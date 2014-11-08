@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sidebar_bg"
+    android:orientation="vertical"
+    android:paddingBottom="1dp"
+    android:paddingLeft="1dp"
+    android:paddingRight="1dp"
+    android:paddingTop="1dp"
+    android:weightSum="100">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="82">
+
+        <ListView
+            android:id="@+id/chat1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="#b5b5b5"
+            android:dividerHeight="1dp"
+
+            />
+
+        <ListView
+            android:id="@+id/chat2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="#b5b5b5"
+            android:dividerHeight="1dp"
+
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="18"
+        android:background="#f0f4fc"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
+
+        <EditText
+            android:id="@+id/messageBox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/sendButton"
+            android:ems="10"
+            android:gravity="top"
+            android:hint="请输入信息"
+            android:inputType="textMultiLine"
+            android:lines="3"
+            android:maxLines="3"
+            android:minHeight="50dp"
+            android:minLines="3">
+
+            <!-- <requestFocus />  -->
+        </EditText>
+
+        <Button
+            android:id="@+id/sendButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@color/blue"
+            android:text="发送" />
+
+    </RelativeLayout>
+</LinearLayout>

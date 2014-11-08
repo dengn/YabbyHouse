@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:id="@+id/profile_popup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/black"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:id="@+id/profile_camera"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/detail_menu_item_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="@dimen/detail_menu_margin_top_up"
+            android:background="@color/white">
+
+
+            <TextView
+                android:id="@+id/text_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="15dp"
+                android:text="拍照"
+                android:textColor="@color/blue"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/profile_album"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/detail_menu_item_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="@dimen/detail_menu_margin_top_up"
+            android:background="@color/white">
+
+
+            <TextView
+                android:id="@+id/text_album"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="15dp"
+                android:text="从手机相册选择"
+                android:textColor="@color/blue"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/profile_cancel"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/detail_menu_item_height"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/detail_menu_margin_top"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="@dimen/detail_menu_margin_top"
+            android:background="@color/white"
+            android:text="取消"
+            android:textColor="@color/blue"
+            android:textSize="27sp" />
+    </LinearLayout>
+
+</RelativeLayout>

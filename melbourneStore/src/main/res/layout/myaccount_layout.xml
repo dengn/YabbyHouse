@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sidebar_bg"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/myaccount_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/lightgray"
+        android:dividerHeight="1dip" />
+
+    <ListView
+        android:id="@+id/myaccount_list_address"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/myaccount_list"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="252dp"
+        android:divider="@color/lightgray"
+        android:dividerHeight="1dip" />
+
+    <ListView
+        android:id="@+id/myaccount_list_coupon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/myaccount_list_address"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="315dp"
+        android:divider="@color/lightgray"
+        android:dividerHeight="1dip" />
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="267dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="27dp"
+        android:layout_marginLeft="45dp"
+        android:background="@drawable/button_style"
+        android:text="退出此账号"
+        android:textColor="@color/white"
+        android:textSize="23dp" />
+
+</RelativeLayout>

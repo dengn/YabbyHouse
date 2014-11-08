@@ -1,0 +1,53 @@
+<!--
+  Copyright 2013 The Android Open Source Project
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+
+<resources>
+    <string name="app_name">Yabby House</string>
+    <string-array name="planets_array">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
+    <string-array name="menu_items">
+        <item>美食餐厅</item>
+        <item>我的订单</item>
+        <item>位置定位</item>
+        <item>买家秀</item>
+        <item>精品推荐</item>
+    </string-array>
+
+    <string-array name="plates_items">
+        <item>麻辣小龙虾</item>
+        <item>蒜泥小龙虾</item>
+        <item>泡椒小龙虾</item>
+        <item>咖喱小龙虾</item>
+        <item>小龙虾炒年糕</item>
+    </string-array>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_websearch">Web search</string>
+    <string name="action_finish">完成</string>
+    <string name="title_search_hint">请输入所在Suburb的名称</string>
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
+
+
+    <string name="login_text">登录</string>
+</resources>

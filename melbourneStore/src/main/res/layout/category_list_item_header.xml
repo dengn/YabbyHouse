@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#30000000"
+    android:orientation="horizontal">
+
+    <SearchView
+        android:id="@+id/category_search_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:iconifiedByDefault="false"
+        android:inputType="textFilter"
+        android:queryHint="请输入要搜索菜品的名称"></SearchView>
+
+
+</LinearLayout>
