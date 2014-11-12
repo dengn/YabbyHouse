@@ -22,6 +22,8 @@ public class CurrentOrderActivity extends Activity {
     private TextView current_order_info;
     private long mExitTime;
 
+    private TextView submitted_totalprice, submitted_delivery_number, submitted_delivery_address, submitted_delivery_time, submitted_preference, submitted_ordernumber, submitted_ordertime;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.order_submitted_layout);
@@ -42,6 +44,14 @@ public class CurrentOrderActivity extends Activity {
 
 
         current_order_info = (TextView) findViewById(R.id.order_submitted_info1);
+
+        submitted_totalprice = (TextView) findViewById(R.id.submitted_totalprice);
+        submitted_delivery_number = (TextView) findViewById(R.id.submitted_delivery_number);
+        submitted_delivery_address = (TextView) findViewById(R.id.submitted_delivery_address);
+        submitted_delivery_time = (TextView) findViewById(R.id.submitted_delivery_time);
+        submitted_preference = (TextView) findViewById(R.id.submitted_preference);
+        submitted_ordernumber = (TextView) findViewById(R.id.submitted_ordernumber);
+        submitted_ordertime = (TextView) findViewById(R.id.submitted_ordertime);
 
 
         String order_info = "";
@@ -65,19 +75,27 @@ public class CurrentOrderActivity extends Activity {
 
         }
 
-        order_info += "其他\n";
-        order_info += "派送费" + String.valueOf(order.getDeliveryFee()) + "\n";
-
-        order_info += "总计费用: $" + String.valueOf(MelbourneUtils.sum_price_all(plates) + order.getDeliveryFee() + "\n");
-
-        order_info += "送货电话: " + activeUser.getPhoneNumber() + "\n";
-        order_info += "送货地址: " + MelbourneUtils.getCompleteAddress(activeUser) + "\n";
-        order_info += "送货时间: " + order.getDeliveryTime() + "\n";
-        order_info += "偏好: " + order.getRemark() + "\n";
-        order_info += "订单号码: \n";
-        order_info += "订单时间: " + order.getCreateTime() + "\n";
+//        order_info += "其他\n";
+//        order_info += "派送费" + String.valueOf(order.getDeliveryFee()) + "\n";
+//
+//        order_info += "总计费用: $" + String.valueOf(MelbourneUtils.sum_price_all(plates) + order.getDeliveryFee() + "\n");
+//
+//        order_info += "送货电话: " + activeUser.getPhoneNumber() + "\n";
+//        order_info += "送货地址: " + MelbourneUtils.getCompleteAddress(activeUser) + "\n";
+//        order_info += "送货时间: " + order.getDeliveryTime() + "\n";
+//        order_info += "偏好: " + order.getRemark() + "\n";
+//        order_info += "订单号码: \n";
+//        order_info += "订单时间: " + order.getCreateTime() + "\n";
 
         current_order_info.setText(order_info);
+
+        submitted_totalprice.setText("总计费用: $" + String.valueOf(MelbourneUtils.sum_price_all(plates) + order.getDeliveryFee()));
+        submitted_delivery_number.setText("送货电话: " + activeUser.getPhoneNumber());
+        submitted_delivery_address.setText("送货地址: " + MelbourneUtils.getCompleteAddress(activeUser));
+        submitted_delivery_time.setText("送货时间: " + order.getDeliveryTime());
+        submitted_preference.setText("偏   好: " + order.getRemark());
+        submitted_ordernumber.setText("订单号码: "+order.getCreateTime());
+        submitted_ordertime.setText("订单时间: " + order.getCreateTime());
 
     }
 

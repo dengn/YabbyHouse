@@ -25,6 +25,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="horizontal"
+        android:background="#e0000000"
         android:tag="front">
 
         <LinearLayout

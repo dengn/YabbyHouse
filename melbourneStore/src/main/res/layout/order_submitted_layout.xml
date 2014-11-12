@@ -2,24 +2,124 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/sidebar_bg"
-    android:orientation="vertical">
+    android:background="@drawable/sidebar_bg">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="10dp"
+    android:background="#80000000">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+
+
+
+
+        <LinearLayout
+            android:id="@+id/submitted_items_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/order_submitted_info1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white" />
-    </ScrollView>
-
-    <TextView
-        android:id="@+id/order_submitted_info2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
 
+        <TextView
+            android:id="@+id/submitted_totalprice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:text="总计费用: "
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginTop="10dp"
+            android:background="@color/lightgray" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginTop="3dp"
+            android:background="@color/lightgray" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="@color/lightgray" />
+
+
+        <TextView
+            android:id="@+id/order_submitted_info2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/submitted_delivery_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="送货电话: "
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/submitted_delivery_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="送货地址: "
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/submitted_delivery_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="送货地址: "
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/submitted_preference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="偏    好: "
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/submitted_ordernumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="订单号码: "
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/submitted_ordertime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:text="订单时间: "
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginBottom="10dp" />
+
+
+    </LinearLayout>
+</ScrollView>
 </LinearLayout>
