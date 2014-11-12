@@ -2,6 +2,7 @@ package com.melbournestore.adaptors;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.melbournestore.activities.PlateActivity;
 import com.melbournestore.activities.R;
+import com.melbournestore.utils.BitmapUtils;
 
 public class CategoryListAdapter extends BaseAdapter {
 
@@ -58,7 +60,11 @@ public class CategoryListAdapter extends BaseAdapter {
         View rowView;
         rowView = inflater.inflate(R.layout.category_list_item, null);
         holder.img = (ImageView) rowView.findViewById(R.id.plates_image);
-        holder.img.setImageResource(imageId[position]);
+
+
+        Bitmap bm = BitmapUtils.readBitMap(mContext, imageId[position]);
+        holder.img.setImageBitmap(bm);
+
 
         holder.shopText = (TextView) rowView.findViewById(R.id.shop_name);
         holder.shopText.setText(mShopText[position]);

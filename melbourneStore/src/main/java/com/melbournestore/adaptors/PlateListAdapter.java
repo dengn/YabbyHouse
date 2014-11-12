@@ -3,6 +3,7 @@ package com.melbournestore.adaptors;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +23,7 @@ import com.melbournestore.activities.R;
 import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
+import com.melbournestore.utils.BitmapUtils;
 
 public class PlateListAdapter extends BaseAdapter {
 
@@ -100,7 +102,10 @@ public class PlateListAdapter extends BaseAdapter {
         holder.prices_view
                 .setText("$" + String.valueOf(mPlates[position].getPrice()));
 
-        holder.imgs_view.setImageResource(mPlates[position].getImageId());
+
+        Bitmap bm = BitmapUtils.readBitMap(mContext, mPlates[position].getImageId());
+        holder.imgs_view.setImageBitmap(bm);
+
 
         holder.num_view.setText(String.valueOf(mPlates[position].getNumber()));
         // rowView.setOnClickListener(new OnClickListener() {

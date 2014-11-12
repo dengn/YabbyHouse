@@ -1,6 +1,7 @@
 package com.melbournestore.adaptors;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.melbournestore.activities.R;
 import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
+import com.melbournestore.utils.BitmapUtils;
 
 public class DishListAdapter extends BaseAdapter {
 
@@ -79,8 +81,10 @@ public class DishListAdapter extends BaseAdapter {
                 holder_image.dishText = (TextView) convertView
                         .findViewById(R.id.dish_img_text);
 
-                holder_image.dishImage
-                        .setImageResource(mPlate.getImageId());
+
+                Bitmap bm = BitmapUtils.readBitMap(mContext, mPlate.getImageId());
+                holder_image.dishImage.setImageBitmap(bm);
+
                 if (mPlate.getNumber() <= 0) {
                     holder_image.dishText.setVisibility(View.INVISIBLE);
                 } else {
