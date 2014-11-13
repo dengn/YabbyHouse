@@ -19,7 +19,12 @@
         android:background="@color/white"/>
     -->
 
-    <com.foound.widget.AmazingListView
+    <!--<com.foound.widget.AmazingListView-->
+        <!--android:id="@+id/suburb_list"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
+
+    <ExpandableListView
         android:id="@+id/suburb_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

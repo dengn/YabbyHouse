@@ -6,14 +6,14 @@ public class Area {
     private String name;
     private int fee;
     private int status;
-    private Suburb suburbs;
+    private Suburb[] suburbs;
     private String update_time;
 
     public Area() {
 
     }
 
-    public Area(int id, String name, int fee, int status, Suburb suburbs, String update_time) {
+    public Area(int id, String name, int fee, int status, Suburb[] suburbs, String update_time) {
         this.id = id;
         this.name = name;
         this.fee = fee;
@@ -54,11 +54,11 @@ public class Area {
         this.status = status;
     }
 
-    public Suburb getSuburbs() {
+    public Suburb[] getSuburbs() {
         return suburbs;
     }
 
-    public void setSuburbs(Suburb suburbs) {
+    public void setSuburbs(Suburb[] suburbs) {
         this.suburbs = suburbs;
     }
 
