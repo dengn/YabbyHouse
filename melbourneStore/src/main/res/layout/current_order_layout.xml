@@ -23,12 +23,12 @@
             android:gravity="center"
             android:padding="3dip">
 
-            <com.example.pagerdemo.CirclePageIndicator
+            <com.melbournestore.ui.CirclePageIndicator
                 android:id="@+id/page_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|bottom"
-                android:padding="2dip"></com.example.pagerdemo.CirclePageIndicator>
+                android:padding="2dip"></com.melbournestore.ui.CirclePageIndicator>
         </LinearLayout>
     </FrameLayout>
 

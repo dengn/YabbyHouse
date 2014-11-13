@@ -9,4 +9,12 @@
         android:bottomRightRadius="30dp"
         android:topLeftRadius="30dp"
         android:topRightRadius="30dp" />
+    <stroke
+        android:width="2dip"
+        android:color="@color/white" />
+    <corners
+        android:bottomLeftRadius="40dp"
+        android:bottomRightRadius="40dp"
+        android:topLeftRadius="40dp"
+        android:topRightRadius="40dp" />
 </shape>
