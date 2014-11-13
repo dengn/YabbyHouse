@@ -19,38 +19,38 @@ import java.util.ArrayList;
 public class SuburbListAdapter extends BaseExpandableListAdapter {
 
     private Context mContext;
-    private ArrayList<Area> mHeadList;
-    private ArrayList<Suburb> mChildList;
+    private ArrayList<Area> mAreaList;
+    private ArrayList<Area> mOriginalList;
 
-    public SuburbListAdapter(Context context, ArrayList<Area> headList, ArrayList<Suburb> childList) {
+    public SuburbListAdapter(Context context, ArrayList<Area> headList) {
         mContext = context;
-        mHeadList = new ArrayList<Area>();
-        mHeadList.addAll(headList);
-        mChildList = new ArrayList<Suburb>();
-        mChildList.addAll(childList);
+        mAreaList = new ArrayList<Area>();
+        mAreaList.addAll(headList);
+        mOriginalList = new ArrayList<Area>();
+        mOriginalList.addAll(headList);
     }
 
     @Override
     public int getGroupCount() {
-        return mHeadList.size();
+        return mAreaList.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-
-        return mChildList.size();
+        ArrayList<Suburb> suburbList = mAreaList.get(groupPosition).getSuburbs();
+        return suburbList.size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
 
-        return mHeadList.get(groupPosition);
+        return mAreaList.get(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        Suburb[] suburbList = mHeadList.get(groupPosition).getSuburbs();
-        return suburbList[childPosition];
+        ArrayList<Suburb> suburbList = mAreaList.get(groupPosition).getSuburbs();
+        return suburbList.get(childPosition);
     }
 
     @Override
@@ -106,34 +106,31 @@ public class SuburbListAdapter extends BaseExpandableListAdapter {
 
     public void filterData(String query){
 
-//        query = query.toLowerCase();
-//
-//        mHeadList.clear();
-//
-//        if(query.isEmpty()){
-//            mHeadList.addAll(mChildList);
-//        }
-//        else {
-//
-//            for(Continent continent: originalList){
-//
-//                ArrayList<Country> countryList = continent.getCountryList();
-//                ArrayList<Country> newList = new ArrayList<Country>();
-//                for(Country country: countryList){
-//                    if(country.getCode().toLowerCase().contains(query) ||
-//                            country.getName().toLowerCase().contains(query)){
-//                        newList.add(country);
-//                    }
-//                }
-//                if(newList.size() > 0){
-//                    Continent nContinent = new Continent(continent.getName(),newList);
-//                    continentList.add(nContinent);
-//                }
-//            }
-//        }
-//
-//        Log.v("MyListAdapter", String.valueOf(continentList.size()));
-//        notifyDataSetChanged();
+        query = query.toLowerCase();
+
+        mAreaList.clear();
+
+        if (query.isEmpty()) {
+            mAreaList.addAll(mOriginalList);
+        } else {
+
+            for (Area area : mOriginalList) {
+
+                ArrayList<Suburb> suburbList = area.getSuburbs();
+                ArrayList<Suburb> newList = new ArrayList<Suburb>();
+                for (Suburb suburb : suburbList) {
+                    if (suburb.getName().toLowerCase().contains(query)) {
+                        newList.add(suburb);
+                    }
+                }
+                if (newList.size() > 0) {
+                    Area nArea = new Area(area.getId(), area.getName(), area.getFee(), area.getStatus(), newList, area.getUpdateTime());
+                    mAreaList.add(nArea);
+                }
+            }
+        }
+
+        notifyDataSetChanged();
 
     }
 }
