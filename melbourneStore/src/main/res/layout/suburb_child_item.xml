@@ -13,6 +13,8 @@
         android:paddingLeft="35sp"
         android:paddingRight="10dp"
         android:text="USA"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
 
 </RelativeLayout>

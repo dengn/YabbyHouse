@@ -1,6 +1,9 @@
 package com.melbournestore.adaptors;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +22,13 @@ import java.util.ArrayList;
 public class SuburbListAdapter extends BaseExpandableListAdapter {
 
     private Context mContext;
+    private Handler mHandler;
     private ArrayList<Area> mAreaList;
     private ArrayList<Area> mOriginalList;
 
-    public SuburbListAdapter(Context context, ArrayList<Area> headList) {
+    public SuburbListAdapter(Context context, Handler handler, ArrayList<Area> headList) {
         mContext = context;
+        mHandler = handler;
         mAreaList = new ArrayList<Area>();
         mAreaList.addAll(headList);
         mOriginalList = new ArrayList<Area>();
@@ -86,15 +91,35 @@ public class SuburbListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
-        Suburb suburb = (Suburb) getChild(groupPosition, childPosition);
+        final Suburb suburb = (Suburb) getChild(groupPosition, childPosition);
 
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.suburb_child_item, null);
         }
 
-        TextView child = (TextView) convertView.findViewById(R.id.suburb_head);
+        TextView child = (TextView) convertView.findViewById(R.id.suburb_child);
         child.setText(suburb.getName().trim());
+
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Message message = new Message();
+                Bundle b = new Bundle();
+                // send the position
+                b.putString("suburb", suburb.getName().trim());
+                message.setData(b);
+
+                // plus = 1
+                message.what = 1;
+
+                mHandler.sendMessage(message);
+
+            }
+        });
+
         return convertView;
     }
 
