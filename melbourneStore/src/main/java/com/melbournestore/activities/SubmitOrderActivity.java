@@ -2,6 +2,7 @@ package com.melbournestore.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -13,11 +14,10 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.DatePicker.OnDateChangedListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -36,10 +36,17 @@ import com.melbournestore.models.Shop;
 import com.melbournestore.models.User;
 import com.melbournestore.utils.MelbourneUtils;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+import kankan.wheel.widget.WheelView;
+import kankan.wheel.widget.adapters.AbstractWheelTextAdapter;
+import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 
 public class SubmitOrderActivity extends Activity {
 
@@ -66,7 +73,8 @@ public class SubmitOrderActivity extends Activity {
                     int action = b1.getInt("action");
                     // popup the time picker
                     if (action == 2) {
-                        showTimePicker();
+                        //showTimePicker();
+                        showDeliveryTimePicker();
                     }
 
                     break;
@@ -245,67 +253,52 @@ public class SubmitOrderActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showTimePicker() {
+    private void showDeliveryTimePicker() {
         View view = View.inflate(this, R.layout.delivery_time_popup, null);
 
-        DatePicker datePicker = (DatePicker) view
-                .findViewById(R.id.delivery_time_picker);
         Button deliveryTimeConfirm = (Button) view
                 .findViewById(R.id.delivery_time_confirm);
 
-        String current_order = SharedPreferenceUtils
-                .getCurrentOrder(SubmitOrderActivity.this);
-        Gson gson = new Gson();
-        final Order_user currentOrder = gson.fromJson(current_order,
-                Order_user.class);
+        LinearLayout deliveryTimePicker = (LinearLayout) view.findViewById(R.id.delivery_time_picker);
 
-        currentOrder.setDeliveryTime("2013.08.20 18:00");
 
-        datePicker.init(2013, 8, 20, new OnDateChangedListener() {
+//        WheelView hours = (WheelView) view.findViewById(R.id.delivery_hour);
+//        NumericWheelAdapter hourAdapter = new NumericWheelAdapter(this, 0, 23, "%02d");
+//        hourAdapter.setItemResource(R.layout.wheel_text_item);
+//        hourAdapter.setItemTextResource(R.id.wheel_text);
+//        hours.setViewAdapter(hourAdapter);
 
-            @Override
-            public void onDateChanged(DatePicker view, int year,
-                                      int monthOfYear, int dayOfMonth) {
-                // 获取一个日历对象，并初始化为当前选中的时间
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, monthOfYear, dayOfMonth);
-                SimpleDateFormat format = new SimpleDateFormat(
-                        "yyyy年MM月dd日  HH:mm");
+//        WheelView mins = (WheelView) view.findViewById(R.id.delivery_mins);
+//        NumericWheelAdapter minAdapter = new NumericWheelAdapter(this, 0, 59, "%02d");
+//        minAdapter.setItemResource(R.layout.wheel_text_item);
+//        minAdapter.setItemTextResource(R.id.wheel_text);
+//        mins.setViewAdapter(minAdapter);
+//        mins.setCyclic(true);
 
-                currentOrder.setDeliveryTime(format.format(calendar.getTime()));
-            }
-        });
+        final WheelView hours = (WheelView) view.findViewById(R.id.delivery_hour);
+        ArrayWheelAdapter<String> hourAdapter =
+                new ArrayWheelAdapter<String>(this, getPossibleDeliveryHours());
+        hourAdapter.setItemResource(R.layout.wheel_text_item);
+        hourAdapter.setItemTextResource(R.id.wheel_text);
+        hours.setViewAdapter(hourAdapter);
 
-        deliveryTimeConfirm.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
+//        final WheelView mins = (WheelView) view.findViewById(R.id.delivery_mins);
+//        ArrayWheelAdapter<String> minAdapter =
+//                new ArrayWheelAdapter<String>(this, new String[] {"00", "15", "30", "45"});
+//        minAdapter.setItemResource(R.layout.wheel_text_item);
+//        minAdapter.setItemTextResource(R.id.wheel_text);
+//        mins.setViewAdapter(minAdapter);
 
-                String users_string = SharedPreferenceUtils
-                        .getLoginUser(SubmitOrderActivity.this);
-                Gson gson = new Gson();
-                User[] users = gson.fromJson(users_string, User[].class);
-                User activeUser = users[MelbourneUtils.getActiveUser(users)];
 
-                SharedPreferenceUtils.saveCurrentOrder(
-                        SubmitOrderActivity.this, gson.toJson(currentOrder));
+        // set current time
+        Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+        hours.setCurrentItem(calendar.get(Calendar.HOUR));
+//        mins.setCurrentItem(calendar.get(Calendar.MINUTE));
 
-                mSubmitListAdapter.refresh(activeUser, currentOrder);
-                mSubmitList.setAdapter(mSubmitListAdapter);
-                mTimePickerPopup.dismiss();
-            }
+        final WheelView day = (WheelView) view.findViewById(R.id.delivery_day);
+        day.setViewAdapter(new DayArrayAdapter(this, calendar));
 
-        });
-
-        view.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                mTimePickerPopup.dismiss();
-            }
-        });
 
         LinearLayout delivery_time_popup = (LinearLayout) view
                 .findViewById(R.id.delivery_time_popup);
@@ -323,10 +316,179 @@ public class SubmitOrderActivity extends Activity {
         }
 
         mTimePickerPopup.setContentView(view);
-        mTimePickerPopup.showAtLocation(datePicker, Gravity.BOTTOM, 0, 0);
+        mTimePickerPopup.showAtLocation(deliveryTimePicker, Gravity.BOTTOM, 0, 0);
         mTimePickerPopup.update();
 
+
+        String current_order = SharedPreferenceUtils
+                .getCurrentOrder(SubmitOrderActivity.this);
+        Gson gson = new Gson();
+        final Order_user currentOrder = gson.fromJson(current_order,
+                Order_user.class);
+
+
+
+        deliveryTimeConfirm.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                String users_string = SharedPreferenceUtils
+                        .getLoginUser(SubmitOrderActivity.this);
+                Gson gson = new Gson();
+                User[] users = gson.fromJson(users_string, User[].class);
+                User activeUser = users[MelbourneUtils.getActiveUser(users)];
+
+                Calendar c = Calendar.getInstance();
+                String delivery_time = "";
+
+
+
+
+                if(day.getCurrentItem()==0){
+                    Date date=new Date();
+                    date=c.getTime(); //这个时间就是日期往后推一天的结果
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    delivery_time += formatter.format(date);
+                }
+                else{
+                    Date date=new Date();
+                    c.setTime(date);
+                    c.add(Calendar.DATE,1);
+                    date=c.getTime(); //这个时间就是日期往后推一天的结果
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    delivery_time += formatter.format(date);
+                }
+
+                delivery_time+=" "+getPossibleDeliveryHours()[hours.getCurrentItem()];
+                currentOrder.setDeliveryTime(delivery_time);
+
+
+                SharedPreferenceUtils.saveCurrentOrder(
+                        SubmitOrderActivity.this, gson.toJson(currentOrder));
+
+                mSubmitListAdapter.refresh(activeUser, currentOrder);
+                mSubmitList.setAdapter(mSubmitListAdapter);
+                mTimePickerPopup.dismiss();
+            }
+
+        });
+
+
+
+
     }
+
+
+
+        private String[] getPossibleDeliveryHours() {
+        Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int start_time;
+        if(hour<20){
+            start_time = 20;
+        }
+        else{
+            start_time =hour+1;
+        }
+
+        ArrayList<String> time = new ArrayList<String>();
+        for (int i = start_time; i < 24; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (j == 0) {
+                    time.add(String.valueOf(i) + ":00");
+                } else {
+                    time.add(String.valueOf(i) + ":" + String.valueOf(j * 15));
+                }
+            }
+        }
+        String[] returned_time = new String[time.size()];
+        returned_time = time.toArray(returned_time);
+        return returned_time;
+    }
+
+//    private void showTimePicker() {
+//        View view = View.inflate(this, R.layout.delivery_time_popup, null);
+//
+//        DatePicker datePicker = (DatePicker) view
+//                .findViewById(R.id.delivery_time_picker);
+//        Button deliveryTimeConfirm = (Button) view
+//                .findViewById(R.id.delivery_time_confirm);
+//
+//        String current_order = SharedPreferenceUtils
+//                .getCurrentOrder(SubmitOrderActivity.this);
+//        Gson gson = new Gson();
+//        final Order_user currentOrder = gson.fromJson(current_order,
+//                Order_user.class);
+//
+//        currentOrder.setDeliveryTime("2013.08.20 18:00");
+//
+//        datePicker.init(2013, 8, 20, new OnDateChangedListener() {
+//
+//            @Override
+//            public void onDateChanged(DatePicker view, int year,
+//                                      int monthOfYear, int dayOfMonth) {
+//                // 获取一个日历对象，并初始化为当前选中的时间
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.set(year, monthOfYear, dayOfMonth);
+//                SimpleDateFormat format = new SimpleDateFormat(
+//                        "yyyy年MM月dd日  HH:mm");
+//
+//                currentOrder.setDeliveryTime(format.format(calendar.getTime()));
+//            }
+//        });
+//
+//        deliveryTimeConfirm.setOnClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                // TODO Auto-generated method stub
+//
+//                String users_string = SharedPreferenceUtils
+//                        .getLoginUser(SubmitOrderActivity.this);
+//                Gson gson = new Gson();
+//                User[] users = gson.fromJson(users_string, User[].class);
+//                User activeUser = users[MelbourneUtils.getActiveUser(users)];
+//
+//                SharedPreferenceUtils.saveCurrentOrder(
+//                        SubmitOrderActivity.this, gson.toJson(currentOrder));
+//
+//                mSubmitListAdapter.refresh(activeUser, currentOrder);
+//                mSubmitList.setAdapter(mSubmitListAdapter);
+//                mTimePickerPopup.dismiss();
+//            }
+//
+//        });
+//
+//        view.setOnClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//
+//                mTimePickerPopup.dismiss();
+//            }
+//        });
+//
+//        LinearLayout delivery_time_popup = (LinearLayout) view
+//                .findViewById(R.id.delivery_time_popup);
+//        delivery_time_popup.startAnimation(AnimationUtils.loadAnimation(
+//                getApplicationContext(), R.anim.push_bottom_in));
+//
+//        if (mTimePickerPopup == null) {
+//            mTimePickerPopup = new PopupWindow(this);
+//            mTimePickerPopup.setWidth(LayoutParams.MATCH_PARENT);
+//            mTimePickerPopup.setHeight(LayoutParams.MATCH_PARENT);
+//            mTimePickerPopup.setBackgroundDrawable(new BitmapDrawable());
+//
+//            mTimePickerPopup.setFocusable(true);
+//            mTimePickerPopup.setOutsideTouchable(true);
+//        }
+//
+//        mTimePickerPopup.setContentView(view);
+//        mTimePickerPopup.showAtLocation(datePicker, Gravity.BOTTOM, 0, 0);
+//        mTimePickerPopup.update();
+//
+//    }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -340,5 +502,59 @@ public class SubmitOrderActivity extends Activity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * Day adapter
+     */
+    private class DayArrayAdapter extends AbstractWheelTextAdapter {
+        // Count of days to be shown
+        private final int daysCount = 1;
+
+        // Calendar
+        Calendar calendar;
+
+        /**
+         * Constructor
+         */
+        protected DayArrayAdapter(Context context, Calendar calendar) {
+            super(context, R.layout.time2_day, NO_RESOURCE);
+            this.calendar = calendar;
+
+
+            setItemTextResource(R.id.time2_monthday);
+        }
+
+        @Override
+        public View getItem(int index, View cachedView, ViewGroup parent) {
+            int day = -daysCount / 2 + index;
+            Calendar newCalendar = (Calendar) calendar.clone();
+            newCalendar.roll(Calendar.DAY_OF_YEAR, day);
+
+            View view = super.getItem(index, cachedView, parent);
+            TextView weekday = (TextView) view.findViewById(R.id.time2_weekday);
+
+            DateFormat format1 = new SimpleDateFormat("EEE");
+            weekday.setText(format1.format(newCalendar.getTime()));
+
+
+            TextView monthday = (TextView) view.findViewById(R.id.time2_monthday);
+
+            DateFormat format2 = new SimpleDateFormat("MMM d");
+            monthday.setText(format2.format(newCalendar.getTime()));
+            monthday.setTextColor(0xFF111111);
+
+            return view;
+        }
+
+        @Override
+        public int getItemsCount() {
+            return daysCount + 1;
+        }
+
+        @Override
+        protected CharSequence getItemText(int index) {
+            return "";
+        }
     }
 }

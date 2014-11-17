@@ -7,22 +7,50 @@
     <LinearLayout
         android:id="@+id/delivery_time_popup"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="250dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/white"
+        android:background="@drawable/customshape"
         android:orientation="vertical">
 
-        <DatePicker
+        <!--<DatePicker-->
+            <!--android:id="@+id/delivery_time_picker"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:calendarViewShown="false" />-->
+        <LinearLayout
             android:id="@+id/delivery_time_picker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:calendarViewShown="false" />
+            android:layout_width="wrap_content"
+            android:layout_height="180dp"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+            <kankan.wheel.widget.WheelView
+                android:id="@+id/delivery_day"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+            <kankan.wheel.widget.WheelView
+                android:id="@+id/delivery_hour"
+                android:layout_marginLeft="15dp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+            <!--<kankan.wheel.widget.WheelView-->
+                <!--android:id="@+id/delivery_mins"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_width="wrap_content"/>-->
+
+        </LinearLayout>
+
+
+
 
         <Button
             android:id="@+id/delivery_time_confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="确定" />
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/button_style"
+            android:text="确定"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
     </LinearLayout>
 
 </RelativeLayout>
