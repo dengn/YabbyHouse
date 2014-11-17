@@ -8,18 +8,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="vertical">-->
 
-        <ListView
-            android:id="@+id/plates_filter"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="40dp"
-            android:divider="@color/lightgray"
-            android:dividerHeight="1dip" />
-    </LinearLayout>
+    <!--<ListView-->
+    <!--android:id="@+id/plates_filter"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_marginTop="40dp"-->
+    <!--android:divider="@color/lightgray"-->
+    <!--android:dividerHeight="1dip" />-->
+    <!--</LinearLayout>-->
+    <ExpandableListView
+        android:id="@+id/plate_search_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </FrameLayout>

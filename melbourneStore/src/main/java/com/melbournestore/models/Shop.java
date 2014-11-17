@@ -1,5 +1,7 @@
 package com.melbournestore.models;
 
+import java.util.ArrayList;
+
 public class Shop {
     private int id;
     private String name;
@@ -99,5 +101,13 @@ public class Shop {
 
     public void setPlates(Plate[] plates) {
         this.plates = plates;
+    }
+
+    public ArrayList<Plate> getArrayPlates() {
+        ArrayList<Plate> plateList = new ArrayList<Plate>();
+        for (int i = 0; i < plates.length; i++) {
+            plateList.add(plates[i]);
+        }
+        return plateList;
     }
 }
