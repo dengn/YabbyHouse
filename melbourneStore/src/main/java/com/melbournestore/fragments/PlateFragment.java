@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.melbournestore.activities.R;
 import com.melbournestore.adaptors.CategoryListAdapter;
@@ -26,8 +24,7 @@ import com.melbournestore.models.Shop;
 
 import java.util.ArrayList;
 
-public class PlateFragment extends Fragment implements
-        SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+public class PlateFragment extends Fragment {
 
     Context mContext;
 
@@ -65,57 +62,46 @@ public class PlateFragment extends Fragment implements
         search_plate.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 
 
-        search_plate.setOnQueryTextListener(this);
-        search_plate.setOnCloseListener(this);
+        search_plate.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String query) {
+                plates.setVisibility(View.VISIBLE);
+                platesFilter_adapter.filterData(query);
+                expandAll();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                plates.setVisibility(View.VISIBLE);
+                platesFilter_adapter.filterData(query);
+                expandAll();
+                return false;
+            }
+        });
+        search_plate.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                plates.setVisibility(View.INVISIBLE);
+                platesFilter_adapter.filterData("");
+                expandAll();
+                return false;
+            }
+        });
 
     }
 
-    @Override
-    public boolean onClose() {
-        platesFilter_adapter.filterData("");
-        expandAll();
-        return false;
-    }
 
-    @Override
-    public boolean onQueryTextChange(String query) {
-        platesFilter_adapter.filterData(query);
-        expandAll();
-        return false;
-    }
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        platesFilter_adapter.filterData(query);
-        expandAll();
-        return false;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d("SEARCH", "item clicked");
-        Toast.makeText(getActivity(), "item clicked", Toast.LENGTH_SHORT);
+
         // handle item selection
         switch (item.getItemId()) {
             case R.id.search_plate:
-                Log.d("SEARCH", "search clicked");
-                Toast.makeText(getActivity(), "search clicked", Toast.LENGTH_SHORT);
 
-                if (!header_created) {
-                    //category.addHeaderView(headerView);
-
-
-                    plates.setVisibility(View.VISIBLE);
-                    header_created = true;
-
-                } else {
-                    //category.removeHeaderView(headerView);
-                    header_created = false;
-                    plates.setVisibility(View.INVISIBLE);
-                    Log.d("SEARCH", "plates should not show");
-                }
-//                plates.setVisibility(View.VISIBLE);
-//                plates.bringToFront();
 
                 return true;
 
