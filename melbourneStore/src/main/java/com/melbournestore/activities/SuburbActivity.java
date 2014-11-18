@@ -12,6 +12,8 @@ import android.os.Message;
 import android.support.v4.app.NavUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
@@ -70,7 +72,7 @@ public class SuburbActivity extends Activity implements
 
         SysApplication.getInstance().addActivity(this);
 
-        initActionBar();
+        //initActionBar();
 
         loadSomeData();
         // search_suburb = (SearchView) findViewById(R.id.search_view);
@@ -225,12 +227,28 @@ public class SuburbActivity extends Activity implements
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.plate_menu, menu);
+
+        search_suburb = (SearchView) menu.findItem(R.id.search_plate).getActionView();;
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+        search_suburb.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        //search_suburb.setIconifiedByDefault(false);
+        search_suburb.setOnQueryTextListener(this);
+        search_suburb.setOnCloseListener(this);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-//            case R.id.search_plate:
+            case R.id.search_plate:
 //                if (!search_enabled) {
 //                    suburbList.addHeaderView(headerView);
 //
@@ -241,6 +259,7 @@ public class SuburbActivity extends Activity implements
 //
 //                }
 //                break;
+                return true;
 
             case android.R.id.home:
                 // This is called when the Home (Up) button is pressed in the action

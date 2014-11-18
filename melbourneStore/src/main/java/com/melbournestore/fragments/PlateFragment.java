@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,16 +15,19 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.melbournestore.activities.R;
 import com.melbournestore.adaptors.CategoryListAdapter;
 import com.melbournestore.adaptors.PlateSearchListAdapter;
 import com.melbournestore.db.DataResourceUtils;
+import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
 
 import java.util.ArrayList;
 
-public class PlateFragment extends Fragment {
+public class PlateFragment extends Fragment implements
+        SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
     Context mContext;
 
@@ -33,14 +37,16 @@ public class PlateFragment extends Fragment {
 
     CategoryListAdapter category_adapter;
     PlateSearchListAdapter platesFilter_adapter;
-    Boolean header_created = false;
-    ActionBar actionBar = getActivity().getActionBar();
+    boolean header_created = false;
+    ActionBar actionBar;
+    SearchView search_plate;
     private ArrayList<Shop> shopList = new ArrayList<Shop>();
 
 
-    public PlateFragment(Context context) {
+    public PlateFragment(Context context){
         mContext = context;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,39 +58,78 @@ public class PlateFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.plate_menu, menu);
+        search_plate = (SearchView) menu.findItem(R.id.search_plate).getActionView();
+
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+
+        search_plate.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+
+        search_plate.setOnQueryTextListener(this);
+        search_plate.setOnCloseListener(this);
+
+    }
+
+    @Override
+    public boolean onClose() {
+        platesFilter_adapter.filterData("");
+        expandAll();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        platesFilter_adapter.filterData(query);
+        expandAll();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        platesFilter_adapter.filterData(query);
+        expandAll();
+        return false;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d("SEARCH", "item clicked");
+        Toast.makeText(getActivity(), "item clicked", Toast.LENGTH_SHORT);
         // handle item selection
         switch (item.getItemId()) {
             case R.id.search_plate:
-
+                Log.d("SEARCH", "search clicked");
+                Toast.makeText(getActivity(), "search clicked", Toast.LENGTH_SHORT);
 
                 if (!header_created) {
                     //category.addHeaderView(headerView);
 
-                    item.setVisible(false);
 
+                    plates.setVisibility(View.VISIBLE);
                     header_created = true;
+
                 } else {
                     //category.removeHeaderView(headerView);
                     header_created = false;
                     plates.setVisibility(View.INVISIBLE);
+                    Log.d("SEARCH", "plates should not show");
                 }
-
+//                plates.setVisibility(View.VISIBLE);
+//                plates.bringToFront();
 
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        initActionBar();
 
+        setHasOptionsMenu(true);
         View rootView = inflater.inflate(R.layout.fragment_plate, container,
                 false);
 
@@ -103,6 +148,8 @@ public class PlateFragment extends Fragment {
 
 
         plates = (ExpandableListView) rootView.findViewById(R.id.plate_search_list);
+
+        loadSomeData();
 
         //platesFilter_adapter = new PlatesFilterListAdapter(getActivity(), MelbourneUtils.getAllPlateNames());
 
@@ -137,6 +184,8 @@ public class PlateFragment extends Fragment {
 
     private void initActionBar() {
 
+        actionBar = getActivity().getActionBar();
+
         actionBar.setDisplayShowHomeEnabled(false);
         //getActionBar().setDisplayShowTitleEnabled(false);
         actionBar.setDisplayShowCustomEnabled(true);
@@ -148,29 +197,33 @@ public class PlateFragment extends Fragment {
                 new ActionBar.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT,
                         ActionBar.LayoutParams.WRAP_CONTENT)
         );
-        SearchView search_suburb = (SearchView) mTitleView.findViewById(R.id.plate_search_view);
 
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 
-        search_suburb.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-        search_suburb.setIconifiedByDefault(false);
-        search_suburb.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
+    }
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-        });
-        search_suburb.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                return false;
-            }
-        });
+    //method to expand all groups
+    private void expandAll() {
+        int count = platesFilter_adapter.getGroupCount();
+        for (int i = 0; i < count; i++) {
+            plates.expandGroup(i);
+        }
+    }
+
+    private void loadSomeData() {
+
+
+        ArrayList<Plate> plateList = new ArrayList<Plate>();
+        Plate plate = new Plate(15, "mala xiaolongxia", 0, 55, 121, 0, 0, 1);
+        plateList.add(plate);
+
+        plate = new Plate(45, "agfdg xiaolongxia", 0, 55, 121, 0, 0, 1);
+        plateList.add(plate);
+
+
+        Shop shop = new Shop(1, "longxia", "123", "123", "06458789", 1, "123", "456", plateList.toArray(new Plate[plateList.size()]));
+
+        shopList.add(shop);
+
 
     }
 

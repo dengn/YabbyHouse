@@ -23,6 +23,7 @@
     <!--</LinearLayout>-->
     <ExpandableListView
         android:id="@+id/plate_search_list"
+        android:background="@color/gray"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

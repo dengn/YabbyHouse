@@ -18,6 +18,7 @@
     <item
         android:id="@+id/search_plate"
         android:icon="@drawable/action_search"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="ifRoom"
+        android:actionViewClass="android.widget.SearchView"
         android:title="" />
 </menu>
