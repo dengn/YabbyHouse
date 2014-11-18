@@ -127,9 +127,12 @@ public class MainActivity extends Activity {
 
         setUpLoginUser();
 
-        plate_fragment = new PlateFragment(this);
-        myorders_fragment = new MyOrdersFragment(this);
-        googlemap_fragment = new GoogleMapFragment(this);
+        plate_fragment = new PlateFragment();
+        plate_fragment.onAttach(this);
+        myorders_fragment = new MyOrdersFragment();
+        myorders_fragment.onAttach(this);
+        googlemap_fragment = new GoogleMapFragment();
+        googlemap_fragment.onAttach(this);
 
         mTitle = mDrawerTitle = getTitle();
         mMenuTitles = DataResourceUtils.drawerItemsTitles;
@@ -196,6 +199,8 @@ public class MainActivity extends Activity {
                 .getLoginUser(MainActivity.this);
         Gson gson = new Gson();
         User[] users = gson.fromJson(users_string, User[].class);
+
+        getActionBar().setTitle(mTitle);
 
         mDrawerListAdapter.refresh(users);
         mDrawerList.setAdapter(mDrawerListAdapter);

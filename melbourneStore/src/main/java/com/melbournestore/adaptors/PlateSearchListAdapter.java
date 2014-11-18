@@ -1,12 +1,15 @@
 package com.melbournestore.adaptors;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import com.melbournestore.activities.DishActivity;
 import com.melbournestore.activities.R;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
@@ -86,7 +89,7 @@ public class PlateSearchListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
         final Plate plate = (Plate) getChild(groupPosition, childPosition);
 
@@ -104,7 +107,11 @@ public class PlateSearchListAdapter extends BaseExpandableListAdapter {
             public void onClick(View view) {
 
                 //jump to the corresponding plate page
+                Intent intent = new Intent(mContext, DishActivity.class);
+                intent.putExtra("plateId", childPosition);
+                intent.putExtra("shopId", groupPosition);
 
+                ((Activity) mContext).startActivity(intent);
             }
         });
 

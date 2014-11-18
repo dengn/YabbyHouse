@@ -1,5 +1,6 @@
 package com.melbournestore.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.location.Criteria;
@@ -23,8 +24,15 @@ public class GoogleMapFragment extends Fragment {
     private GoogleMap map;
     private Context mContext;
 
-    public GoogleMapFragment(Context context) {
-        mContext = context;
+    public GoogleMapFragment() {
+
+
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mContext = activity;
     }
 
     @Override

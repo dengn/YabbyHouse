@@ -108,23 +108,12 @@ public class PlateListAdapter extends BaseAdapter {
 
 
         holder.num_view.setText(String.valueOf(mPlates[position].getNumber()));
-        // rowView.setOnClickListener(new OnClickListener() {
-        // @Override
-        // public void onClick(View v) {
-        // // TODO Auto-generated method stub
-        // Toast.makeText(mContext, "You Clicked " + plate_names[position],
-        // Toast.LENGTH_LONG).show();
-        //
-        //
-        // }
-        // });
+
 
         rowView.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-
 
                 int shopId = mPlates[position].getShopId();
                 String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);

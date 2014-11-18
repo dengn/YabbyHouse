@@ -1,6 +1,7 @@
 package com.melbournestore.fragments;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
@@ -39,9 +40,14 @@ public class PlateFragment extends Fragment {
     SearchView search_plate;
     private ArrayList<Shop> shopList = new ArrayList<Shop>();
 
+    public PlateFragment() {
 
-    public PlateFragment(Context context){
-        mContext = context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mContext = activity;
     }
 
 
@@ -61,11 +67,18 @@ public class PlateFragment extends Fragment {
 
         search_plate.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 
+        search_plate.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                plates.setVisibility(View.VISIBLE);
+                expandAll();
+            }
+        });
 
         search_plate.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String query) {
-                plates.setVisibility(View.VISIBLE);
+                //plates.setVisibility(View.VISIBLE);
                 platesFilter_adapter.filterData(query);
                 expandAll();
                 return false;
@@ -73,7 +86,7 @@ public class PlateFragment extends Fragment {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                plates.setVisibility(View.VISIBLE);
+                //plates.setVisibility(View.VISIBLE);
                 platesFilter_adapter.filterData(query);
                 expandAll();
                 return false;
@@ -145,25 +158,6 @@ public class PlateFragment extends Fragment {
 
         plates.setVisibility(View.INVISIBLE);
 
-        // headerView.setVisibility(View.INVISIBLE);
-
-        // category.setOnTouchListener(new OnTouchListener(){
-        //
-        // @Override
-        // public boolean onTouch(View v, MotionEvent event) {
-        // // TODO Auto-generated method stub
-        // // switch (event.getAction()) {
-        // // case MotionEvent.ACTION_DOWN:
-        // // headerView.setVisibility(View.VISIBLE);
-        // // break;
-        // // case MotionEvent.ACTION_UP:
-        // // headerView.setVisibility(View.INVISIBLE);
-        // // break;
-        // // }
-        // return false;
-        // }
-        //
-        // });
 
         return rootView;
     }
@@ -199,14 +193,14 @@ public class PlateFragment extends Fragment {
 
 
         ArrayList<Plate> plateList = new ArrayList<Plate>();
-        Plate plate = new Plate(15, "mala xiaolongxia", 0, 55, 121, 0, 0, 1);
+        Plate plate = new Plate(15, "椒盐小龙虾", 0, 55, 121, 0, 0, 1);
         plateList.add(plate);
 
-        plate = new Plate(45, "agfdg xiaolongxia", 0, 55, 121, 0, 0, 1);
+        plate = new Plate(45, "麻辣小龙虾", 0, 55, 121, 0, 0, 1);
         plateList.add(plate);
 
 
-        Shop shop = new Shop(1, "longxia", "123", "123", "06458789", 1, "123", "456", plateList.toArray(new Plate[plateList.size()]));
+        Shop shop = new Shop(1, "龙虾叔叔", "123", "123", "06458789", 1, "123", "456", plateList.toArray(new Plate[plateList.size()]));
 
         shopList.add(shop);
 

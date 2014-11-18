@@ -60,11 +60,14 @@ public class MyOrdersFragment extends Fragment {
 
     //private Context mContext;
 
-    public MyOrdersFragment(Context context) {
+    public MyOrdersFragment() {
 
-        mContext = context;
+    }
 
-
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mContext = activity;
     }
 
     @Override
