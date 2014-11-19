@@ -193,10 +193,19 @@ public class PlateFragment extends Fragment {
 
 
         ArrayList<Plate> plateList = new ArrayList<Plate>();
-        Plate plate = new Plate(15, "椒盐小龙虾", 0, 55, 121, 0, 0, 1);
+        Plate plate = new Plate(15, "麻辣小龙虾", 0, 55, 121, 0, 0, 1);
         plateList.add(plate);
 
-        plate = new Plate(45, "麻辣小龙虾", 0, 55, 121, 0, 0, 1);
+        plate = new Plate(45, "蒜泥小龙虾", 0, 55, 121, 0, 0, 1);
+        plateList.add(plate);
+
+        plate = new Plate(45, "泡椒小龙虾", 0, 55, 121, 0, 0, 1);
+        plateList.add(plate);
+
+        plate = new Plate(45, "咖喱小龙虾", 0, 55, 121, 0, 0, 1);
+        plateList.add(plate);
+
+        plate = new Plate(45, "小龙虾炒年糕", 0, 55, 121, 0, 0, 1);
         plateList.add(plate);
 
 
@@ -204,7 +213,48 @@ public class PlateFragment extends Fragment {
 
         shopList.add(shop);
 
+        plateList = new ArrayList<Plate>();
 
+        plate = new Plate(15, "A套餐", 0, 55, 121, 0, 0, 1);
+        plateList.add(plate);
+
+        plate = new Plate(45, "B套餐", 0, 55, 121, 0, 0, 1);
+        plateList.add(plate);
+
+        plate = new Plate(45, "C套餐", 0, 55, 121, 0, 0, 1);
+        plateList.add(plate);
+
+        plate = new Plate(45, "D套餐", 0, 55, 121, 0, 0, 1);
+        plateList.add(plate);
+
+        plate = new Plate(45, "E套餐", 0, 55, 121, 0, 0, 1);
+        plateList.add(plate);
+
+        shop = new Shop(2, "黑丸嫩仙草", "123", "123", "06458789", 1, "123", "456", plateList.toArray(new Plate[plateList.size()]));
+
+        shopList.add(shop);
+
+
+        plateList = new ArrayList<Plate>();
+
+        plate = new Plate(15, "水饺", 0, 55, 121, 0, 0, 1);
+        plateList.add(plate);
+
+        plate = new Plate(45, "煎饺", 0, 55, 121, 0, 0, 1);
+        plateList.add(plate);
+
+        plate = new Plate(45, "猪肉水饺", 0, 55, 121, 0, 0, 1);
+        plateList.add(plate);
+
+        plate = new Plate(45, "芹菜水饺", 0, 55, 121, 0, 0, 1);
+        plateList.add(plate);
+
+        plate = new Plate(45, "白菜水饺", 0, 55, 121, 0, 0, 1);
+        plateList.add(plate);
+
+        shop = new Shop(3, "水饺妞妞", "123", "123", "06458789", 1, "123", "456", plateList.toArray(new Plate[plateList.size()]));
+
+        shopList.add(shop);
     }
 
 
