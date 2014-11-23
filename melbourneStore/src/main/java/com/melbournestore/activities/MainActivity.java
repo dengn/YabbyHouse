@@ -17,8 +17,10 @@
 package com.melbournestore.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -44,6 +46,7 @@ import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.fragments.GoogleMapFragment;
 import com.melbournestore.fragments.MyOrdersFragment;
 import com.melbournestore.fragments.PlateFragment;
+import com.melbournestore.fragments.RecommandationFragment;
 import com.melbournestore.models.Order_user;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
@@ -95,6 +98,7 @@ public class MainActivity extends Activity {
     Fragment plate_fragment;
     Fragment myorders_fragment;
     Fragment googlemap_fragment;
+    Fragment recommandation_fragment;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private DrawerListAdapter mDrawerListAdapter;
@@ -133,6 +137,9 @@ public class MainActivity extends Activity {
         myorders_fragment.onAttach(this);
         googlemap_fragment = new GoogleMapFragment();
         googlemap_fragment.onAttach(this);
+
+        recommandation_fragment = new RecommandationFragment();
+        recommandation_fragment.onAttach(this);
 
         mTitle = mDrawerTitle = getTitle();
         mMenuTitles = DataResourceUtils.drawerItemsTitles;
@@ -353,11 +360,23 @@ public class MainActivity extends Activity {
                 mDrawerLayout.closeDrawer(mDrawerList);
                 break;
             case 4:
-                mDrawerList.setItemChecked(position, true);
-                setTitle(mMenuTitles[position - 1]);
-                mDrawerLayout.closeDrawer(mDrawerList);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Coming soon!")
+                        .setCancelable(false)
+                        .setPositiveButton("知道了", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //do things
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+//                mDrawerList.setItemChecked(position, true);
+//                setTitle(mMenuTitles[position - 1]);
+//                mDrawerLayout.closeDrawer(mDrawerList);
                 break;
             case 5:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content_frame, recommandation_fragment).commit();
                 mDrawerList.setItemChecked(position, true);
                 setTitle(mMenuTitles[position - 1]);
                 mDrawerLayout.closeDrawer(mDrawerList);

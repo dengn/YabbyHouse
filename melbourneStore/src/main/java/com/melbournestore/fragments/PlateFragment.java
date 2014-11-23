@@ -6,6 +6,8 @@ import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +24,7 @@ import com.melbournestore.adaptors.PlateSearchListAdapter;
 import com.melbournestore.db.DataResourceUtils;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
+import com.melbournestore.network.ShopManagerThread;
 
 import java.util.ArrayList;
 
@@ -33,11 +36,27 @@ public class PlateFragment extends Fragment {
 
     ExpandableListView plates;
 
+    ShopManagerThread mShopThread;
     CategoryListAdapter category_adapter;
     PlateSearchListAdapter platesFilter_adapter;
     boolean header_created = false;
     ActionBar actionBar;
     SearchView search_plate;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+
+                    break;
+                case 2:
+
+
+                    break;
+
+            }
+        }
+    };
     private ArrayList<Shop> shopList = new ArrayList<Shop>();
 
     public PlateFragment() {
@@ -105,9 +124,6 @@ public class PlateFragment extends Fragment {
     }
 
 
-
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -129,6 +145,10 @@ public class PlateFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
+
+        mShopThread = new ShopManagerThread(mHandler);
+        mShopThread.start();
+
         View rootView = inflater.inflate(R.layout.fragment_plate, container,
                 false);
 
