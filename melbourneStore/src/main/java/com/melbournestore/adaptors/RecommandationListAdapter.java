@@ -69,6 +69,15 @@ public class RecommandationListAdapter extends BaseAdapter {
         holder.ad_img = (ImageView) rowView.findViewById(R.id.ad_image);
 //TODO
 
+//        ImageSize targetSize = new ImageSize(1280, 800);
+//        imageLoader.loadImage(imageUri, targetSize, options, new SimpleImageLoadingListener() {
+//            @Override
+//            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+//                // Do whatever you want with Bitmap
+//            }
+//        });
+
+
         ImageLoader.getInstance().displayImage(URL_BASE_PHOTO + mAd.get(position).getPic(), holder.ad_img, mOptions);
 
 //        holder.ad_img.setBackgroundResource(R.drawable.loading_ads);
