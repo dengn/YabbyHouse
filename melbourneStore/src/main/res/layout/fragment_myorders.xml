@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
 
-    <com.fortysevendeg.swipelistview.SwipeListView
+    <com.melbournestore.utils.SwipeListView
         android:id="@+id/my_orders"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

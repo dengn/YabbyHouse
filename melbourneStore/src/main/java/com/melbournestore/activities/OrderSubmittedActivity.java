@@ -62,7 +62,6 @@ public class OrderSubmittedActivity extends Activity {
         submitted_ordertime = (TextView) findViewById(R.id.submitted_ordertime);
 
 
-
         String order_info = "";
 
 
@@ -81,14 +80,13 @@ public class OrderSubmittedActivity extends Activity {
         LinearLayout submitted_items_list = (LinearLayout) findViewById(R.id.submitted_items_list);
 
 
-
         int currentshop = -1;
 
         for (int i = 0; i < plates.length; i++) {
             //order_info += DataResourceUtils.shopItems[plates[i].getShopId()] + "\n";
             //order_info += plates[i].getName() + " " + String.valueOf(plates[i].getNumber()) + "份  $" + String.valueOf(plates[i].getNumber() * plates[i].getPrice()) + "\n";
 
-            if(currentshop!=plates[i].getShopId()) {
+            if (currentshop != plates[i].getShopId()) {
 
                 currentshop = plates[i].getShopId();
 
@@ -104,15 +102,15 @@ public class OrderSubmittedActivity extends Activity {
                 submitted_items_list.addView(whitebar_view);
 
             }
-            //add view for each plate item
+            //add view for each plate myorder_list_item
 
             View item_view = LayoutInflater.from(this).inflate(R.layout.submitted_item, null);
             TextView submitted_item_name = (TextView) item_view.findViewById(R.id.submitted_item_name);
             TextView submitted_item_number = (TextView) item_view.findViewById(R.id.submitted_item_number);
             TextView submitted_item_price = (TextView) item_view.findViewById(R.id.submitted_item_price);
             submitted_item_name.setText(plates[i].getName());
-            submitted_item_number.setText(String.valueOf(plates[i].getNumber())+"份");
-            submitted_item_price.setText("$ "+String.valueOf(plates[i].getNumber() * plates[i].getPrice()));
+            submitted_item_number.setText(String.valueOf(plates[i].getNumber()) + "份");
+            submitted_item_price.setText("$ " + String.valueOf(plates[i].getNumber() * plates[i].getPrice()));
             submitted_items_list.addView(item_view);
 
 
@@ -135,10 +133,8 @@ public class OrderSubmittedActivity extends Activity {
         TextView submitted_item_price = (TextView) delivery_fee_view.findViewById(R.id.submitted_item_price);
 
         submitted_item_name.setText("派送费");
-        submitted_item_price.setText("$ "+String.valueOf(order.getDeliveryFee()));
+        submitted_item_price.setText("$ " + String.valueOf(order.getDeliveryFee()));
         submitted_items_list.addView(delivery_fee_view);
-
-
 
 
 //        order_info += "其他\n";
@@ -154,9 +150,6 @@ public class OrderSubmittedActivity extends Activity {
 //        order_info += "订单时间: " + order.getCreateTime() + "\n";
 
 
-
-
-
         notice_info1.setText(order_info);
         notice_info2.setText("");
 
@@ -165,7 +158,7 @@ public class OrderSubmittedActivity extends Activity {
         submitted_delivery_address.setText("送货地址: " + MelbourneUtils.getCompleteAddress(activeUser));
         submitted_delivery_time.setText("送货时间: " + order.getDeliveryTime());
         submitted_preference.setText("偏   好: " + order.getRemark());
-        submitted_ordernumber.setText("订单号码: "+order.getCreateTime());
+        submitted_ordernumber.setText("订单号码: " + order.getCreateTime());
         submitted_ordertime.setText("订单时间: " + order.getCreateTime());
     }
 

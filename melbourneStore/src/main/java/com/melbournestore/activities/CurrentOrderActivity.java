@@ -77,9 +77,6 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         List<View> views = new ArrayList<View>();
 
 
-
-
-
         String order_info = "";
 
 
@@ -119,8 +116,6 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
 //			pager_splash_ad.setOnPageChangeListener(new MypageChangeListener());
             pager_splash_ad.setOnTouchListener(this);
         }
-
-
 
 
     }
@@ -214,7 +209,7 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
                 submitted_items_list.addView(whitebar_view);
 
             }
-            //add view for each plate item
+            //add view for each plate myorder_list_item
 
             View item_view = LayoutInflater.from(this).inflate(R.layout.submitted_item, null);
             TextView submitted_item_name = (TextView) item_view.findViewById(R.id.submitted_item_name);
@@ -270,9 +265,9 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         @Override
         public void onPageSelected(int arg0) {
             currentIndex = arg0;
-            if(currentIndex==0){
+            if (currentIndex == 0) {
                 getActionBar().setTitle("订单流程");
-            }else if(currentIndex==1){
+            } else if (currentIndex == 1) {
                 getActionBar().setTitle("订单详情");
             }
         }

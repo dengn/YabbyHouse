@@ -199,7 +199,7 @@ public class PlateActivity extends Activity {
     // public void onItemClick(AdapterView<?> parent, View view, int position,
     // long id) {
     // //selectItem(position);
-    // Log.d(TAG, String.valueOf(position)+" plat item clicked");
+    // Log.d(TAG, String.valueOf(position)+" plat myorder_list_item clicked");
     // }
     // }
     //

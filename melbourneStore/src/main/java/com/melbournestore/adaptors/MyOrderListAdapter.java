@@ -1,17 +1,22 @@
 package com.melbournestore.adaptors;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.melbournestore.activities.CurrentOrderActivity;
 import com.melbournestore.activities.R;
 import com.melbournestore.models.User;
 import com.melbournestore.utils.MelbourneUtils;
@@ -23,9 +28,12 @@ public class MyOrderListAdapter extends BaseAdapter {
     private Handler mHandler;
     private User mUser;
 
-    public MyOrderListAdapter(Context context, Handler handler, User user) {
+    private int mRightWidth = 0;
+
+    public MyOrderListAdapter(Context context, int rightWidth, Handler handler, User user) {
 
         mContext = context;
+        mRightWidth = rightWidth;
         mHandler = handler;
         mUser = user;
 
@@ -73,7 +81,10 @@ public class MyOrderListAdapter extends BaseAdapter {
         holder.price_view = (TextView) rowView.findViewById(R.id.myorder_price);
         holder.status_view = (TextView) rowView.findViewById(R.id.myorder_status);
 
-        holder.delete = (Button) rowView.findViewById(R.id.myorder_delete);
+        holder.item_left = (View) rowView.findViewById(R.id.item_left);
+        holder.item_right = (View) rowView.findViewById(R.id.item_right);
+
+        holder.delete = (TextView) rowView.findViewById(R.id.myorder_delete);
 
         holder.time_view.setText(mUser.getOrders()[position].getCreateTime());
         holder.names_view.setText(MelbourneUtils.getAllPlateNames(mUser.getOrders()[position].getPlates()));
@@ -83,20 +94,26 @@ public class MyOrderListAdapter extends BaseAdapter {
 
         holder.delete.setText("删除");
 
-//		rowView.setOnClickListener(new OnClickListener(){
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				
-//				Log.d("DEBUG", "item clicked");
-//				
-//				Intent intent = new Intent(mContext, CurrentOrderActivity.class);
-//				intent.putExtra("position", position);
-//				((Activity) mContext).startActivity(intent);
-//			}
-//			
-//		});
+        LinearLayout.LayoutParams lp1 = new LayoutParams(LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT);
+        holder.item_left.setLayoutParams(lp1);
+        LinearLayout.LayoutParams lp2 = new LayoutParams(mRightWidth, LayoutParams.MATCH_PARENT);
+        holder.item_right.setLayoutParams(lp2);
+
+        rowView.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+
+                Log.d("DEBUG", "myorder_list_item clicked");
+
+                Intent intent = new Intent(mContext, CurrentOrderActivity.class);
+                intent.putExtra("position", position);
+                ((Activity) mContext).startActivity(intent);
+            }
+
+        });
 
         holder.delete.setOnClickListener(new OnClickListener() {
 
@@ -130,7 +147,11 @@ public class MyOrderListAdapter extends BaseAdapter {
 
         TextView status_view;
 
-        Button delete;
+        View item_left;
+
+        View item_right;
+
+        TextView delete;
     }
 
 }

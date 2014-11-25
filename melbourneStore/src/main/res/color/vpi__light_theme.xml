@@ -18,7 +18,7 @@
     <item android:color="@color/vpi__bright_foreground_holo_light" android:state_window_focused="false" />
     <item android:color="@color/vpi__bright_foreground_holo_light" android:state_pressed="true" />
     <item android:color="@color/vpi__bright_foreground_holo_light" android:state_selected="true" />
-    <!--item android:state_activated="true" android:color="@color/vpi__bright_foreground_holo_light"/-->
+    <!--myorder_list_item android:state_activated="true" android:color="@color/vpi__bright_foreground_holo_light"/-->
     <item android:color="@color/vpi__bright_foreground_holo_light" />
     <!-- not selected -->
 

@@ -127,7 +127,7 @@ public class PlateFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        // handle item selection
+        // handle myorder_list_item selection
         switch (item.getItemId()) {
             case R.id.search_plate:
 

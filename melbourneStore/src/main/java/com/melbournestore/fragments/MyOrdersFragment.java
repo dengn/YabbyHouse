@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,16 +14,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.fortysevendeg.swipelistview.BaseSwipeListViewListener;
-import com.fortysevendeg.swipelistview.SwipeListView;
 import com.google.gson.Gson;
 import com.melbournestore.activities.ChatActivity;
-import com.melbournestore.activities.CurrentOrderActivity;
 import com.melbournestore.activities.R;
 import com.melbournestore.adaptors.MyOrderListAdapter;
 import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.User;
 import com.melbournestore.utils.MelbourneUtils;
+import com.melbournestore.utils.SwipeListView;
 
 public class MyOrdersFragment extends Fragment {
 
@@ -84,7 +81,7 @@ public class MyOrdersFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // handle item selection
+        // handle myorder_list_item selection
         switch (item.getItemId()) {
             case R.id.chat:
 
@@ -109,63 +106,72 @@ public class MyOrdersFragment extends Fragment {
         User[] users = gson.fromJson(users_string, User[].class);
         User activeUser = users[MelbourneUtils.getActiveUser(users)];
 
-        myOrderListAdapter = new MyOrderListAdapter(mContext, mHandler, activeUser);
+        myOrderListAdapter = new MyOrderListAdapter(mContext, myOrdersList.getRightViewWidth(), mHandler, activeUser);
 
 
-        myOrdersList.setSwipeListViewListener(new BaseSwipeListViewListener() {
-            @Override
-            public void onOpened(int position, boolean toRight) {
-            }
+//        myOrdersList.setSwipeListViewListener(new BaseSwipeListViewListener() {
+//            @Override
+//            public void onOpened(int position, boolean toRight) {
+//            }
+//
+//            @Override
+//            public void onClosed(int position, boolean fromRight) {
+//            }
+//
+//            @Override
+//            public void onListChanged() {
+//            }
+//
+//            @Override
+//            public void onMove(int position, float x) {
+//            }
+//
+//            @Override
+//            public void onStartOpen(int position, int action, boolean right) {
+//                Log.d("swipe", String.format("onStartOpen %d - action %d", position, action));
+//
+//            }
+//
+//            @Override
+//            public void onStartClose(int position, boolean right) {
+//                Log.d("swipe", String.format("onStartClose %d", position));
+//
+//            }
+//
+//            @Override
+//            public void onClickFrontView(int position) {
+//                Log.d("swipe", String.format("onClickFrontView %d", position));
+//
+//
+//                //myOrdersList.openAnimate(position); //when you touch front view it will open
+//                Intent intent = new Intent(mContext, CurrentOrderActivity.class);
+//                intent.putExtra("position", position);
+//                ((Activity) mContext).startActivity(intent);
+//
+//            }
+//
+//            @Override
+//            public void onClickBackView(int position) {
+//                Log.d("swipe", String.format("onClickBackView %d", position));
+//
+//                //myOrdersList.closeAnimate(position);//when you touch back view it will close
+//            }
+//
+//            @Override
+//            public void onDismiss(int[] reverseSortedPositions) {
+//
+//            }
+//
+//        });
 
-            @Override
-            public void onClosed(int position, boolean fromRight) {
-            }
-
-            @Override
-            public void onListChanged() {
-            }
-
-            @Override
-            public void onMove(int position, float x) {
-            }
-
-            @Override
-            public void onStartOpen(int position, int action, boolean right) {
-                Log.d("swipe", String.format("onStartOpen %d - action %d", position, action));
-
-            }
-
-            @Override
-            public void onStartClose(int position, boolean right) {
-                Log.d("swipe", String.format("onStartClose %d", position));
-
-            }
-
-            @Override
-            public void onClickFrontView(int position) {
-                Log.d("swipe", String.format("onClickFrontView %d", position));
-
-
-                //myOrdersList.openAnimate(position); //when you touch front view it will open
-                Intent intent = new Intent(mContext, CurrentOrderActivity.class);
-                intent.putExtra("position", position);
-                ((Activity) mContext).startActivity(intent);
-
-            }
-
-            @Override
-            public void onClickBackView(int position) {
-                Log.d("swipe", String.format("onClickBackView %d", position));
-
-                //myOrdersList.closeAnimate(position);//when you touch back view it will close
-            }
-
-            @Override
-            public void onDismiss(int[] reverseSortedPositions) {
-
-            }
-
-        });
+//        myOrdersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(mContext, CurrentOrderActivity.class);
+//                intent.putExtra("position", position);
+//                ((Activity) mContext).startActivity(intent);
+//            }
+//        });
 
 
         myOrdersList.setAdapter(myOrderListAdapter);

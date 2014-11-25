@@ -36,7 +36,7 @@ public class DummyContent {
     }
 
     /**
-     * A dummy item representing a piece of content.
+     * A dummy myorder_list_item representing a piece of content.
      */
     public static class DummyItem {
         public String id;

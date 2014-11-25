@@ -332,7 +332,7 @@ public class MainActivity extends Activity {
                 fragmentManager.beginTransaction()
                         .replace(R.id.content_frame, plate_fragment).commit();
 
-                // update selected item and title, then close the drawer
+                // update selected myorder_list_item and title, then close the drawer
                 mDrawerList.setItemChecked(position, true);
                 setTitle(mMenuTitles[position - 1]);
                 mDrawerLayout.closeDrawer(mDrawerList);
@@ -344,7 +344,7 @@ public class MainActivity extends Activity {
                 fragmentManager.beginTransaction()
                         .replace(R.id.content_frame, myorders_fragment).commit();
 
-                // update selected item and title, then close the drawer
+                // update selected myorder_list_item and title, then close the drawer
                 mDrawerList.setItemChecked(position, true);
                 setTitle(mMenuTitles[position - 1]);
                 mDrawerLayout.closeDrawer(mDrawerList);
@@ -493,7 +493,7 @@ public class MainActivity extends Activity {
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
             selectItem(position);
-            // Log.d(TAG, String.valueOf(position)+" drawer item clicked");
+            // Log.d(TAG, String.valueOf(position)+" drawer myorder_list_item clicked");
         }
     }
 

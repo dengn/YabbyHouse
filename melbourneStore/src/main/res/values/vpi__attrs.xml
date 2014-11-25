@@ -99,7 +99,7 @@
         </attr>
         <!-- Color of the selected title. -->
         <attr name="selectedColor" />
-        <!-- Whether or not the selected item is displayed as bold. -->
+        <!-- Whether or not the selected myorder_list_item is displayed as bold. -->
         <attr name="selectedBold" format="boolean" />
         <!-- Color of regular titles. -->
         <attr name="android:textColor" />
