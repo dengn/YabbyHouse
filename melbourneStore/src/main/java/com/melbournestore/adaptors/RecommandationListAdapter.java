@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.melbournestore.activities.R;
 import com.melbournestore.models.advertisements;
+import com.melbournestore.utils.Constant;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -23,7 +24,6 @@ import java.util.ArrayList;
 
 public class RecommandationListAdapter extends BaseAdapter {
 
-    public static final String URL_BASE_PHOTO = "http://106.187.34.107/api/photo/";
 
     private static LayoutInflater inflater = null;
     Context mContext;
@@ -44,6 +44,7 @@ public class RecommandationListAdapter extends BaseAdapter {
     public void refresh(ArrayList<advertisements> Ad) {
         mAd.clear();
         mAd.addAll(Ad);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -67,22 +68,11 @@ public class RecommandationListAdapter extends BaseAdapter {
         View rowView;
         rowView = inflater.inflate(R.layout.recommandation_list_item, null);
         holder.ad_img = (ImageView) rowView.findViewById(R.id.ad_image);
-//TODO
-
-//        ImageSize targetSize = new ImageSize(1280, 800);
-//        imageLoader.loadImage(imageUri, targetSize, options, new SimpleImageLoadingListener() {
-//            @Override
-//            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-//                // Do whatever you want with Bitmap
-//            }
-//        });
 
 
-        ImageLoader.getInstance().displayImage(URL_BASE_PHOTO + mAd.get(position).getPic(), holder.ad_img, mOptions);
+        ImageLoader.getInstance().displayImage(Constant.URL_BASE_PHOTO + mAd.get(position).getPic(), holder.ad_img, mOptions);
 
-//        holder.ad_img.setBackgroundResource(R.drawable.loading_ads);
-//        new DownloadImageTask(holder.ad_img)
-//                .execute(URL_BASE_PHOTO+mAd.get(position).getPic());
+
 
         holder.ad_name = (TextView) rowView.findViewById(R.id.ad_name);
         holder.ad_name.setText(mAd.get(position).getName());

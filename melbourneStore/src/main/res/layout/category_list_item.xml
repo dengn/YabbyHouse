@@ -8,11 +8,12 @@
     <ImageView
         android:id="@+id/plates_image"
         android:layout_width="match_parent"
-        android:layout_height="190dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginLeft="7dp"
         android:layout_marginRight="7dp"
-        android:scaleType="fitXY" />
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/shop_name"

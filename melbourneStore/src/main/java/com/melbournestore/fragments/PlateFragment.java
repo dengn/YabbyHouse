@@ -21,10 +21,12 @@ import android.widget.SearchView;
 import com.melbournestore.activities.R;
 import com.melbournestore.adaptors.CategoryListAdapter;
 import com.melbournestore.adaptors.PlateSearchListAdapter;
-import com.melbournestore.db.DataResourceUtils;
+import com.melbournestore.application.SysApplication;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
+import com.melbournestore.models.Shop_iPhone;
 import com.melbournestore.network.ShopManagerThread;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import java.util.ArrayList;
 
@@ -35,26 +37,30 @@ public class PlateFragment extends Fragment {
     ListView category;
 
     ExpandableListView plates;
-
+    DisplayImageOptions options;
     ShopManagerThread mShopThread;
     CategoryListAdapter category_adapter;
     PlateSearchListAdapter platesFilter_adapter;
     boolean header_created = false;
     ActionBar actionBar;
     SearchView search_plate;
+    private ArrayList<Shop_iPhone> mShops = new ArrayList<Shop_iPhone>();
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 1:
-
-                    break;
-                case 2:
-
-
-                    break;
-
-            }
+            mShops = (ArrayList<Shop_iPhone>) msg.obj;
+            category_adapter.refresh(mShops);
+            category.setAdapter(category_adapter);
+//            switch (msg.what) {
+//                case 1:
+//
+//                    break;
+//                case 2:
+//
+//
+//                    break;
+//
+//            }
         }
     };
     private ArrayList<Shop> shopList = new ArrayList<Shop>();
@@ -74,6 +80,24 @@ public class PlateFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        SysApplication.initImageLoader(mContext);
+
+
+        mShopThread = new ShopManagerThread(mHandler);
+        mShopThread.start();
+
+
+        options = new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.loading_ads)    //在ImageView加载过程中显示图片
+                .showImageForEmptyUri(R.drawable.loading_ads)  //image连接地址为空时
+                .showImageOnFail(R.drawable.loading_ads)  //image加载失败
+                .cacheInMemory(true)  //加载图片时会在内存中加载缓存
+                .cacheOnDisc(true)   //加载图片时会在磁盘中加载缓存
+                .build();
+        category_adapter = new CategoryListAdapter(mContext, options, mShops);
+
+
     }
 
     @Override
@@ -153,17 +177,9 @@ public class PlateFragment extends Fragment {
                 false);
 
         category = (ListView) rootView.findViewById(R.id.category);
-
-
-        String[] shopSubItems = new String[DataResourceUtils.shopItemsImages.length];
-        for (int i = 0; i < shopSubItems.length; i++) {
-            shopSubItems[i] = DataResourceUtils.plateNames[i][0] + "、 "
-                    + DataResourceUtils.plateNames[i][1] + "限时特卖中";
-        }
-        category_adapter = new CategoryListAdapter(getActivity(),
-                DataResourceUtils.shopItemsImages, DataResourceUtils.shopItems,
-                shopSubItems);
         category.setAdapter(category_adapter);
+
+
 
 
         plates = (ExpandableListView) rootView.findViewById(R.id.plate_search_list);
