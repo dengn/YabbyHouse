@@ -35,10 +35,10 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.melbournestore.adaptors.PlateListAdapter;
 import com.melbournestore.application.SysApplication;
-import com.melbournestore.db.DataResourceUtils;
 import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
+import com.melbournestore.network.ItemManagerThread;
 import com.melbournestore.utils.MelbourneUtils;
 
 public class PlateActivity extends Activity {
@@ -49,6 +49,8 @@ public class PlateActivity extends Activity {
 
     private PlateListAdapter mPlateListAdapter;
 
+    private ItemManagerThread mItemThread;
+
     private Button mConfirmChoice;
 
     private TextView mTotalPrice;
@@ -56,6 +58,7 @@ public class PlateActivity extends Activity {
     private TextView mTotalNum;
 
     private int mShopId;
+    private String mShopName;
 
     private int totalPrice = 0;
 
@@ -118,6 +121,8 @@ public class PlateActivity extends Activity {
 
         SysApplication.getInstance().addActivity(this);
 
+
+
         // Set up action bar.
         final ActionBar actionBar = getActionBar();
 
@@ -128,9 +133,13 @@ public class PlateActivity extends Activity {
 
         Intent intent = getIntent();
         mShopId = intent.getIntExtra("shopid", 0);
+        mShopName = intent.getStringExtra("shopName");
+
+        mItemThread = new ItemManagerThread(mHandler, mShopId);
+        mItemThread.start();
 
 
-        getActionBar().setTitle(DataResourceUtils.shopItems[mShopId]);
+        getActionBar().setTitle(mShopName);
 
         String shops_string = SharedPreferenceUtils.getCurrentChoice(this);
         Gson gson = new Gson();

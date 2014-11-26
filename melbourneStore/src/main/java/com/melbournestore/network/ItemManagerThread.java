@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.melbournestore.models.advertisements;
+import com.melbournestore.models.item_iphone;
 import com.melbournestore.utils.Constant;
 
 import org.apache.http.HttpResponse;
@@ -22,12 +22,14 @@ import java.util.HashMap;
 /**
  * Created by dengn on 2014/11/23.
  */
-public class RecommandationManagerThread extends Thread {
+public class ItemManagerThread extends Thread {
 
     Handler mHandler;
+    int mShopId;
 
-    public RecommandationManagerThread(Handler handler) {
+    public ItemManagerThread(Handler handler, int shopId) {
         mHandler = handler;
+        mShopId = shopId;
     }
 
     public static String handleGet(String strUrl) {
@@ -47,39 +49,39 @@ public class RecommandationManagerThread extends Thread {
         return result;
     }
 
+
+
     /**
-     * Transform JSON String to advertisement
+     * Transform JSON String to shops
      */
-    public static ArrayList<advertisements> getAdvertisement(String jsonString) {
+    public static ArrayList<item_iphone> getItems(String jsonString) {
         Gson gson = new Gson();
-        Type listType = new TypeToken<HashMap<String, advertisements[]>>() {
+        Type listType = new TypeToken<HashMap<String, item_iphone[]>>() {
         }.getType();
-        HashMap<String, advertisements[]> mAds = gson.fromJson(jsonString, listType);
-        advertisements[] ads = mAds.get("advertisements");
+        HashMap<String, item_iphone[]> mItems = gson.fromJson(jsonString, listType);
+        item_iphone[] items = mItems.get("items");
 
 
-        ArrayList<advertisements> Ads_array = new ArrayList<advertisements>();
+        ArrayList<item_iphone> Items_array = new ArrayList<item_iphone>();
 
-        for (int i = 0; i < ads.length; i++) {
-            Ads_array.add(ads[i]);
+        for (int i = 0; i < items.length; i++) {
+            Items_array.add(items[i]);
         }
 
 
-        return Ads_array;
+        return Items_array;
     }
 
     @Override
     public void run() {
-        // TODO Auto-generated method stub
-        String result = handleGet(Constant.URL_BASE+"advertisements");
 
+        String result = handleGet(Constant.URL_BASE+"shop/"+mShopId+"/items");
 
-        Log.d("THREAD", result);
-        Log.d("THREAD", "result string len: " + String.valueOf(result.length()));
-        ArrayList<advertisements> mAd = getAdvertisement(result);
+        Log.d("ITEMTHREAD", result);
+        ArrayList<item_iphone> mItems = getItems(result);
 
         Message message = mHandler.obtainMessage();
-        message.obj = mAd;
+        message.obj = mItems;
         try {
             sleep(5);
         } catch (InterruptedException e) {
