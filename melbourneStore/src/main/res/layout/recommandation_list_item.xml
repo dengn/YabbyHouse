@@ -31,6 +31,7 @@
             android:background="@drawable/new_button_style"
             android:drawableLeft="@drawable/call_icon_small"
             android:gravity="left|center_vertical"
+            android:shadowColor="@color/black"
             android:text="1234"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
@@ -47,6 +48,7 @@
                 android:id="@+id/ad_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:shadowColor="@color/black"
                 android:textColor="@color/white"
                 android:textSize="23sp" />
 
@@ -66,6 +68,7 @@
                     android:id="@+id/ad_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:shadowColor="@color/black"
                     android:textColor="@color/white"
                     android:textSize="17sp" />
 

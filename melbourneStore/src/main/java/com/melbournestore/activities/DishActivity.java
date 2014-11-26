@@ -16,90 +16,88 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.melbournestore.adaptors.DishListAdapter;
 import com.melbournestore.application.SysApplication;
-import com.melbournestore.db.SharedPreferenceUtils;
-import com.melbournestore.models.Plate;
-import com.melbournestore.models.Shop;
-import com.melbournestore.utils.MelbourneUtils;
+import com.melbournestore.models.item_iphone;
+import com.melbournestore.network.SingleItemManagerThread;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 public class DishActivity extends Activity {
 
+    DisplayImageOptions options;
     private ListView mDishList;
-
     private DishListAdapter mDishListAdapter;
-
     private Button mDishConfirmChoice;
-
     private TextView mDishTotalPrice;
-
     private TextView mDishTotalNum;
-
     private String mName;
     private int mPrice;
     private int mStockMax;
     private int mNum;
     private int mLikeNum;
-
-    private int mShopId;
-    private int mPlateId;
-
-    private int mTotalPrice;
-    private int mTotalNum;
-
+    private int mItemId;
+    private String mItemName;
+    private item_iphone mItem = new item_iphone();
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 1:
-                    // plus = 1
-
-                    String shops_string1 = SharedPreferenceUtils
-                            .getCurrentChoice(DishActivity.this);
-                    Gson gson1 = new Gson();
-                    Shop[] shops1 = gson1.fromJson(shops_string1, Shop[].class);
-                    Plate plate1 = shops1[mShopId].getPlates()[mPlateId];
-
-                    mDishListAdapter.refresh(plate1);
-                    mDishList.setAdapter(mDishListAdapter);
-
-                    mTotalNum = MelbourneUtils.sum_number_all(shops1);
-                    mTotalPrice = MelbourneUtils.sum_price_all(shops1);
-
-                    mDishTotalNum.setText(String.valueOf(mTotalNum));
-                    mDishTotalPrice.setText("$" + String.valueOf(mTotalPrice));
-
-                    break;
-                case 2:
-                    // minus = 2
-
-                    String shops_string2 = SharedPreferenceUtils
-                            .getCurrentChoice(DishActivity.this);
-                    Gson gson2 = new Gson();
-                    Shop[] shops2 = gson2.fromJson(shops_string2, Shop[].class);
-                    Plate plate2 = shops2[mShopId].getPlates()[mPlateId];
-
-                    mDishListAdapter.refresh(plate2);
-                    mDishList.setAdapter(mDishListAdapter);
-
-
-                    mTotalNum = MelbourneUtils.sum_number_all(shops2);
-                    mTotalPrice = MelbourneUtils.sum_price_all(shops2);
-
-                    mDishTotalNum.setText(String.valueOf(mTotalNum));
-                    mDishTotalPrice.setText("$" + String.valueOf(mTotalPrice));
-
-                    break;
-
-            }
+            mItem = (item_iphone) msg.obj;
+            mDishListAdapter.refresh(mItem);
+            mDishList.setAdapter(mDishListAdapter);
+//            switch (msg.what) {
+//                case 1:
+//                    // plus = 1
+//
+//                    String shops_string1 = SharedPreferenceUtils
+//                            .getCurrentChoice(DishActivity.this);
+//                    Gson gson1 = new Gson();
+//                    Shop[] shops1 = gson1.fromJson(shops_string1, Shop[].class);
+//                    Plate plate1 = shops1[mShopId].getPlates()[mPlateId];
+//
+//                    mDishListAdapter.refresh(plate1);
+//                    mDishList.setAdapter(mDishListAdapter);
+//
+//                    mTotalNum = MelbourneUtils.sum_number_all(shops1);
+//                    mTotalPrice = MelbourneUtils.sum_price_all(shops1);
+//
+//                    mDishTotalNum.setText(String.valueOf(mTotalNum));
+//                    mDishTotalPrice.setText("$" + String.valueOf(mTotalPrice));
+//
+//                    break;
+//                case 2:
+//                    // minus = 2
+//
+//                    String shops_string2 = SharedPreferenceUtils
+//                            .getCurrentChoice(DishActivity.this);
+//                    Gson gson2 = new Gson();
+//                    Shop[] shops2 = gson2.fromJson(shops_string2, Shop[].class);
+//                    Plate plate2 = shops2[mShopId].getPlates()[mPlateId];
+//
+//                    mDishListAdapter.refresh(plate2);
+//                    mDishList.setAdapter(mDishListAdapter);
+//
+//
+//                    mTotalNum = MelbourneUtils.sum_number_all(shops2);
+//                    mTotalPrice = MelbourneUtils.sum_price_all(shops2);
+//
+//                    mDishTotalNum.setText(String.valueOf(mTotalNum));
+//                    mDishTotalPrice.setText("$" + String.valueOf(mTotalPrice));
+//
+//                    break;
+//
+//            }
         }
     };
+    private SingleItemManagerThread mSingleItemThread;
+    private int mTotalPrice;
+    private int mTotalNum;
     private long mExitTime;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dish_layout);
+
+        SysApplication.initImageLoader(this);
 
         SysApplication.getInstance().addActivity(this);
 
@@ -112,28 +110,40 @@ public class DishActivity extends Activity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
-        mShopId = intent.getIntExtra("shopId", 0);
-        mPlateId = intent.getIntExtra("plateId", 0);
+        mItemId = intent.getIntExtra("item_id", 0);
+        mItemName = intent.getStringExtra("item_name");
 
-        String shop_info = SharedPreferenceUtils.getCurrentChoice(this);
-        Gson gson = new Gson();
-        Shop[] shops = gson.fromJson(shop_info, Shop[].class);
-        Plate plate = shops[mShopId].getPlates()[mPlateId];
+        mSingleItemThread = new SingleItemManagerThread(mHandler, mItemId);
+        mSingleItemThread.start();
 
-        mName = plate.getName();
+//        String shop_info = SharedPreferenceUtils.getCurrentChoice(this);
+//        Gson gson = new Gson();
+//        Shop[] shops = gson.fromJson(shop_info, Shop[].class);
+//        Plate plate = shops[mShopId].getPlates()[mPlateId];
 
-        getActionBar().setTitle(mName);
+
+        getActionBar().setTitle(mItemName);
 
         mDishList = (ListView) findViewById(R.id.dish_list);
-        mDishListAdapter = new DishListAdapter(this, mHandler, plate);
+
+        options = new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.loading_ads)    //在ImageView加载过程中显示图片
+                .showImageForEmptyUri(R.drawable.loading_ads)  //image连接地址为空时
+                .showImageOnFail(R.drawable.loading_ads)  //image加载失败
+                .cacheInMemory(true)  //加载图片时会在内存中加载缓存
+                .cacheOnDisc(true)   //加载图片时会在磁盘中加载缓存
+                .build();
+
+
+        mDishListAdapter = new DishListAdapter(this, mHandler, options, mItem);
         mDishList.setAdapter(mDishListAdapter);
 
         mDishConfirmChoice = (Button) findViewById(R.id.dish_confirm_choice);
         mDishTotalPrice = (TextView) findViewById(R.id.dish_price);
         mDishTotalNum = (TextView) findViewById(R.id.dish_num_total);
 
-        mTotalNum = MelbourneUtils.sum_number_all(shops);
-        mTotalPrice = MelbourneUtils.sum_price_all(shops);
+//        mTotalNum = MelbourneUtils.sum_number_all(shops);
+//        mTotalPrice = MelbourneUtils.sum_price_all(shops);
 
         mDishTotalNum.setText(String.valueOf(mTotalNum));
         mDishTotalPrice.setText("$" + String.valueOf(mTotalPrice));
@@ -143,7 +153,6 @@ public class DishActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
 
                 Intent intent = new Intent(DishActivity.this,
                         ShoppingCartActivity.class);

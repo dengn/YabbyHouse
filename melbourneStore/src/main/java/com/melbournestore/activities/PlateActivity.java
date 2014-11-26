@@ -48,30 +48,18 @@ import java.util.ArrayList;
 public class PlateActivity extends Activity {
 
     private static final String TAG = "Melbourne";
-
+    DisplayImageOptions options;
     private ListView mPlatesList;
-
     private PlateListAdapter mPlateListAdapter;
-
     private ItemManagerThread mItemThread;
-
     private Button mConfirmChoice;
-
     private TextView mTotalPrice;
-
     private TextView mTotalNum;
-
     private int mShopId;
     private String mShopName;
-
     private int totalPrice = 0;
-
     private int totalNum = 0;
-
     private ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
-
-    DisplayImageOptions options;
-
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -213,7 +201,7 @@ public class PlateActivity extends Activity {
         String shops_string = SharedPreferenceUtils.getCurrentChoice(this);
         Gson gson = new Gson();
         Shop[] shops = gson.fromJson(shops_string, Shop[].class);
-        Plate[] plates = shops[mShopId].getPlates();
+        //Plate[] plates = shops[mShopId].getPlates();
 
         mPlateListAdapter.refresh(mItems);
         mPlatesList.setAdapter(mPlateListAdapter);

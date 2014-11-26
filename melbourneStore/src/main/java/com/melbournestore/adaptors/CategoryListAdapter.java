@@ -77,12 +77,12 @@ public class CategoryListAdapter extends BaseAdapter {
         holder.shopText.setText(mShops.get(position).getName());
 
         holder.shopSubtext = (TextView) rowView.findViewById(R.id.shop_description);
-        holder.shopSubtext.setText(mShops.get(position).getName());
+        holder.shopSubtext.setText(mShops.get(position).getDesc());
 
         rowView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
+
                 Intent intent = new Intent(mContext, PlateActivity.class);
                 intent.putExtra("shopid", mShops.get(position).getId());
                 intent.putExtra("shopName", mShops.get(position).getName());

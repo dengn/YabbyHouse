@@ -1,9 +1,7 @@
 package com.melbournestore.adaptors;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,63 +11,58 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.melbournestore.activities.R;
-import com.melbournestore.db.SharedPreferenceUtils;
-import com.melbournestore.models.Plate;
-import com.melbournestore.models.Shop;
-import com.melbournestore.utils.BitmapUtils;
+import com.melbournestore.models.item_iphone;
+import com.melbournestore.utils.Constant;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class DishListAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
+    DisplayImageOptions mOptions;
     private Context mContext;
     private Handler mHandler;
-    private Plate mPlate;
+    private item_iphone mItem;
 
-    public DishListAdapter(Context context, Handler handler, Plate plate) {
-        // TODO Auto-generated constructor stub
+    public DishListAdapter(Context context, Handler handler, DisplayImageOptions options, item_iphone item) {
 
         mContext = context;
         mHandler = handler;
-        mPlate = plate;
-
+        mItem = item;
+        mOptions = options;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(Plate plate) {
+    public void refresh(item_iphone item) {
 
-        mPlate = plate;
+        mItem = item;
 
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
-        return 2;
+        return 3;
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
 
         viewHolder_image holder_image = null;
         final viewHolder_dish holder_dish = new viewHolder_dish();
-
+        viewHolder_text holder_text = null;
         switch (position) {
             case 0:
                 holder_image = new viewHolder_image();
@@ -82,14 +75,13 @@ public class DishListAdapter extends BaseAdapter {
                         .findViewById(R.id.dish_img_text);
 
 
-                Bitmap bm = BitmapUtils.readBitMap(mContext, mPlate.getImageId());
-                holder_image.dishImage.setImageBitmap(bm);
+                ImageLoader.getInstance().displayImage(Constant.URL_BASE_PHOTO + mItem.getImage(), holder_image.dishImage, mOptions);
 
-                if (mPlate.getNumber() <= 0) {
+                if (mItem.getUnit() <= 0) {
                     holder_image.dishText.setVisibility(View.INVISIBLE);
                 } else {
                     holder_image.dishText.setVisibility(View.VISIBLE);
-                    holder_image.dishText.setText(String.valueOf(mPlate.getNumber()));
+                    holder_image.dishText.setText(String.valueOf(mItem.getUnit()));
                 }
 
                 convertView.setTag(holder_image);
@@ -113,11 +105,11 @@ public class DishListAdapter extends BaseAdapter {
                 holder_dish.minus = (Button) convertView
                         .findViewById(R.id.dish_minus);
 
-                holder_dish.price.setText("$" + String.valueOf(mPlate.getPrice()));
+                holder_dish.price.setText("$" + String.valueOf(mItem.getPrice()));
                 holder_dish.like.setImageResource(R.drawable.other_icon_like);
 
-                holder_dish.like_num.setText(String.valueOf(mPlate.getLikeNum()));
-                holder_dish.stock.setText("今日库存" + String.valueOf(mPlate.getStockMax()) + "份");
+                holder_dish.like_num.setText(String.valueOf(mItem.getGood()));
+                holder_dish.stock.setText("今日库存" + String.valueOf(mItem.getStock()) + "份");
 
 
                 setComponentsStatus(holder_dish.plus, holder_dish.minus);
@@ -125,28 +117,27 @@ public class DishListAdapter extends BaseAdapter {
                 holder_dish.plus.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        Message message = new Message();
-                        // plus = 1
-                        message.what = 1;
-
-                        mHandler.sendMessage(message);
-
-
-                        mPlate.setNumber(mPlate.getNumber() + 1);
-
-                        int shopId = mPlate.getShopId();
-                        int plateId = mPlate.getPlateId();
-                        String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
-                        Gson gson = new Gson();
-                        Shop[] shops = gson.fromJson(shop_string, Shop[].class);
-                        Plate[] plates = shops[shopId].getPlates();
-                        plates[plateId] = mPlate;
-                        shops[shopId].setPlates(plates);
-                        SharedPreferenceUtils
-                                .saveCurrentChoice(mContext, gson.toJson(shops));
-
-                        setComponentsStatus(holder_dish.plus, holder_dish.minus);
+//                        Message message = new Message();
+//                        // plus = 1
+//                        message.what = 1;
+//
+//                        mHandler.sendMessage(message);
+//
+//
+//                        mPlate.setNumber(mPlate.getNumber() + 1);
+//
+//                        int shopId = mPlate.getShopId();
+//                        int plateId = mPlate.getPlateId();
+//                        String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
+//                        Gson gson = new Gson();
+//                        Shop[] shops = gson.fromJson(shop_string, Shop[].class);
+//                        Plate[] plates = shops[shopId].getPlates();
+//                        plates[plateId] = mPlate;
+//                        shops[shopId].setPlates(plates);
+//                        SharedPreferenceUtils
+//                                .saveCurrentChoice(mContext, gson.toJson(shops));
+//
+//                        setComponentsStatus(holder_dish.plus, holder_dish.minus);
 
                     }
                 });
@@ -154,33 +145,41 @@ public class DishListAdapter extends BaseAdapter {
                 holder_dish.minus.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        Message message = new Message();
-                        // minus = 2
-                        message.what = 2;
 
-                        mHandler.sendMessage(message);
-
-
-                        mPlate.setNumber(mPlate.getNumber() - 1);
-
-                        int shopId = mPlate.getShopId();
-                        int plateId = mPlate.getPlateId();
-                        String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
-                        Gson gson = new Gson();
-                        Shop[] shops = gson.fromJson(shop_string, Shop[].class);
-                        Plate[] plates = shops[shopId].getPlates();
-                        plates[plateId] = mPlate;
-                        shops[shopId].setPlates(plates);
-                        SharedPreferenceUtils
-                                .saveCurrentChoice(mContext, gson.toJson(shops));
-                        setComponentsStatus(holder_dish.plus, holder_dish.minus);
+//                        Message message = new Message();
+//                        // minus = 2
+//                        message.what = 2;
+//
+//                        mHandler.sendMessage(message);
+//
+//
+//                        mPlate.setNumber(mPlate.getNumber() - 1);
+//
+//                        int shopId = mPlate.getShopId();
+//                        int plateId = mPlate.getPlateId();
+//                        String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
+//                        Gson gson = new Gson();
+//                        Shop[] shops = gson.fromJson(shop_string, Shop[].class);
+//                        Plate[] plates = shops[shopId].getPlates();
+//                        plates[plateId] = mPlate;
+//                        shops[shopId].setPlates(plates);
+//                        SharedPreferenceUtils
+//                                .saveCurrentChoice(mContext, gson.toJson(shops));
+//                        setComponentsStatus(holder_dish.plus, holder_dish.minus);
                     }
                 });
 
 
                 convertView.setTag(holder_dish);
 
+                break;
+            case 2:
+                holder_text = new viewHolder_text();
+                convertView = inflater.inflate(R.layout.dish_list_item_text, parent,
+                        false);
+                holder_text.dishDesc = (TextView) convertView
+                        .findViewById(R.id.dish_desc);
+                holder_text.dishDesc.setText(mItem.getDesc());
                 break;
 
         }
@@ -189,8 +188,8 @@ public class DishListAdapter extends BaseAdapter {
     }
 
     private void setComponentsStatus(Button plusButton, Button minusButton) {
-        int stock_num = mPlate.getStockMax();
-        int plate_num = mPlate.getNumber();
+        int stock_num = mItem.getStock();
+        int plate_num = mItem.getUnit();
 
         if (plate_num >= stock_num) {
             plusButton.setEnabled(false);
@@ -209,6 +208,10 @@ public class DishListAdapter extends BaseAdapter {
         private ImageView dishImage;
 
         private TextView dishText;
+    }
+
+    class viewHolder_text {
+        private TextView dishDesc;
     }
 
     class viewHolder_dish {

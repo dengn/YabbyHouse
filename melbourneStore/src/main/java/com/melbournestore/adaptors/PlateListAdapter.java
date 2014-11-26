@@ -1,6 +1,8 @@
 package com.melbournestore.adaptors;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.melbournestore.activities.DishActivity;
 import com.melbournestore.activities.R;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.utils.Constant;
@@ -101,14 +104,19 @@ public class PlateListAdapter extends BaseAdapter {
         ImageLoader.getInstance().displayImage(Constant.URL_BASE_PHOTO + mItems.get(position).getImage(), holder.imgs_view, mOptions);
 
 
-        holder.num_view.setText(String.valueOf(mItems.get(position).getUnit()));
+        if (mItems.get(position).getUnit() <= 0) {
+            holder.num_view.setVisibility(View.INVISIBLE);
+        } else {
+            holder.num_view.setVisibility(View.VISIBLE);
+            holder.num_view.setText(String.valueOf(mItems.get(position).getUnit()));
+        }
 
 
-//        rowView.setOnClickListener(new OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//
+        rowView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
 //                int shopId = mPlates[position].getShopId();
 //                String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
 //                Gson gson = new Gson();
@@ -116,17 +124,17 @@ public class PlateListAdapter extends BaseAdapter {
 //                shops[shopId].setPlates(mPlates);
 //                SharedPreferenceUtils
 //                        .saveCurrentChoice(mContext, gson.toJson(shops));
-//
-//
-//                Intent intent = new Intent(mContext, DishActivity.class);
-//                intent.putExtra("plateId", position);
-//                intent.putExtra("shopId", shopId);
-//
-//                ((Activity) mContext).startActivity(intent);
-//
-//            }
-//
-//        });
+
+
+                Intent intent = new Intent(mContext, DishActivity.class);
+                intent.putExtra("item_id", mItems.get(position).getId());
+                intent.putExtra("item_name", mItems.get(position).getName());
+
+                ((Activity) mContext).startActivity(intent);
+
+            }
+
+        });
 //
 //        holder.like_number_view.setOnClickListener(new OnClickListener() {
 //
