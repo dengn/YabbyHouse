@@ -5,34 +5,44 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/plates_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="7dp"
-        android:layout_marginRight="7dp"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop" />
 
-    <TextView
-        android:id="@+id/shop_name"
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="120dp"
-        android:text="龙虾叔叔"
-        android:textColor="@color/white"
-        android:textSize="23sp" />
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/shop_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="147dp"
-        android:text="麻辣小龙虾、香辣小龙虾限时特卖中"
-        android:textColor="@color/white"
-        android:textSize="17sp" />
+        <ImageView
+            android:id="@+id/plates_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/plates_image"
+            android:layout_marginLeft="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/shop_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="龙虾叔叔"
+                android:textColor="@color/white"
+                android:textSize="23sp" />
+
+            <TextView
+                android:id="@+id/shop_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="麻辣小龙虾、香辣小龙虾限时特卖中"
+                android:textColor="@color/white"
+                android:textSize="17sp" />
+        </LinearLayout>
+    </RelativeLayout>
 
 </FrameLayout>
