@@ -38,8 +38,12 @@ import com.melbournestore.application.SysApplication;
 import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
+import com.melbournestore.models.item_iphone;
 import com.melbournestore.network.ItemManagerThread;
 import com.melbournestore.utils.MelbourneUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+
+import java.util.ArrayList;
 
 public class PlateActivity extends Activity {
 
@@ -64,52 +68,61 @@ public class PlateActivity extends Activity {
 
     private int totalNum = 0;
 
+    private ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
+
+    DisplayImageOptions options;
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            Bundle b = msg.getData();
-            int position = b.getInt("position");
-            switch (msg.what) {
-                // plus = 1
-                case 1:
-                    //totalPrice += DataResourceUtils.platePrices[mShopId][position];
-                    //totalNum++;
-                    // plateNumbers[position]++;
 
-                    String shops_string1 = SharedPreferenceUtils.getCurrentChoice(PlateActivity.this);
-                    Gson gson1 = new Gson();
-                    Shop[] shops1 = gson1.fromJson(shops_string1, Shop[].class);
+            mItems = (ArrayList<item_iphone>) msg.obj;
+            mPlateListAdapter.refresh(mItems);
+            mPlatesList.setAdapter(mPlateListAdapter);
 
-                    totalNum = MelbourneUtils.sum_number_all(shops1);
-                    totalPrice = MelbourneUtils.sum_price_all(shops1);
-
-
-                    mTotalPrice.setText("$" + String.valueOf(totalPrice));
-                    mTotalNum.setText(String.valueOf(totalNum));
-                    break;
-                // minus = 2
-                case 2:
-                    if (totalPrice <= 0) {
-
-                    } else {
-
-                        //totalPrice -= DataResourceUtils.platePrices[mShopId][position];
-                        //totalNum--;
-                        // plateNumbers[position]--;
-
-                        String shops_string2 = SharedPreferenceUtils.getCurrentChoice(PlateActivity.this);
-                        Gson gson2 = new Gson();
-                        Shop[] shops2 = gson2.fromJson(shops_string2, Shop[].class);
-
-                        totalNum = MelbourneUtils.sum_number_all(shops2);
-                        totalPrice = MelbourneUtils.sum_price_all(shops2);
-
-                        mTotalPrice.setText("$" + String.valueOf(totalPrice));
-                        mTotalNum.setText(String.valueOf(totalNum));
-                    }
-                    break;
-
-            }
+//            Bundle b = msg.getData();
+//            int position = b.getInt("position");
+//            switch (msg.what) {
+//                // plus = 1
+//                case 1:
+//                    //totalPrice += DataResourceUtils.platePrices[mShopId][position];
+//                    //totalNum++;
+//                    // plateNumbers[position]++;
+//
+//                    String shops_string1 = SharedPreferenceUtils.getCurrentChoice(PlateActivity.this);
+//                    Gson gson1 = new Gson();
+//                    Shop[] shops1 = gson1.fromJson(shops_string1, Shop[].class);
+//
+//                    totalNum = MelbourneUtils.sum_number_all(shops1);
+//                    totalPrice = MelbourneUtils.sum_price_all(shops1);
+//
+//
+//                    mTotalPrice.setText("$" + String.valueOf(totalPrice));
+//                    mTotalNum.setText(String.valueOf(totalNum));
+//                    break;
+//                // minus = 2
+//                case 2:
+//                    if (totalPrice <= 0) {
+//
+//                    } else {
+//
+//                        //totalPrice -= DataResourceUtils.platePrices[mShopId][position];
+//                        //totalNum--;
+//                        // plateNumbers[position]--;
+//
+//                        String shops_string2 = SharedPreferenceUtils.getCurrentChoice(PlateActivity.this);
+//                        Gson gson2 = new Gson();
+//                        Shop[] shops2 = gson2.fromJson(shops_string2, Shop[].class);
+//
+//                        totalNum = MelbourneUtils.sum_number_all(shops2);
+//                        totalPrice = MelbourneUtils.sum_price_all(shops2);
+//
+//                        mTotalPrice.setText("$" + String.valueOf(totalPrice));
+//                        mTotalNum.setText(String.valueOf(totalNum));
+//                    }
+//                    break;
+//
+//            }
         }
 
     };
@@ -118,6 +131,8 @@ public class PlateActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.plate_layout);
+
+        SysApplication.initImageLoader(this);
 
         SysApplication.getInstance().addActivity(this);
 
@@ -148,13 +163,22 @@ public class PlateActivity extends Activity {
         totalNum = MelbourneUtils.sum_number_all(shops);
         totalPrice = MelbourneUtils.sum_price_all(shops);
 
-        Plate[] plates = shops[mShopId].getPlates();
+        //Plate[] plates = shops[mShopId].getPlates();
 
 
         mPlatesList = (ListView) findViewById(R.id.plates_list);
 
 
-        mPlateListAdapter = new PlateListAdapter(this, mHandler, plates);
+        options = new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.loading_ads)    //在ImageView加载过程中显示图片
+                .showImageForEmptyUri(R.drawable.loading_ads)  //image连接地址为空时
+                .showImageOnFail(R.drawable.loading_ads)  //image加载失败
+                .cacheInMemory(true)  //加载图片时会在内存中加载缓存
+                .cacheOnDisc(true)   //加载图片时会在磁盘中加载缓存
+                .build();
+
+
+        mPlateListAdapter = new PlateListAdapter(this, mHandler, options, mItems);
         mPlatesList.setAdapter(mPlateListAdapter);
 
         mConfirmChoice = (Button) findViewById(R.id.confirm_choice);
@@ -191,7 +215,7 @@ public class PlateActivity extends Activity {
         Shop[] shops = gson.fromJson(shops_string, Shop[].class);
         Plate[] plates = shops[mShopId].getPlates();
 
-        mPlateListAdapter.refresh(plates);
+        mPlateListAdapter.refresh(mItems);
         mPlatesList.setAdapter(mPlateListAdapter);
 
         totalNum = MelbourneUtils.sum_number_all(shops);

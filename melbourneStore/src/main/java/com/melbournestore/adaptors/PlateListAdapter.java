@@ -1,76 +1,71 @@
 package com.melbournestore.adaptors;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.melbournestore.activities.DishActivity;
 import com.melbournestore.activities.R;
-import com.melbournestore.db.SharedPreferenceUtils;
-import com.melbournestore.models.Plate;
-import com.melbournestore.models.Shop;
-import com.melbournestore.utils.BitmapUtils;
+import com.melbournestore.models.item_iphone;
+import com.melbournestore.utils.Constant;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.ArrayList;
 
 public class PlateListAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
     Context mContext;
     Handler mHandler;
-    Plate[] mPlates;
+    ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
+    DisplayImageOptions mOptions;
     private boolean likeClicked = false;
 
-    public PlateListAdapter(Context context, Handler handler, Plate[] plates) {
-        // TODO Auto-generated constructor stub
+    public PlateListAdapter(Context context, Handler handler,DisplayImageOptions options, ArrayList<item_iphone> items) {
 
         mContext = context;
         mHandler = handler;
+        mOptions = options;
 
-        mPlates = plates;
+        mItems.clear();
+        mItems.addAll(items);
 
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(Plate[] plates) {
-        mPlates = plates;
+    public void refresh(ArrayList<item_iphone> items) {
+        mItems.clear();
+        mItems.addAll(items);
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
-        return mPlates.length;
+
+        return mItems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
-        return position;
+
+        return mItems.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
 
 
         final Holder holder = new Holder();
@@ -89,176 +84,175 @@ public class PlateListAdapter extends BaseAdapter {
 
         holder.like_view.setImageResource(R.drawable.other_icon_like);
 
-        holder.like_number_view.setText(String.valueOf(mPlates[position].getLikeNum())
-                + "         今日库存" + mPlates[position].getStockMax() + "份");
+        holder.like_number_view.setText(String.valueOf(mItems.get(position).getGood())
+                + "         今日库存" + mItems.get(position).getStock() + "份");
 
         holder.plus = (Button) rowView.findViewById(R.id.plate_plus);
         holder.minus = (Button) rowView.findViewById(R.id.plate_minus);
 
-        setComponentsStatus(holder.plus, holder.minus, holder.num_view,
-                position);
+//        setComponentsStatus(holder.plus, holder.minus, holder.num_view,
+//                position);
 
-        holder.names_view.setText(mPlates[position].getName());
+        holder.names_view.setText(mItems.get(position).getName());
         holder.prices_view
-                .setText("$" + String.valueOf(mPlates[position].getPrice()));
+                .setText("$" + String.valueOf(mItems.get(position).getPrice()));
 
 
-        Bitmap bm = BitmapUtils.readBitMap(mContext, mPlates[position].getImageId());
-        holder.imgs_view.setImageBitmap(bm);
+        ImageLoader.getInstance().displayImage(Constant.URL_BASE_PHOTO + mItems.get(position).getImage(), holder.imgs_view, mOptions);
 
 
-        holder.num_view.setText(String.valueOf(mPlates[position].getNumber()));
+        holder.num_view.setText(String.valueOf(mItems.get(position).getUnit()));
 
 
-        rowView.setOnClickListener(new OnClickListener() {
+//        rowView.setOnClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//
+//                int shopId = mPlates[position].getShopId();
+//                String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
+//                Gson gson = new Gson();
+//                Shop[] shops = gson.fromJson(shop_string, Shop[].class);
+//                shops[shopId].setPlates(mPlates);
+//                SharedPreferenceUtils
+//                        .saveCurrentChoice(mContext, gson.toJson(shops));
+//
+//
+//                Intent intent = new Intent(mContext, DishActivity.class);
+//                intent.putExtra("plateId", position);
+//                intent.putExtra("shopId", shopId);
+//
+//                ((Activity) mContext).startActivity(intent);
+//
+//            }
+//
+//        });
+//
+//        holder.like_number_view.setOnClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                // TODO Auto-generated method stub
+//                if (!likeClicked) {
+//                    holder.like_view
+//                            .setImageResource(R.drawable.other_icon_liked);
+//
+//                    holder.like_number_view.setText(String
+//                            .valueOf(mPlates[position].getLikeNum() + 1)
+//                            + "         今日库存"
+//                            + String.valueOf(mPlates[position].getStockMax()) + "份");
+//
+//                    mPlates[position].setLikeNum(mPlates[position].getLikeNum() + 1);
+//
+//
+//                    int shopId = mPlates[position].getShopId();
+//                    String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
+//                    Gson gson = new Gson();
+//                    Shop[] shops = gson.fromJson(shop_string, Shop[].class);
+//                    shops[shopId].setPlates(mPlates);
+//                    SharedPreferenceUtils
+//                            .saveCurrentChoice(mContext, gson.toJson(shops));
+//
+//                    likeClicked = true;
+//                } else {
+//                    Toast.makeText(mContext, "亲，今天已经点过赞了。", Toast.LENGTH_SHORT)
+//                            .show();
+//                }
+//            }
+//
+//        });
 
-            @Override
-            public void onClick(View v) {
-
-                int shopId = mPlates[position].getShopId();
-                String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
-                Gson gson = new Gson();
-                Shop[] shops = gson.fromJson(shop_string, Shop[].class);
-                shops[shopId].setPlates(mPlates);
-                SharedPreferenceUtils
-                        .saveCurrentChoice(mContext, gson.toJson(shops));
-
-
-                Intent intent = new Intent(mContext, DishActivity.class);
-                intent.putExtra("plateId", position);
-                intent.putExtra("shopId", shopId);
-
-                ((Activity) mContext).startActivity(intent);
-
-            }
-
-        });
-
-        holder.like_number_view.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                if (!likeClicked) {
-                    holder.like_view
-                            .setImageResource(R.drawable.other_icon_liked);
-
-                    holder.like_number_view.setText(String
-                            .valueOf(mPlates[position].getLikeNum() + 1)
-                            + "         今日库存"
-                            + String.valueOf(mPlates[position].getStockMax()) + "份");
-
-                    mPlates[position].setLikeNum(mPlates[position].getLikeNum() + 1);
-
-
-                    int shopId = mPlates[position].getShopId();
-                    String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
-                    Gson gson = new Gson();
-                    Shop[] shops = gson.fromJson(shop_string, Shop[].class);
-                    shops[shopId].setPlates(mPlates);
-                    SharedPreferenceUtils
-                            .saveCurrentChoice(mContext, gson.toJson(shops));
-
-                    likeClicked = true;
-                } else {
-                    Toast.makeText(mContext, "亲，今天已经点过赞了。", Toast.LENGTH_SHORT)
-                            .show();
-                }
-            }
-
-        });
-
-        holder.plus.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Message message = new Message();
-                Bundle b = new Bundle();
-                // send the position
-                b.putInt("position", position);
-                message.setData(b);
-
-                // plus = 1
-                message.what = 1;
-
-                mHandler.sendMessage(message);
-
-
-                mPlates[position].setNumber(mPlates[position].getNumber() + 1);
-
-                int shopId = mPlates[position].getShopId();
-                String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
-                Gson gson = new Gson();
-                Shop[] shops = gson.fromJson(shop_string, Shop[].class);
-                shops[shopId].setPlates(mPlates);
-                SharedPreferenceUtils
-                        .saveCurrentChoice(mContext, gson.toJson(shops));
-
-
-                holder.num_view.setText(String.valueOf(mPlates[position].getNumber()));
-
-                setComponentsStatus(holder.plus, holder.minus, holder.num_view,
-                        position);
-
-            }
-        });
-
-        holder.minus.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Message message = new Message();
-                Bundle b = new Bundle();
-                // send the position
-                b.putInt("position", position);
-                message.setData(b);
-
-                // minus = 2
-                message.what = 2;
-
-                mHandler.sendMessage(message);
-
-
-                mPlates[position].setNumber(mPlates[position].getNumber() - 1);
-
-                int shopId = mPlates[position].getShopId();
-                String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
-                Gson gson = new Gson();
-                Shop[] shops = gson.fromJson(shop_string, Shop[].class);
-                shops[shopId].setPlates(mPlates);
-                SharedPreferenceUtils
-                        .saveCurrentChoice(mContext, gson.toJson(shops));
-
-
-                holder.num_view.setText(String.valueOf(mPlates[position].getNumber()));
-
-                setComponentsStatus(holder.plus, holder.minus, holder.num_view,
-                        position);
-
-            }
-        });
+//        holder.plus.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // TODO Auto-generated method stub
+//                Message message = new Message();
+//                Bundle b = new Bundle();
+//                // send the position
+//                b.putInt("position", position);
+//                message.setData(b);
+//
+//                // plus = 1
+//                message.what = 1;
+//
+//                mHandler.sendMessage(message);
+//
+//
+//                mPlates[position].setNumber(mPlates[position].getNumber() + 1);
+//
+//                int shopId = mPlates[position].getShopId();
+//                String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
+//                Gson gson = new Gson();
+//                Shop[] shops = gson.fromJson(shop_string, Shop[].class);
+//                shops[shopId].setPlates(mPlates);
+//                SharedPreferenceUtils
+//                        .saveCurrentChoice(mContext, gson.toJson(shops));
+//
+//
+//                holder.num_view.setText(String.valueOf(mPlates[position].getNumber()));
+//
+//                setComponentsStatus(holder.plus, holder.minus, holder.num_view,
+//                        position);
+//
+//            }
+//        });
+//
+//        holder.minus.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // TODO Auto-generated method stub
+//                Message message = new Message();
+//                Bundle b = new Bundle();
+//                // send the position
+//                b.putInt("position", position);
+//                message.setData(b);
+//
+//                // minus = 2
+//                message.what = 2;
+//
+//                mHandler.sendMessage(message);
+//
+//
+//                mPlates[position].setNumber(mPlates[position].getNumber() - 1);
+//
+//                int shopId = mPlates[position].getShopId();
+//                String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
+//                Gson gson = new Gson();
+//                Shop[] shops = gson.fromJson(shop_string, Shop[].class);
+//                shops[shopId].setPlates(mPlates);
+//                SharedPreferenceUtils
+//                        .saveCurrentChoice(mContext, gson.toJson(shops));
+//
+//
+//                holder.num_view.setText(String.valueOf(mPlates[position].getNumber()));
+//
+//                setComponentsStatus(holder.plus, holder.minus, holder.num_view,
+//                        position);
+//
+//            }
+//        });
 
         return rowView;
     }
 
-    private void setComponentsStatus(Button plusButton, Button minusButton,
-                                     TextView numView, int position) {
-        int stock_num = mPlates[position].getStockMax();
-        int plate_num = mPlates[position].getNumber();
-
-        if (plate_num >= stock_num) {
-            plusButton.setEnabled(false);
-        } else {
-            plusButton.setEnabled(true);
-        }
-        if (plate_num <= 0) {
-            numView.setVisibility(View.INVISIBLE);
-            minusButton.setEnabled(false);
-        } else {
-            numView.setVisibility(View.VISIBLE);
-            minusButton.setEnabled(true);
-        }
-    }
+//    private void setComponentsStatus(Button plusButton, Button minusButton,
+//                                     TextView numView, int position) {
+//        int stock_num = mPlates[position].getStockMax();
+//        int plate_num = mPlates[position].getNumber();
+//
+//        if (plate_num >= stock_num) {
+//            plusButton.setEnabled(false);
+//        } else {
+//            plusButton.setEnabled(true);
+//        }
+//        if (plate_num <= 0) {
+//            numView.setVisibility(View.INVISIBLE);
+//            minusButton.setEnabled(false);
+//        } else {
+//            numView.setVisibility(View.VISIBLE);
+//            minusButton.setEnabled(true);
+//        }
+//    }
 
     public class Holder {
         TextView names_view;
