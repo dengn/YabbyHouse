@@ -37,8 +37,6 @@ import com.google.gson.reflect.TypeToken;
 import com.melbournestore.adaptors.PlateListAdapter;
 import com.melbournestore.application.SysApplication;
 import com.melbournestore.db.SharedPreferenceUtils;
-import com.melbournestore.models.Plate;
-import com.melbournestore.models.Shop;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.models.number_price;
 import com.melbournestore.network.ItemManagerThread;
@@ -98,9 +96,11 @@ public class PlateActivity extends Activity {
                     }.getType();
                     ArrayList<item_iphone> items1 = gson.fromJson(itemsString1, type1);
                     items1.get(position).setUnit(items1.get(position).getUnit() + 1);
+                    mItems.clear();
+                    mItems.addAll(items1);
                     SharedPreferenceUtils.saveLocalItems(PlateActivity.this, gson.toJson(items1), mShopId);
 
-                    mPlateListAdapter.refresh(items1);
+                    mPlateListAdapter.refresh(mItems);
                     mPlatesList.setAdapter(mPlateListAdapter);
 
                     sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
@@ -135,9 +135,11 @@ public class PlateActivity extends Activity {
                         }.getType();
                         ArrayList<item_iphone> items2 = gson.fromJson(itemsString2, type2);
                         items2.get(position).setUnit(items2.get(position).getUnit() + 1);
+                        mItems.clear();
+                        mItems.addAll(items2);
                         SharedPreferenceUtils.saveLocalItems(PlateActivity.this, gson.toJson(items2), mShopId);
 
-                        mPlateListAdapter.refresh(items2);
+                        mPlateListAdapter.refresh(mItems);
                         mPlatesList.setAdapter(mPlateListAdapter);
 
                         sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
@@ -184,8 +186,6 @@ public class PlateActivity extends Activity {
         getActionBar().setTitle(mShopName);
 
 
-//        totalNum = MelbourneUtils.sum_number_all(shops);
-//        totalPrice = MelbourneUtils.sum_price_all(shops);
 
         sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
 
@@ -236,16 +236,13 @@ public class PlateActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        String shops_string = SharedPreferenceUtils.getCurrentChoice(this);
-        Gson gson = new Gson();
-        Shop[] shops = gson.fromJson(shops_string, Shop[].class);
-        //Plate[] plates = shops[mShopId].getPlates();
+        sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
+
+        totalPrice = sumNumberPrice.getPrice();
+        totalNum = sumNumberPrice.getNumber();
 
         mPlateListAdapter.refresh(mItems);
         mPlatesList.setAdapter(mPlateListAdapter);
-
-        totalNum = MelbourneUtils.sum_number_all(shops);
-        totalPrice = MelbourneUtils.sum_price_all(shops);
 
         mTotalNum.setText(String.valueOf(totalNum));
         mTotalPrice.setText("$" + String.valueOf(totalPrice));
@@ -282,14 +279,7 @@ public class PlateActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private Plate[] getDataFromPreference() {
 
-        String data = SharedPreferenceUtils.getCurrentChoice(this);
-        Gson gson = new Gson();
-        Plate[] plates = gson.fromJson(data, Plate[].class);
-        return plates;
-
-    }
 
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

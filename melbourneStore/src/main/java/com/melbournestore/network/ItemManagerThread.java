@@ -82,7 +82,6 @@ public class ItemManagerThread extends Thread {
         String result = handleGet(Constant.URL_BASE + "shop/" + mShopId + "/items");
 
 
-
         Log.d("ITEMTHREAD", result);
         ArrayList<item_iphone> mItems = getItems(result);
 
@@ -92,6 +91,8 @@ public class ItemManagerThread extends Thread {
         Type type = new TypeToken<ArrayList<item_iphone>>() {
         }.getType();
         ArrayList<item_iphone> localItems = gson.fromJson(localItemsString, type);
+
+        Log.d("ITEMS", "mItems len: " + String.valueOf(mItems.size()));
 
         localItems = refreshLocalItems(localItems, mItems);
         SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(localItems), mShopId);
@@ -129,25 +130,27 @@ public class ItemManagerThread extends Thread {
                 for (int i = 0; i < remoteItems.size(); i++) {
 
                     if (chosenItemsIds.size() > 0) {
-                        for (int j = 0; j < chosenItemsIds.size(); j++) {
+                        item_iphone chosenItem = new item_iphone();
 
-                            item_iphone chosenItem = new item_iphone();
 
-                            //if the same item exists in remote items
-                            if (chosenItemsIds.containsKey(remoteItems.get(i).getId())) {
-                                chosenItem = remoteItems.get(i);
-                                chosenItem.setUnit(chosenItemsIds.get(remoteItems.get(i).getId()));
-                                returnedItems.add(chosenItem);
-                            } else {
-                                returnedItems.add(chosenItem);
-                            }
+                        //if the same item exists in remote items
+                        if (chosenItemsIds.containsKey(remoteItems.get(i).getId())) {
+                            chosenItem = remoteItems.get(i);
+                            chosenItem.setUnit(chosenItemsIds.get(remoteItems.get(i).getId()));
+                            returnedItems.add(chosenItem);
+
+                        } else {
+                            chosenItem = remoteItems.get(i);
+                            returnedItems.add(chosenItem);
                         }
-                    }else{
+
+
+                    } else {
                         returnedItems.add(remoteItems.get(i));
                     }
                 }
 
-                Log.d("ITEMS", "returnedItems len: " + String.valueOf(returnedItems));
+                //Log.d("ITEMS", "returnedItems len: " + String.valueOf(returnedItems));
 
                 return returnedItems;
             } else {

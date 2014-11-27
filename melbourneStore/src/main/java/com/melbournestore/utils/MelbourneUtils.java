@@ -89,6 +89,7 @@ public class MelbourneUtils {
             }.getType();
             ArrayList<item_iphone> items = gson.fromJson(itemsString, type);
             for(int j=0;j<items.size();j++){
+
                 item_numbers+=items.get(j).getUnit();
                 item_prices+=items.get(j).getUnit()*(int)Float.parseFloat(items.get(j).getPrice());
             }
