@@ -98,6 +98,30 @@ public class MelbourneUtils {
         return sumNumberPrice;
     }
 
+    public static final ArrayList<item_iphone> getAllChosenItems(Context context) {
+
+        Gson gson = new Gson();
+        String shopsString = SharedPreferenceUtils.getLocalShops(context);
+        Type type = new TypeToken<ArrayList<Shop_iPhone>>() {
+        }.getType();
+        ArrayList<Shop_iPhone> shops = gson.fromJson(shopsString, type);
+
+        ArrayList<item_iphone> chosenItems = new ArrayList<item_iphone>();
+        for (int i = 0; i < shops.size(); i++) {
+            String itemsString = SharedPreferenceUtils.getLocalItems(context, shops.get(i).getId());
+            type = new TypeToken<ArrayList<item_iphone>>() {
+            }.getType();
+            ArrayList<item_iphone> items = gson.fromJson(itemsString, type);
+
+            for (int j = 0; j < items.size(); j++) {
+                if (items.get(j).getUnit() > 0) {
+                    chosenItems.add(items.get(j));
+                }
+            }
+        }
+        return chosenItems;
+    }
+
     public static final int sum_price_all(Plate[] plates) {
         int price_all = 0;
         for (int i = 0; i < plates.length; i++) {

@@ -19,13 +19,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.melbournestore.adaptors.OrderListAdapter;
 import com.melbournestore.application.SysApplication;
 import com.melbournestore.db.SharedPreferenceUtils;
-import com.melbournestore.models.Plate;
-import com.melbournestore.models.Shop;
 import com.melbournestore.models.User;
+import com.melbournestore.models.item_iphone;
 import com.melbournestore.utils.MelbourneUtils;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class ShoppingCartActivity extends Activity {
 
@@ -39,6 +42,10 @@ public class ShoppingCartActivity extends Activity {
 
     private OrderListAdapter mOrderListAdapter;
 
+    private ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
+
+    private Gson gson = new Gson();
+
     private int totalPrice;
 
     private Handler mHandler = new Handler() {
@@ -51,12 +58,21 @@ public class ShoppingCartActivity extends Activity {
                 case 1:
                     // totalPrice += orderPrices[position];
 
-                    String shops_string1 = SharedPreferenceUtils
-                            .getCurrentChoice(ShoppingCartActivity.this);
-                    Gson gson1 = new Gson();
-                    Shop[] shops1 = gson1.fromJson(shops_string1, Shop[].class);
+//                    String shops_string1 = SharedPreferenceUtils
+//                            .getCurrentChoice(ShoppingCartActivity.this);
+//                    Gson gson1 = new Gson();
+//                    Shop[] shops1 = gson1.fromJson(shops_string1, Shop[].class);
+                    int mShopId1 = mItems.get(position).getShopId();
+                    String itemsString1 = SharedPreferenceUtils.getLocalItems(ShoppingCartActivity.this, mShopId1);
+                    Type type1 = new TypeToken<ArrayList<item_iphone>>() {
+                    }.getType();
+                    ArrayList<item_iphone> items1 = gson.fromJson(itemsString1, type1);
+                    items1.get(position).setUnit(items1.get(position).getUnit() + 1);
+                    mItems.clear();
+                    mItems.addAll(items1);
+                    SharedPreferenceUtils.saveLocalItems(ShoppingCartActivity.this, gson.toJson(items1), mShopId1);
 
-                    totalPrice = MelbourneUtils.sum_price_all(shops1);
+                    totalPrice = MelbourneUtils.sum_item_number_price(ShoppingCartActivity.this).getPrice();
 
                     mTotalPrice.setText("$" + String.valueOf(totalPrice));
                     break;
@@ -64,12 +80,22 @@ public class ShoppingCartActivity extends Activity {
                 case 2:
                     // totalPrice -= orderPrices[position];
 
-                    String shops_string2 = SharedPreferenceUtils
-                            .getCurrentChoice(ShoppingCartActivity.this);
-                    Gson gson2 = new Gson();
-                    Shop[] shops2 = gson2.fromJson(shops_string2, Shop[].class);
+//                    String shops_string2 = SharedPreferenceUtils
+//                            .getCurrentChoice(ShoppingCartActivity.this);
+//                    Gson gson2 = new Gson();
+//                    Shop[] shops2 = gson2.fromJson(shops_string2, Shop[].class);
 
-                    totalPrice = MelbourneUtils.sum_price_all(shops2);
+                    int mShopId2 = mItems.get(position).getShopId();
+                    String itemsString2 = SharedPreferenceUtils.getLocalItems(ShoppingCartActivity.this, mShopId2);
+                    Type type2 = new TypeToken<ArrayList<item_iphone>>() {
+                    }.getType();
+                    ArrayList<item_iphone> items2 = gson.fromJson(itemsString2, type2);
+                    items2.get(position).setUnit(items2.get(position).getUnit() - 1);
+                    mItems.clear();
+                    mItems.addAll(items2);
+                    SharedPreferenceUtils.saveLocalItems(ShoppingCartActivity.this, gson.toJson(items2), mShopId2);
+
+                    totalPrice = MelbourneUtils.sum_item_number_price(ShoppingCartActivity.this).getPrice();
 
                     mTotalPrice.setText("$" + String.valueOf(totalPrice));
                     break;
@@ -96,13 +122,14 @@ public class ShoppingCartActivity extends Activity {
 
         getActionBar().setTitle("购物车");
 
-        String shops_string = SharedPreferenceUtils.getCurrentChoice(this);
-        Gson gson = new Gson();
-        Shop[] shops = gson.fromJson(shops_string, Shop[].class);
+//        String shops_string = SharedPreferenceUtils.getCurrentChoice(this);
+//        Gson gson = new Gson();
+//        Shop[] shops = gson.fromJson(shops_string, Shop[].class);
+        mItems = MelbourneUtils.getAllChosenItems(this);
 
-        totalPrice = MelbourneUtils.sum_price_all(shops);
+        totalPrice = MelbourneUtils.sum_item_number_price(this).getPrice();
 
-        Plate[] plates_chosen = MelbourneUtils.getPlatesChosen(shops);
+//        Plate[] plates_chosen = MelbourneUtils.getPlatesChosen(shops);
 
         mConfirmOrders = (Button) findViewById(R.id.confirm_order);
         mConfirmOrders.getBackground().setAlpha(80);
@@ -111,7 +138,7 @@ public class ShoppingCartActivity extends Activity {
 
         mOrderList = (ListView) findViewById(R.id.shopping_list);
 
-        mOrderListAdapter = new OrderListAdapter(this, mHandler, plates_chosen);
+        mOrderListAdapter = new OrderListAdapter(this, mHandler, mItems);
         mOrderList.setAdapter(mOrderListAdapter);
 
         mTotalPrice.setText("共计费用：$" + String.valueOf(totalPrice));
@@ -120,7 +147,7 @@ public class ShoppingCartActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
+
 
                 String users_string = SharedPreferenceUtils
                         .getLoginUser(ShoppingCartActivity.this);

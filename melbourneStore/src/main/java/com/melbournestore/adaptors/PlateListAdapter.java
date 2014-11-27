@@ -15,8 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.melbournestore.activities.DishActivity;
 import com.melbournestore.activities.R;
+import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.utils.Constant;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -31,6 +33,7 @@ public class PlateListAdapter extends BaseAdapter {
     Handler mHandler;
     ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
     DisplayImageOptions mOptions;
+    private Gson gson = new Gson();
     private boolean likeClicked = false;
 
     public PlateListAdapter(Context context, Handler handler,DisplayImageOptions options, ArrayList<item_iphone> items) {
@@ -198,7 +201,16 @@ public class PlateListAdapter extends BaseAdapter {
 //                shops[shopId].setPlates(mPlates);
 //                SharedPreferenceUtils
 //                        .saveCurrentChoice(mContext, gson.toJson(shops));
-
+                int mShopId1 = mItems.get(position).getShopId();
+//                String itemsString1 = SharedPreferenceUtils.getLocalItems(mContext, mShopId1);
+//                Type type1 = new TypeToken<ArrayList<item_iphone>>() {
+//                }.getType();
+//                ArrayList<item_iphone> items1 = gson.fromJson(itemsString1, type1);
+//                items1.get(position).setUnit(items1.get(position).getUnit() + 1);
+//                mItems.clear();
+//                mItems.addAll(items1);
+                mItems.get(position).setUnit(mItems.get(position).getUnit() + 1);
+                SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(mItems), mShopId1);
 
                 holder.num_view.setText(String.valueOf(mItems.get(position).getUnit()));
 
@@ -233,6 +245,17 @@ public class PlateListAdapter extends BaseAdapter {
 //                shops[shopId].setPlates(mPlates);
 //                SharedPreferenceUtils
 //                        .saveCurrentChoice(mContext, gson.toJson(shops));
+
+                int mShopId2 = mItems.get(position).getShopId();
+//                String itemsString2 = SharedPreferenceUtils.getLocalItems(mContext, mShopId2);
+//                Type type2 = new TypeToken<ArrayList<item_iphone>>() {
+//                }.getType();
+//                ArrayList<item_iphone> items2 = gson.fromJson(itemsString2, type2);
+//                items2.get(position).setUnit(items2.get(position).getUnit() - 1);
+//                mItems.clear();
+//                mItems.addAll(items2);
+                mItems.get(position).setUnit(mItems.get(position).getUnit() - 1);
+                SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(mItems), mShopId2);
 
 
                 holder.num_view.setText(String.valueOf(mItems.get(position).getUnit()));

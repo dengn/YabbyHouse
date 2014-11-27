@@ -95,10 +95,10 @@ public class PlateActivity extends Activity {
                     Type type1 = new TypeToken<ArrayList<item_iphone>>() {
                     }.getType();
                     ArrayList<item_iphone> items1 = gson.fromJson(itemsString1, type1);
-                    items1.get(position).setUnit(items1.get(position).getUnit() + 1);
+//                    items1.get(position).setUnit(items1.get(position).getUnit() + 1);
                     mItems.clear();
                     mItems.addAll(items1);
-                    SharedPreferenceUtils.saveLocalItems(PlateActivity.this, gson.toJson(items1), mShopId);
+//                    SharedPreferenceUtils.saveLocalItems(PlateActivity.this, gson.toJson(items1), mShopId);
 
                     mPlateListAdapter.refresh(mItems);
                     mPlatesList.setAdapter(mPlateListAdapter);
@@ -134,10 +134,10 @@ public class PlateActivity extends Activity {
                         Type type2 = new TypeToken<ArrayList<item_iphone>>() {
                         }.getType();
                         ArrayList<item_iphone> items2 = gson.fromJson(itemsString2, type2);
-                        items2.get(position).setUnit(items2.get(position).getUnit() + 1);
+//                        items2.get(position).setUnit(items2.get(position).getUnit() - 1);
                         mItems.clear();
                         mItems.addAll(items2);
-                        SharedPreferenceUtils.saveLocalItems(PlateActivity.this, gson.toJson(items2), mShopId);
+//                        SharedPreferenceUtils.saveLocalItems(PlateActivity.this, gson.toJson(items2), mShopId);
 
                         mPlateListAdapter.refresh(mItems);
                         mPlatesList.setAdapter(mPlateListAdapter);
