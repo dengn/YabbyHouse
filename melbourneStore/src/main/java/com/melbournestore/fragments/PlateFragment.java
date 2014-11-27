@@ -84,7 +84,9 @@ public class PlateFragment extends Fragment {
         SysApplication.initImageLoader(mContext);
 
 
-        mShopThread = new ShopManagerThread(mHandler);
+
+
+        mShopThread = new ShopManagerThread(mHandler, mContext);
         mShopThread.start();
 
 
@@ -96,6 +98,8 @@ public class PlateFragment extends Fragment {
                 .cacheOnDisc(true)   //加载图片时会在磁盘中加载缓存
                 .build();
         category_adapter = new CategoryListAdapter(mContext, options, mShops);
+
+
 
 
     }
@@ -170,8 +174,6 @@ public class PlateFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        mShopThread = new ShopManagerThread(mHandler);
-        mShopThread.start();
 
         View rootView = inflater.inflate(R.layout.fragment_plate, container,
                 false);

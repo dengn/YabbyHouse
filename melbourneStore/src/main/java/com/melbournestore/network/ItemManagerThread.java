@@ -1,11 +1,13 @@
 package com.melbournestore.network;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.utils.Constant;
 
@@ -25,10 +27,12 @@ import java.util.HashMap;
 public class ItemManagerThread extends Thread {
 
     Handler mHandler;
+    Context mContext;
     int mShopId;
 
-    public ItemManagerThread(Handler handler, int shopId) {
+    public ItemManagerThread(Handler handler, Context context, int shopId) {
         mHandler = handler;
+        mContext = context;
         mShopId = shopId;
     }
 
@@ -48,7 +52,6 @@ public class ItemManagerThread extends Thread {
         }
         return result;
     }
-
 
 
     /**
@@ -72,23 +75,87 @@ public class ItemManagerThread extends Thread {
         return Items_array;
     }
 
+
     @Override
     public void run() {
 
-        String result = handleGet(Constant.URL_BASE+"shop/"+mShopId+"/items");
+        String result = handleGet(Constant.URL_BASE + "shop/" + mShopId + "/items");
+
+
 
         Log.d("ITEMTHREAD", result);
         ArrayList<item_iphone> mItems = getItems(result);
 
+
+        Gson gson = new Gson();
+        String localItemsString = SharedPreferenceUtils.getLocalItems(mContext, mShopId);
+        Type type = new TypeToken<ArrayList<item_iphone>>() {
+        }.getType();
+        ArrayList<item_iphone> localItems = gson.fromJson(localItemsString, type);
+
+        localItems = refreshLocalItems(localItems, mItems);
+        SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(localItems), mShopId);
+
+        Log.d("ITEMS", "localItems len: " + String.valueOf(localItems.size()));
+
         Message message = mHandler.obtainMessage();
-        message.obj = mItems;
+        message.obj = localItems;
         try {
             sleep(5);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        message.what = 0;
         mHandler.sendMessage(message);
+    }
+
+    private ArrayList<item_iphone> refreshLocalItems(ArrayList<item_iphone> localItems, ArrayList<item_iphone> remoteItems) {
+
+
+        if (localItems != null) {
+            if (localItems.size() != 0) {
+                //find out the already chosen ones
+                HashMap<Integer, Integer> chosenItemsIds = new HashMap<Integer, Integer>();
+                for (int i = 0; i < localItems.size(); i++) {
+                    if (localItems.get(i).getUnit() > 0) {
+                        chosenItemsIds.put(localItems.get(i).getId(), localItems.get(i).getUnit());
+                    }
+                }
+
+                ArrayList<item_iphone> returnedItems = new ArrayList<item_iphone>();
+
+                //copy remote items to local, and update their units with local ones
+                for (int i = 0; i < remoteItems.size(); i++) {
+
+                    if (chosenItemsIds.size() > 0) {
+                        for (int j = 0; j < chosenItemsIds.size(); j++) {
+
+                            item_iphone chosenItem = new item_iphone();
+
+                            //if the same item exists in remote items
+                            if (chosenItemsIds.containsKey(remoteItems.get(i).getId())) {
+                                chosenItem = remoteItems.get(i);
+                                chosenItem.setUnit(chosenItemsIds.get(remoteItems.get(i).getId()));
+                                returnedItems.add(chosenItem);
+                            } else {
+                                returnedItems.add(chosenItem);
+                            }
+                        }
+                    }else{
+                        returnedItems.add(remoteItems.get(i));
+                    }
+                }
+
+                Log.d("ITEMS", "returnedItems len: " + String.valueOf(returnedItems));
+
+                return returnedItems;
+            } else {
+                return remoteItems;
+            }
+        } else {
+            return remoteItems;
+        }
     }
 
 }

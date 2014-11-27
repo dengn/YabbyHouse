@@ -31,18 +31,19 @@
                 android:id="@+id/shop_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:shadowColor="@color/black"
+
                 android:text="龙虾叔叔"
-                android:textColor="@color/white"
+
+                style="@style/textShadow"
                 android:textSize="23sp" />
 
             <TextView
                 android:id="@+id/shop_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:shadowColor="@color/black"
+
                 android:text="麻辣小龙虾、香辣小龙虾限时特卖中"
-                android:textColor="@color/white"
+                style="@style/textShadow"
                 android:textSize="17sp" />
         </LinearLayout>
     </RelativeLayout>

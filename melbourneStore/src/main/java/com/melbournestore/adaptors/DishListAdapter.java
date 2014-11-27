@@ -179,7 +179,24 @@ public class DishListAdapter extends BaseAdapter {
                         false);
                 holder_text.dishDesc = (TextView) convertView
                         .findViewById(R.id.dish_desc);
-                holder_text.dishDesc.setText(mItem.getDesc());
+
+                if(mItem.getDesc()==null||mItem.getDesc().equals("")){
+                    convertView.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    convertView.setVisibility(View.VISIBLE);
+                    holder_text.dishDesc.setText(mItem.getDesc());
+                }
+
+
+                convertView.setTag(holder_text);
+
+//                if(mItem.getDesc().equals("")){
+//                    convertView.setVisibility(View.INVISIBLE);
+//                }
+//                else{
+//                    convertView.setVisibility(View.VISIBLE);
+//                }
                 break;
 
         }

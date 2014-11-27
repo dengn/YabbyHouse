@@ -10,6 +10,48 @@ import com.melbournestore.models.Shop;
 
 public class SharedPreferenceUtils {
 
+    // The SharedPrefrence file to know if the application is the first time used
+    public static boolean getFirstTimeLaunch(Context context) {
+        Boolean isFirstIn = false;
+        SharedPreferences pref = context.getSharedPreferences("yabbyhouse",
+                0);
+        isFirstIn = pref.getBoolean("isFirstIn", true);
+        return isFirstIn;
+    }
+
+    public static boolean saveFirstTimeLaunch(Context context){
+        SharedPreferences pref = context.getSharedPreferences("yabbyhouse", 0);
+        return pref.edit().putBoolean("isFirstIn", false).commit();
+    }
+
+
+    // The SharedPrefrence file to store current local items
+    public static String getLocalItems(Context context, int shopId) {
+        SharedPreferences pref = context.getSharedPreferences("local_items"+String.valueOf(shopId),
+                0);
+        return pref.getString("local_items"+String.valueOf(shopId), "");
+    }
+
+    public static boolean saveLocalItems(Context context, String info, int shopId) {
+        SharedPreferences pref = context.getSharedPreferences("local_items"+String.valueOf(shopId),
+                0);
+        return pref.edit().putString("local_items"+String.valueOf(shopId), info).commit();
+    }
+
+
+    // The SharedPrefrence file to store current local shops
+    public static String getLocalShops(Context context) {
+        SharedPreferences pref = context.getSharedPreferences("local_shops",
+                0);
+        return pref.getString("local_shops", "");
+    }
+
+    public static boolean saveLocalShops(Context context, String info) {
+        SharedPreferences pref = context.getSharedPreferences("local_shops",
+                0);
+        return pref.edit().putString("local_shops", info).commit();
+    }
+
     // The SharedPrefrence file to store current choosed flates, which are not
     // added to Shopping cart.
     public static String getCurrentChoice(Context context) {
@@ -23,6 +65,8 @@ public class SharedPreferenceUtils {
                 0);
         return pref.edit().putString("current_choice", info).commit();
     }
+
+
 
     // The SharedPrefrence file to store User login info
     public static String getLoginUser(Context context) {

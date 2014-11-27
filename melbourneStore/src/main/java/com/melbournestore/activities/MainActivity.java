@@ -125,6 +125,9 @@ public class MainActivity extends Activity {
             SharedPreferenceUtils.SharedPreferenceLoginUser(this);
         }
 
+
+
+
         SharedPreferenceUtils.setUpCurrentChoice(this);
 
         SharedPreferenceUtils.setUpCurrentOrder(this);

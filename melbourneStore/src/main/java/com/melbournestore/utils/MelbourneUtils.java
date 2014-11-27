@@ -1,12 +1,21 @@
 package com.melbournestore.utils;
 
+import android.content.Context;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.melbournestore.db.DataResourceUtils;
+import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.Order_user;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
+import com.melbournestore.models.Shop_iPhone;
 import com.melbournestore.models.User;
+import com.melbournestore.models.item_iphone;
+import com.melbournestore.models.number_price;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,6 +72,29 @@ public class MelbourneUtils {
             }
         }
         return price_all;
+    }
+
+    public static final number_price sum_item_number_price(Context context){
+        Gson gson = new Gson();
+        String shopsString = SharedPreferenceUtils.getLocalShops(context);
+        Type type = new TypeToken<ArrayList<Shop_iPhone>>() {
+        }.getType();
+        ArrayList<Shop_iPhone> shops = gson.fromJson(shopsString, type);
+
+        int item_numbers = 0;
+        int item_prices = 0;
+        for(int i=0;i<shops.size();i++){
+            String itemsString = SharedPreferenceUtils.getLocalItems(context, shops.get(i).getId());
+            type = new TypeToken<ArrayList<item_iphone>>() {
+            }.getType();
+            ArrayList<item_iphone> items = gson.fromJson(itemsString, type);
+            for(int j=0;j<items.size();j++){
+                item_numbers+=items.get(j).getUnit();
+                item_prices+=items.get(j).getUnit()*(int)Float.parseFloat(items.get(j).getPrice());
+            }
+        }
+        number_price sumNumberPrice = new number_price(item_numbers, item_prices);
+        return sumNumberPrice;
     }
 
     public static final int sum_price_all(Plate[] plates) {

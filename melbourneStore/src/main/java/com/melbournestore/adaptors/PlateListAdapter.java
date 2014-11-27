@@ -3,7 +3,9 @@ package com.melbournestore.adaptors;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.melbournestore.activities.DishActivity;
 import com.melbournestore.activities.R;
@@ -135,22 +138,22 @@ public class PlateListAdapter extends BaseAdapter {
             }
 
         });
-//
-//        holder.like_number_view.setOnClickListener(new OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                // TODO Auto-generated method stub
-//                if (!likeClicked) {
-//                    holder.like_view
-//                            .setImageResource(R.drawable.other_icon_liked);
-//
-//                    holder.like_number_view.setText(String
-//                            .valueOf(mPlates[position].getLikeNum() + 1)
-//                            + "         今日库存"
-//                            + String.valueOf(mPlates[position].getStockMax()) + "份");
-//
-//                    mPlates[position].setLikeNum(mPlates[position].getLikeNum() + 1);
+
+        holder.like_number_view.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (!likeClicked) {
+                    holder.like_view
+                            .setImageResource(R.drawable.other_icon_liked);
+
+                    holder.like_number_view.setText(String
+                            .valueOf(mItems.get(position).getGood() + 1)
+                            + "         今日库存"
+                            + String.valueOf(mItems.get(position).getStock()) + "份");
+
+//                    mItems.get(position).setGood(mItems.get(position).getGood() + 1);
 //
 //
 //                    int shopId = mPlates[position].getShopId();
@@ -160,32 +163,32 @@ public class PlateListAdapter extends BaseAdapter {
 //                    shops[shopId].setPlates(mPlates);
 //                    SharedPreferenceUtils
 //                            .saveCurrentChoice(mContext, gson.toJson(shops));
-//
-//                    likeClicked = true;
-//                } else {
-//                    Toast.makeText(mContext, "亲，今天已经点过赞了。", Toast.LENGTH_SHORT)
-//                            .show();
-//                }
-//            }
-//
-//        });
 
-//        holder.plus.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // TODO Auto-generated method stub
-//                Message message = new Message();
-//                Bundle b = new Bundle();
-//                // send the position
-//                b.putInt("position", position);
-//                message.setData(b);
-//
-//                // plus = 1
-//                message.what = 1;
-//
-//                mHandler.sendMessage(message);
-//
-//
+                    likeClicked = true;
+                } else {
+                    Toast.makeText(mContext, "亲，今天已经点过赞了。", Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
+
+        });
+
+        holder.plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Message message = new Message();
+                Bundle b = new Bundle();
+                // send the position
+                b.putInt("position", position);
+                message.setData(b);
+
+                // plus = 1
+                message.what = 1;
+
+                mHandler.sendMessage(message);
+
+
 //                mPlates[position].setNumber(mPlates[position].getNumber() + 1);
 //
 //                int shopId = mPlates[position].getShopId();
@@ -195,32 +198,32 @@ public class PlateListAdapter extends BaseAdapter {
 //                shops[shopId].setPlates(mPlates);
 //                SharedPreferenceUtils
 //                        .saveCurrentChoice(mContext, gson.toJson(shops));
-//
-//
-//                holder.num_view.setText(String.valueOf(mPlates[position].getNumber()));
-//
-//                setComponentsStatus(holder.plus, holder.minus, holder.num_view,
-//                        position);
-//
-//            }
-//        });
-//
-//        holder.minus.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // TODO Auto-generated method stub
-//                Message message = new Message();
-//                Bundle b = new Bundle();
-//                // send the position
-//                b.putInt("position", position);
-//                message.setData(b);
-//
-//                // minus = 2
-//                message.what = 2;
-//
-//                mHandler.sendMessage(message);
-//
-//
+
+
+                holder.num_view.setText(String.valueOf(mItems.get(position).getUnit()));
+
+                setComponentsStatus(holder.plus, holder.minus, holder.num_view,
+                        position);
+
+            }
+        });
+
+        holder.minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Message message = new Message();
+                Bundle b = new Bundle();
+                // send the position
+                b.putInt("position", position);
+                message.setData(b);
+
+                // minus = 2
+                message.what = 2;
+
+                mHandler.sendMessage(message);
+
+
 //                mPlates[position].setNumber(mPlates[position].getNumber() - 1);
 //
 //                int shopId = mPlates[position].getShopId();
@@ -230,37 +233,37 @@ public class PlateListAdapter extends BaseAdapter {
 //                shops[shopId].setPlates(mPlates);
 //                SharedPreferenceUtils
 //                        .saveCurrentChoice(mContext, gson.toJson(shops));
-//
-//
-//                holder.num_view.setText(String.valueOf(mPlates[position].getNumber()));
-//
-//                setComponentsStatus(holder.plus, holder.minus, holder.num_view,
-//                        position);
-//
-//            }
-//        });
+
+
+                holder.num_view.setText(String.valueOf(mItems.get(position).getUnit()));
+
+                setComponentsStatus(holder.plus, holder.minus, holder.num_view,
+                        position);
+
+            }
+        });
 
         return rowView;
     }
 
-//    private void setComponentsStatus(Button plusButton, Button minusButton,
-//                                     TextView numView, int position) {
-//        int stock_num = mPlates[position].getStockMax();
-//        int plate_num = mPlates[position].getNumber();
-//
-//        if (plate_num >= stock_num) {
-//            plusButton.setEnabled(false);
-//        } else {
-//            plusButton.setEnabled(true);
-//        }
-//        if (plate_num <= 0) {
-//            numView.setVisibility(View.INVISIBLE);
-//            minusButton.setEnabled(false);
-//        } else {
-//            numView.setVisibility(View.VISIBLE);
-//            minusButton.setEnabled(true);
-//        }
-//    }
+    private void setComponentsStatus(Button plusButton, Button minusButton,
+                                     TextView numView, int position) {
+        int stock_num = mItems.get(position).getStock();
+        int plate_num = mItems.get(position).getUnit();
+
+        if (plate_num >= stock_num) {
+            plusButton.setEnabled(false);
+        } else {
+            plusButton.setEnabled(true);
+        }
+        if (plate_num <= 0) {
+            numView.setVisibility(View.INVISIBLE);
+            minusButton.setEnabled(false);
+        } else {
+            numView.setVisibility(View.VISIBLE);
+            minusButton.setEnabled(true);
+        }
+    }
 
     public class Holder {
         TextView names_view;

@@ -33,22 +33,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.melbournestore.adaptors.PlateListAdapter;
 import com.melbournestore.application.SysApplication;
 import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
 import com.melbournestore.models.item_iphone;
+import com.melbournestore.models.number_price;
 import com.melbournestore.network.ItemManagerThread;
 import com.melbournestore.utils.MelbourneUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class PlateActivity extends Activity {
 
     private static final String TAG = "Melbourne";
     DisplayImageOptions options;
+    Gson gson = new Gson();
     private ListView mPlatesList;
     private PlateListAdapter mPlateListAdapter;
     private ItemManagerThread mItemThread;
@@ -57,6 +61,10 @@ public class PlateActivity extends Activity {
     private TextView mTotalNum;
     private int mShopId;
     private String mShopName;
+
+
+    private number_price sumNumberPrice;
+
     private int totalPrice = 0;
     private int totalNum = 0;
     private ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
@@ -64,53 +72,85 @@ public class PlateActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
 
-            mItems = (ArrayList<item_iphone>) msg.obj;
-            mPlateListAdapter.refresh(mItems);
-            mPlatesList.setAdapter(mPlateListAdapter);
 
-//            Bundle b = msg.getData();
-//            int position = b.getInt("position");
-//            switch (msg.what) {
-//                // plus = 1
-//                case 1:
-//                    //totalPrice += DataResourceUtils.platePrices[mShopId][position];
-//                    //totalNum++;
-//                    // plateNumbers[position]++;
-//
+            Bundle b = msg.getData();
+            int position = b.getInt("position");
+            switch (msg.what) {
+
+                case 0:
+                    mItems = (ArrayList<item_iphone>) msg.obj;
+                    mPlateListAdapter.refresh(mItems);
+                    mPlatesList.setAdapter(mPlateListAdapter);
+                    break;
+                // plus = 1
+                case 1:
+                    //totalPrice += DataResourceUtils.platePrices[mShopId][position];
+                    //totalNum++;
+                    // plateNumbers[position]++;
+
 //                    String shops_string1 = SharedPreferenceUtils.getCurrentChoice(PlateActivity.this);
 //                    Gson gson1 = new Gson();
 //                    Shop[] shops1 = gson1.fromJson(shops_string1, Shop[].class);
-//
-//                    totalNum = MelbourneUtils.sum_number_all(shops1);
-//                    totalPrice = MelbourneUtils.sum_price_all(shops1);
-//
-//
-//                    mTotalPrice.setText("$" + String.valueOf(totalPrice));
-//                    mTotalNum.setText(String.valueOf(totalNum));
-//                    break;
-//                // minus = 2
-//                case 2:
-//                    if (totalPrice <= 0) {
-//
-//                    } else {
-//
-//                        //totalPrice -= DataResourceUtils.platePrices[mShopId][position];
-//                        //totalNum--;
-//                        // plateNumbers[position]--;
-//
+
+
+                    String itemsString1 = SharedPreferenceUtils.getLocalItems(PlateActivity.this, mShopId);
+                    Type type1 = new TypeToken<ArrayList<item_iphone>>() {
+                    }.getType();
+                    ArrayList<item_iphone> items1 = gson.fromJson(itemsString1, type1);
+                    items1.get(position).setUnit(items1.get(position).getUnit() + 1);
+                    SharedPreferenceUtils.saveLocalItems(PlateActivity.this, gson.toJson(items1), mShopId);
+
+                    mPlateListAdapter.refresh(items1);
+                    mPlatesList.setAdapter(mPlateListAdapter);
+
+                    sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
+
+                    totalPrice = sumNumberPrice.getPrice();
+                    totalNum = sumNumberPrice.getNumber();
+
+                    mTotalPrice.setText("$" + String.valueOf(totalPrice));
+                    mTotalNum.setText(String.valueOf(totalNum));
+                    break;
+                // minus = 2
+                case 2:
+                    if (totalPrice <= 0) {
+
+                    } else {
+
+                        //totalPrice -= DataResourceUtils.platePrices[mShopId][position];
+                        //totalNum--;
+                        // plateNumbers[position]--;
+
 //                        String shops_string2 = SharedPreferenceUtils.getCurrentChoice(PlateActivity.this);
 //                        Gson gson2 = new Gson();
 //                        Shop[] shops2 = gson2.fromJson(shops_string2, Shop[].class);
 //
 //                        totalNum = MelbourneUtils.sum_number_all(shops2);
 //                        totalPrice = MelbourneUtils.sum_price_all(shops2);
-//
-//                        mTotalPrice.setText("$" + String.valueOf(totalPrice));
-//                        mTotalNum.setText(String.valueOf(totalNum));
-//                    }
-//                    break;
-//
-//            }
+
+
+
+                        String itemsString2 = SharedPreferenceUtils.getLocalItems(PlateActivity.this, mShopId);
+                        Type type2 = new TypeToken<ArrayList<item_iphone>>() {
+                        }.getType();
+                        ArrayList<item_iphone> items2 = gson.fromJson(itemsString2, type2);
+                        items2.get(position).setUnit(items2.get(position).getUnit() + 1);
+                        SharedPreferenceUtils.saveLocalItems(PlateActivity.this, gson.toJson(items2), mShopId);
+
+                        mPlateListAdapter.refresh(items2);
+                        mPlatesList.setAdapter(mPlateListAdapter);
+
+                        sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
+
+                        totalPrice = sumNumberPrice.getPrice();
+                        totalNum = sumNumberPrice.getNumber();
+
+                        mTotalPrice.setText("$" + String.valueOf(totalPrice));
+                        mTotalNum.setText(String.valueOf(totalNum));
+                    }
+                    break;
+
+            }
         }
 
     };
@@ -125,7 +165,6 @@ public class PlateActivity extends Activity {
         SysApplication.getInstance().addActivity(this);
 
 
-
         // Set up action bar.
         final ActionBar actionBar = getActionBar();
 
@@ -138,20 +177,20 @@ public class PlateActivity extends Activity {
         mShopId = intent.getIntExtra("shopid", 0);
         mShopName = intent.getStringExtra("shopName");
 
-        mItemThread = new ItemManagerThread(mHandler, mShopId);
+        mItemThread = new ItemManagerThread(mHandler, this, mShopId);
         mItemThread.start();
 
 
         getActionBar().setTitle(mShopName);
 
-        String shops_string = SharedPreferenceUtils.getCurrentChoice(this);
-        Gson gson = new Gson();
-        Shop[] shops = gson.fromJson(shops_string, Shop[].class);
 
-        totalNum = MelbourneUtils.sum_number_all(shops);
-        totalPrice = MelbourneUtils.sum_price_all(shops);
+//        totalNum = MelbourneUtils.sum_number_all(shops);
+//        totalPrice = MelbourneUtils.sum_price_all(shops);
 
-        //Plate[] plates = shops[mShopId].getPlates();
+        sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
+
+        totalPrice = sumNumberPrice.getPrice();
+        totalNum = sumNumberPrice.getNumber();
 
 
         mPlatesList = (ListView) findViewById(R.id.plates_list);
@@ -176,7 +215,6 @@ public class PlateActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
 
                 Intent intent = new Intent(PlateActivity.this,
                         ShoppingCartActivity.class);
@@ -252,6 +290,7 @@ public class PlateActivity extends Activity {
         return plates;
 
     }
+
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

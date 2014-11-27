@@ -1,12 +1,15 @@
 package com.melbournestore.network;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.Shop_iPhone;
+import com.melbournestore.models.item_iphone;
 import com.melbournestore.utils.Constant;
 
 import org.apache.http.HttpResponse;
@@ -26,8 +29,11 @@ public class ShopManagerThread extends Thread {
 
     Handler mHandler;
 
-    public ShopManagerThread(Handler handler) {
+    Context mContext;
+
+    public ShopManagerThread(Handler handler, Context context) {
         mHandler = handler;
+        mContext = context;
     }
 
     public static String handleGet(String strUrl) {
@@ -71,14 +77,27 @@ public class ShopManagerThread extends Thread {
 
     @Override
     public void run() {
-        // TODO Auto-generated method stub
         String result = handleGet(Constant.URL_BASE+"shops");
 
+
         Log.d("THREAD", result);
-        ArrayList<Shop_iPhone> mAd = getShops(result);
+        ArrayList<Shop_iPhone> mShops = getShops(result);
+
+        Gson gson = new Gson();
+        SharedPreferenceUtils.saveLocalShops(mContext, gson.toJson(mShops));
+
+        //if it's the first time to launch
+        if(SharedPreferenceUtils.getFirstTimeLaunch(mContext)){
+            SharedPreferenceUtils.saveFirstTimeLaunch(mContext);
+            for(int i=0;i<mShops.size();i++){
+                ArrayList<item_iphone> items = new ArrayList<item_iphone>();
+                SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(items), mShops.get(i).getId());
+            }
+        }
+
 
         Message message = mHandler.obtainMessage();
-        message.obj = mAd;
+        message.obj = mShops;
         try {
             sleep(5);
         } catch (InterruptedException e) {
