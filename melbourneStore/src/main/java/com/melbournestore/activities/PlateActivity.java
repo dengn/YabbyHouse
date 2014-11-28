@@ -218,6 +218,9 @@ public class PlateActivity extends Activity {
         totalPrice = sumNumberPrice.getPrice();
         totalNum = sumNumberPrice.getNumber();
 
+//        Intent intent = getIntent();
+//        mShopId = intent.getIntExtra("shopId", 0);
+
         String itemsString = SharedPreferenceUtils.getLocalItems(PlateActivity.this, mShopId);
         Type type = new TypeToken<ArrayList<item_iphone>>() {
         }.getType();

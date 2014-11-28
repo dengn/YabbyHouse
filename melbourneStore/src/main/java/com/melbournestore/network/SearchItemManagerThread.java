@@ -7,8 +7,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.melbournestore.db.SharedPreferenceUtils;
-import com.melbournestore.models.Shop_iPhone;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.utils.Constant;
 
@@ -23,17 +21,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by dengn on 2014/11/23.
+ * Created by OLEDCOMM on 28/11/2014.
  */
-public class ShopManagerThread extends Thread {
+public class SearchItemManagerThread extends Thread{
 
     Handler mHandler;
-
     Context mContext;
+    String mSearchText;
 
-    public ShopManagerThread(Handler handler, Context context) {
+    public SearchItemManagerThread(Handler handler, Context context, String searchText) {
         mHandler = handler;
         mContext = context;
+        mSearchText = searchText;
     }
 
     public static String handleGet(String strUrl) {
@@ -57,55 +56,57 @@ public class ShopManagerThread extends Thread {
     /**
      * Transform JSON String to shops
      */
-    public static ArrayList<Shop_iPhone> getShops(String jsonString) {
+    public static ArrayList<item_iphone> getItems(String jsonString) {
         Gson gson = new Gson();
-        Type listType = new TypeToken<HashMap<String, Shop_iPhone[]>>() {
+        Type listType = new TypeToken<HashMap<String, item_iphone[]>>() {
         }.getType();
-        HashMap<String, Shop_iPhone[]> mShops = gson.fromJson(jsonString, listType);
-        Shop_iPhone[] shops = mShops.get("shops");
+        HashMap<String, item_iphone[]> mItems = gson.fromJson(jsonString, listType);
+        item_iphone[] items = mItems.get("items");
 
 
-        ArrayList<Shop_iPhone> Shops_array = new ArrayList<Shop_iPhone>();
+        ArrayList<item_iphone> Items_array = new ArrayList<item_iphone>();
 
-        for (int i = 0; i < shops.length; i++) {
-            Shops_array.add(shops[i]);
+        if(items.length>0) {
+
+            for (int i = 0; i < items.length; i++) {
+                Items_array.add(items[i]);
+            }
+
+
         }
-
-
-        return Shops_array;
+        return Items_array;
     }
+
 
     @Override
     public void run() {
-        String result = handleGet(Constant.URL_BASE+"shops");
+
+        String result = handleGet(Constant.URL_BASE + "items?search="+mSearchText);
 
 
-        Log.d("THREAD", result);
-        ArrayList<Shop_iPhone> mShops = getShops(result);
 
-        Gson gson = new Gson();
-        SharedPreferenceUtils.saveLocalShops(mContext, gson.toJson(mShops));
+        Log.d("ITEMSEARCHTHREAD", result);
+        ArrayList<item_iphone> mItems = getItems(result);
 
-        //if it's the first time to launch
-        if(SharedPreferenceUtils.getFirstTimeLaunch(mContext)){
-            SharedPreferenceUtils.saveFirstTimeLaunch(mContext);
-            for(int i=0;i<mShops.size();i++){
-                ArrayList<item_iphone> items = new ArrayList<item_iphone>();
-                SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(items), mShops.get(i).getId());
-            }
-        }
 
+//        if(SharedPreferenceUtils.getFirstTimeLaunch(mContext)){
+//            SharedPreferenceUtils.saveFirstTimeLaunch(mContext);
+//
+//            MelbourneUtils.createLocalItems(mContext, mItems);
+//
+//        }
 
         Message message = mHandler.obtainMessage();
-        message.obj = mShops;
-        try {
-            sleep(5);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        message.what = 0;
+        message.obj = mItems;
+//        try {
+//            sleep(5);
+//        } catch (InterruptedException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+        message.what = 1;
         mHandler.sendMessage(message);
     }
+
 
 }

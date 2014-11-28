@@ -3,6 +3,7 @@ package com.melbournestore.adaptors;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -131,26 +132,12 @@ public class DishListAdapter extends BaseAdapter {
                         message.what = 1;
 
 
-//
-//
-//                        mPlate.setNumber(mPlate.getNumber() + 1);
-//
-//                        int shopId = mPlate.getShopId();
-//                        int plateId = mPlate.getPlateId();
-//                        String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
-//                        Gson gson = new Gson();
-//                        Shop[] shops = gson.fromJson(shop_string, Shop[].class);
-//                        Plate[] plates = shops[shopId].getPlates();
-//                        plates[plateId] = mPlate;
-//                        shops[shopId].setPlates(plates);
-//                        SharedPreferenceUtils
-//                                .saveCurrentChoice(mContext, gson.toJson(shops));
-//
-//                        setComponentsStatus(holder_dish.plus, holder_dish.minus);
 
                         if (mItem.getUnit() < mItem.getStock()) {
                             int mShopId1 = mItem.getShopId();
                             String shopItemsString1 = SharedPreferenceUtils.getLocalItems(mContext, mShopId1);
+
+                            Log.d("DISH", "plus: "+shopItemsString1);
                             Type type1 = new TypeToken<ArrayList<item_iphone>>() {
                             }.getType();
                             ArrayList<item_iphone> shopItems1 = gson.fromJson(shopItemsString1, type1);
@@ -181,24 +168,10 @@ public class DishListAdapter extends BaseAdapter {
                         message.what = 2;
 
 
-//
-//
-//                        mPlate.setNumber(mPlate.getNumber() - 1);
-//
-//                        int shopId = mPlate.getShopId();
-//                        int plateId = mPlate.getPlateId();
-//                        String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
-//                        Gson gson = new Gson();
-//                        Shop[] shops = gson.fromJson(shop_string, Shop[].class);
-//                        Plate[] plates = shops[shopId].getPlates();
-//                        plates[plateId] = mPlate;
-//                        shops[shopId].setPlates(plates);
-//                        SharedPreferenceUtils
-//                                .saveCurrentChoice(mContext, gson.toJson(shops));
-//                        setComponentsStatus(holder_dish.plus, holder_dish.minus);
                         if (mItem.getUnit() > 0) {
                             int mShopId2 = mItem.getShopId();
                             String shopItemsString2 = SharedPreferenceUtils.getLocalItems(mContext, mShopId2);
+                            Log.d("DISH", "minus: "+shopItemsString2);
                             Type type2 = new TypeToken<ArrayList<item_iphone>>() {
                             }.getType();
                             ArrayList<item_iphone> shopItems2 = gson.fromJson(shopItemsString2, type2);

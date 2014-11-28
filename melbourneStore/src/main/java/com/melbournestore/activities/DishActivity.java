@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.NavUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -134,7 +133,7 @@ public class DishActivity extends Activity {
         mItemId = intent.getIntExtra("item_id", 0);
         mItemName = intent.getStringExtra("item_name");
 
-        mSingleItemThread = new SingleItemManagerThread(mHandler, mItemId);
+        mSingleItemThread = new SingleItemManagerThread(mHandler, this, mItemId);
         mSingleItemThread.start();
 
 
@@ -194,9 +193,10 @@ public class DishActivity extends Activity {
                 // activity and
                 // use NavUtils in the Support Package to ensure proper handling of
                 // Up.
-                Intent upIntent = NavUtils.getParentActivityIntent(this);
-                upIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivity(upIntent);
+//                Intent upIntent = NavUtils.getParentActivityIntent(this);
+//                upIntent.putExtra("shopId", mItem.getShopId());
+//                upIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//                startActivity(upIntent);
                 finish();
                 return true;
         }

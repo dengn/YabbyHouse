@@ -1,13 +1,16 @@
 package com.melbournestore.network;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.utils.Constant;
+import com.melbournestore.utils.MelbourneUtils;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -16,6 +19,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -24,10 +28,13 @@ import java.util.HashMap;
 public class SingleItemManagerThread extends Thread {
 
     Handler mHandler;
+    Context mContext;
+    Gson gson = new Gson();
     int mItemId;
 
-    public SingleItemManagerThread(Handler handler, int itemId) {
+    public SingleItemManagerThread(Handler handler, Context context, int itemId) {
         mHandler = handler;
+        mContext = context;
         mItemId = itemId;
     }
 
@@ -70,6 +77,19 @@ public class SingleItemManagerThread extends Thread {
 
         Log.d("ITEMTHREAD", result);
         item_iphone mItem = getItem(result);
+
+        String localItemsString = SharedPreferenceUtils.getLocalItems(mContext, mItem.getShopId());
+        Type type = new TypeToken<ArrayList<item_iphone>>() {}.getType();
+        ArrayList<item_iphone> localItems = gson.fromJson(localItemsString, type);
+        ArrayList<Integer> localItemIds = MelbourneUtils.getLocalItemsId(localItems);
+
+        if(!localItemIds.contains(mItem.getId())){
+            ArrayList<item_iphone> newItems = new ArrayList<item_iphone>();
+            newItems.clear();
+            newItems.addAll(localItems);
+            newItems.add(mItem);
+            SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(newItems), mItem.getShopId());
+        }
 
         Message message = mHandler.obtainMessage();
         message.obj = mItem;

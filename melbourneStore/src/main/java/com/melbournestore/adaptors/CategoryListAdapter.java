@@ -28,7 +28,6 @@ public class CategoryListAdapter extends BaseAdapter {
     DisplayImageOptions mOptions;
 
     public CategoryListAdapter(Context context, DisplayImageOptions options, ArrayList<Shop_iPhone> Shops) {
-        // TODO Auto-generated constructor stub
 
         mContext = context;
         mOptions = options;

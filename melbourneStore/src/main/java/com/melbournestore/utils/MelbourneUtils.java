@@ -137,6 +137,41 @@ public class MelbourneUtils {
         return item;
     }
 
+    public static final ArrayList<Integer> getLocalItemsId(ArrayList<item_iphone> items){
+        ArrayList<Integer> itemIds = new ArrayList<Integer>();
+        for(int i=0;i<items.size();i++){
+            itemIds.add(items.get(i).getId());
+        }
+        return itemIds;
+    }
+
+
+    public static final void createLocalItems(Context context, ArrayList<item_iphone> items){
+
+        //HashMap<Integer, ArrayList<item_iphone>> shopItems = new HashMap<Integer, ArrayList<item_iphone>>();
+
+        ArrayList<Integer> shopIds = new ArrayList<Integer>();
+
+        for(int i=0;i<items.size();i++){
+            if(shopIds.contains(items.get(i).getShopId())){
+                shopIds.add(items.get(i).getShopId());
+
+            }
+        }
+
+
+        Gson gson = new Gson();
+        for(int i=0;i<shopIds.size();i++){
+            ArrayList<item_iphone> localItems = new ArrayList<item_iphone>();
+            for(int j=0;j<items.size();j++){
+                if(shopIds.get(i)==items.get(j).getShopId()){
+                    localItems.add(items.get(j));
+                }
+            }
+            SharedPreferenceUtils.saveLocalItems(context, gson.toJson(localItems), shopIds.get(i));
+        }
+    }
+
     public static final int sum_price_all(Plate[] plates) {
         int price_all = 0;
         for (int i = 0; i < plates.length; i++) {

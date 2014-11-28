@@ -20,11 +20,14 @@ import android.widget.SearchView;
 
 import com.melbournestore.activities.R;
 import com.melbournestore.adaptors.CategoryListAdapter;
+import com.melbournestore.adaptors.ItemsSearchListAdapter;
 import com.melbournestore.adaptors.PlateSearchListAdapter;
 import com.melbournestore.application.SysApplication;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
 import com.melbournestore.models.Shop_iPhone;
+import com.melbournestore.models.item_iphone;
+import com.melbournestore.network.SearchItemManagerThread;
 import com.melbournestore.network.ShopManagerThread;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
@@ -41,26 +44,35 @@ public class PlateFragment extends Fragment {
     ShopManagerThread mShopThread;
     CategoryListAdapter category_adapter;
     PlateSearchListAdapter platesFilter_adapter;
+    ItemsSearchListAdapter itemsSearchAdapter;
+    SearchItemManagerThread mSearchItemThread;
+
+    ListView searchList;
+
+
     boolean header_created = false;
     ActionBar actionBar;
     SearchView search_plate;
     private ArrayList<Shop_iPhone> mShops = new ArrayList<Shop_iPhone>();
+    private ArrayList<item_iphone> mSearchItems = new ArrayList<item_iphone>();
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            mShops = (ArrayList<Shop_iPhone>) msg.obj;
-            category_adapter.refresh(mShops);
-            category.setAdapter(category_adapter);
-//            switch (msg.what) {
-//                case 1:
-//
-//                    break;
-//                case 2:
-//
-//
-//                    break;
-//
-//            }
+            switch (msg.what){
+                case 0:
+                    mShops = (ArrayList<Shop_iPhone>) msg.obj;
+                    category_adapter.refresh(mShops);
+                    category.setAdapter(category_adapter);
+                    break;
+                case 1:
+                    mSearchItems = (ArrayList<item_iphone>) msg.obj;
+                    itemsSearchAdapter.refresh(mSearchItems);
+
+
+                    break;
+            }
+
+
         }
     };
     private ArrayList<Shop> shopList = new ArrayList<Shop>();
@@ -90,6 +102,8 @@ public class PlateFragment extends Fragment {
         mShopThread.start();
 
 
+
+
         options = new DisplayImageOptions.Builder()
                 .showStubImage(R.drawable.loading_ads)    //在ImageView加载过程中显示图片
                 .showImageForEmptyUri(R.drawable.loading_ads)  //image连接地址为空时
@@ -99,7 +113,7 @@ public class PlateFragment extends Fragment {
                 .build();
         category_adapter = new CategoryListAdapter(mContext, options, mShops);
 
-
+        itemsSearchAdapter = new ItemsSearchListAdapter(mContext, mHandler, mSearchItems);
 
 
     }
@@ -117,7 +131,8 @@ public class PlateFragment extends Fragment {
         search_plate.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                plates.setVisibility(View.VISIBLE);
+                //plates.setVisibility(View.VISIBLE);
+                searchList.setVisibility(View.VISIBLE);
                 expandAll();
             }
         });
@@ -126,7 +141,15 @@ public class PlateFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String query) {
                 //plates.setVisibility(View.VISIBLE);
+
                 platesFilter_adapter.filterData(query);
+
+                mSearchItemThread = new SearchItemManagerThread(mHandler, mContext, query);
+                mSearchItemThread.start();
+
+
+
+
                 expandAll();
                 return false;
             }
@@ -134,8 +157,11 @@ public class PlateFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //plates.setVisibility(View.VISIBLE);
+
                 platesFilter_adapter.filterData(query);
                 expandAll();
+
+
                 return false;
             }
         });
@@ -143,6 +169,7 @@ public class PlateFragment extends Fragment {
             @Override
             public boolean onClose() {
                 plates.setVisibility(View.INVISIBLE);
+                searchList.setVisibility(View.INVISIBLE);
                 platesFilter_adapter.filterData("");
                 expandAll();
                 return false;
@@ -183,6 +210,11 @@ public class PlateFragment extends Fragment {
 
 
 
+        searchList =(ListView) rootView.findViewById(R.id.items_search_list);
+
+        searchList.setAdapter(itemsSearchAdapter);
+
+        searchList.setVisibility(View.INVISIBLE);
 
         plates = (ExpandableListView) rootView.findViewById(R.id.plate_search_list);
 
