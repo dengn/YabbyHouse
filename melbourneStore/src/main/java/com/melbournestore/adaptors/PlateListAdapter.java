@@ -36,7 +36,7 @@ public class PlateListAdapter extends BaseAdapter {
     private Gson gson = new Gson();
     private boolean likeClicked = false;
 
-    public PlateListAdapter(Context context, Handler handler,DisplayImageOptions options, ArrayList<item_iphone> items) {
+    public PlateListAdapter(Context context, Handler handler, DisplayImageOptions options, ArrayList<item_iphone> items) {
 
         mContext = context;
         mHandler = handler;
@@ -123,13 +123,6 @@ public class PlateListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-//                int shopId = mPlates[position].getShopId();
-//                String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
-//                Gson gson = new Gson();
-//                Shop[] shops = gson.fromJson(shop_string, Shop[].class);
-//                shops[shopId].setPlates(mPlates);
-//                SharedPreferenceUtils
-//                        .saveCurrentChoice(mContext, gson.toJson(shops));
 
 
                 Intent intent = new Intent(mContext, DishActivity.class);
@@ -189,33 +182,18 @@ public class PlateListAdapter extends BaseAdapter {
                 // plus = 1
                 message.what = 1;
 
-                mHandler.sendMessage(message);
-
-
-//                mPlates[position].setNumber(mPlates[position].getNumber() + 1);
-//
-//                int shopId = mPlates[position].getShopId();
-//                String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
-//                Gson gson = new Gson();
-//                Shop[] shops = gson.fromJson(shop_string, Shop[].class);
-//                shops[shopId].setPlates(mPlates);
-//                SharedPreferenceUtils
-//                        .saveCurrentChoice(mContext, gson.toJson(shops));
-                int mShopId1 = mItems.get(position).getShopId();
-//                String itemsString1 = SharedPreferenceUtils.getLocalItems(mContext, mShopId1);
-//                Type type1 = new TypeToken<ArrayList<item_iphone>>() {
-//                }.getType();
-//                ArrayList<item_iphone> items1 = gson.fromJson(itemsString1, type1);
-//                items1.get(position).setUnit(items1.get(position).getUnit() + 1);
-//                mItems.clear();
-//                mItems.addAll(items1);
-                mItems.get(position).setUnit(mItems.get(position).getUnit() + 1);
-                SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(mItems), mShopId1);
+                if (mItems.get(position).getUnit() < mItems.get(position).getStock()) {
+                    int mShopId1 = mItems.get(position).getShopId();
+                    mItems.get(position).setUnit(mItems.get(position).getUnit() + 1);
+                    SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(mItems), mShopId1);
+                }
 
                 holder.num_view.setText(String.valueOf(mItems.get(position).getUnit()));
 
                 setComponentsStatus(holder.plus, holder.minus, holder.num_view,
                         position);
+
+                mHandler.sendMessage(message);
 
             }
         });
@@ -233,35 +211,19 @@ public class PlateListAdapter extends BaseAdapter {
                 // minus = 2
                 message.what = 2;
 
-                mHandler.sendMessage(message);
 
-
-//                mPlates[position].setNumber(mPlates[position].getNumber() - 1);
-//
-//                int shopId = mPlates[position].getShopId();
-//                String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
-//                Gson gson = new Gson();
-//                Shop[] shops = gson.fromJson(shop_string, Shop[].class);
-//                shops[shopId].setPlates(mPlates);
-//                SharedPreferenceUtils
-//                        .saveCurrentChoice(mContext, gson.toJson(shops));
-
-                int mShopId2 = mItems.get(position).getShopId();
-//                String itemsString2 = SharedPreferenceUtils.getLocalItems(mContext, mShopId2);
-//                Type type2 = new TypeToken<ArrayList<item_iphone>>() {
-//                }.getType();
-//                ArrayList<item_iphone> items2 = gson.fromJson(itemsString2, type2);
-//                items2.get(position).setUnit(items2.get(position).getUnit() - 1);
-//                mItems.clear();
-//                mItems.addAll(items2);
-                mItems.get(position).setUnit(mItems.get(position).getUnit() - 1);
-                SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(mItems), mShopId2);
-
+                if (mItems.get(position).getUnit() > 0) {
+                    int mShopId2 = mItems.get(position).getShopId();
+                    mItems.get(position).setUnit(mItems.get(position).getUnit() - 1);
+                    SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(mItems), mShopId2);
+                }
 
                 holder.num_view.setText(String.valueOf(mItems.get(position).getUnit()));
 
                 setComponentsStatus(holder.plus, holder.minus, holder.num_view,
                         position);
+
+                mHandler.sendMessage(message);
 
             }
         });

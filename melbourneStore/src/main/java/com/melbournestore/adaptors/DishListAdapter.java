@@ -2,6 +2,7 @@ package com.melbournestore.adaptors;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,11 +12,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.melbournestore.activities.R;
+import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.utils.Constant;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class DishListAdapter extends BaseAdapter {
 
@@ -24,6 +31,8 @@ public class DishListAdapter extends BaseAdapter {
     private Context mContext;
     private Handler mHandler;
     private item_iphone mItem;
+
+    private Gson gson = new Gson();
 
     public DishListAdapter(Context context, Handler handler, DisplayImageOptions options, item_iphone item) {
 
@@ -117,11 +126,11 @@ public class DishListAdapter extends BaseAdapter {
                 holder_dish.plus.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        Message message = new Message();
-//                        // plus = 1
-//                        message.what = 1;
-//
-//                        mHandler.sendMessage(message);
+                        Message message = new Message();
+                        // plus = 1
+                        message.what = 1;
+
+
 //
 //
 //                        mPlate.setNumber(mPlate.getNumber() + 1);
@@ -139,6 +148,27 @@ public class DishListAdapter extends BaseAdapter {
 //
 //                        setComponentsStatus(holder_dish.plus, holder_dish.minus);
 
+                        if (mItem.getUnit() < mItem.getStock()) {
+                            int mShopId1 = mItem.getShopId();
+                            String shopItemsString1 = SharedPreferenceUtils.getLocalItems(mContext, mShopId1);
+                            Type type1 = new TypeToken<ArrayList<item_iphone>>() {
+                            }.getType();
+                            ArrayList<item_iphone> shopItems1 = gson.fromJson(shopItemsString1, type1);
+                            for(int i=0;i<shopItems1.size();i++){
+                                if(shopItems1.get(i).getId()==mItem.getId()){
+                                    shopItems1.get(i).setUnit(mItem.getUnit() + 1);
+                                    break;
+                                }
+                            }
+                            SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(shopItems1), mShopId1);
+
+                            mItem.setUnit(mItem.getUnit() + 1);
+
+                        }
+
+
+                        mHandler.sendMessage(message);
+
                     }
                 });
 
@@ -146,11 +176,11 @@ public class DishListAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
 
-//                        Message message = new Message();
-//                        // minus = 2
-//                        message.what = 2;
-//
-//                        mHandler.sendMessage(message);
+                        Message message = new Message();
+                        // minus = 2
+                        message.what = 2;
+
+
 //
 //
 //                        mPlate.setNumber(mPlate.getNumber() - 1);
@@ -166,6 +196,25 @@ public class DishListAdapter extends BaseAdapter {
 //                        SharedPreferenceUtils
 //                                .saveCurrentChoice(mContext, gson.toJson(shops));
 //                        setComponentsStatus(holder_dish.plus, holder_dish.minus);
+                        if (mItem.getUnit() > 0) {
+                            int mShopId2 = mItem.getShopId();
+                            String shopItemsString2 = SharedPreferenceUtils.getLocalItems(mContext, mShopId2);
+                            Type type2 = new TypeToken<ArrayList<item_iphone>>() {
+                            }.getType();
+                            ArrayList<item_iphone> shopItems2 = gson.fromJson(shopItemsString2, type2);
+                            for(int i=0;i<shopItems2.size();i++){
+                                if(shopItems2.get(i).getId()==mItem.getId()){
+                                    shopItems2.get(i).setUnit(mItem.getUnit() - 1);
+                                    break;
+                                }
+                            }
+                            SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(shopItems2), mShopId2);
+
+                            mItem.setUnit(mItem.getUnit() - 1);
+
+                        }
+
+                        mHandler.sendMessage(message);
                     }
                 });
 

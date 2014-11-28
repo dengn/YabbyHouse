@@ -19,7 +19,9 @@ import android.widget.Toast;
 import com.melbournestore.adaptors.DishListAdapter;
 import com.melbournestore.application.SysApplication;
 import com.melbournestore.models.item_iphone;
+import com.melbournestore.models.number_price;
 import com.melbournestore.network.SingleItemManagerThread;
+import com.melbournestore.utils.MelbourneUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 public class DishActivity extends Activity {
@@ -37,55 +39,74 @@ public class DishActivity extends Activity {
     private int mLikeNum;
     private int mItemId;
     private String mItemName;
+
+    private number_price sumNumberPrice;
+
     private item_iphone mItem = new item_iphone();
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            mItem = (item_iphone) msg.obj;
-            mDishListAdapter.refresh(mItem);
-            mDishList.setAdapter(mDishListAdapter);
-//            switch (msg.what) {
-//                case 1:
-//                    // plus = 1
-//
+
+
+
+
+            switch (msg.what) {
+
+                case 0:
+
+                    mItem = (item_iphone) msg.obj;
+                    mItem = MelbourneUtils.updateItemUnits(DishActivity.this, mItem);
+                    mDishListAdapter.refresh(mItem);
+                    mDishList.setAdapter(mDishListAdapter);
+
+                    break;
+                case 1:
+                    // plus = 1
+
 //                    String shops_string1 = SharedPreferenceUtils
 //                            .getCurrentChoice(DishActivity.this);
 //                    Gson gson1 = new Gson();
 //                    Shop[] shops1 = gson1.fromJson(shops_string1, Shop[].class);
 //                    Plate plate1 = shops1[mShopId].getPlates()[mPlateId];
-//
-//                    mDishListAdapter.refresh(plate1);
-//                    mDishList.setAdapter(mDishListAdapter);
-//
-//                    mTotalNum = MelbourneUtils.sum_number_all(shops1);
-//                    mTotalPrice = MelbourneUtils.sum_price_all(shops1);
-//
-//                    mDishTotalNum.setText(String.valueOf(mTotalNum));
-//                    mDishTotalPrice.setText("$" + String.valueOf(mTotalPrice));
-//
-//                    break;
-//                case 2:
-//                    // minus = 2
-//
+
+                    mItem = MelbourneUtils.updateItemUnits(DishActivity.this, mItem);
+                    mDishListAdapter.refresh(mItem);
+                    //mDishList.setAdapter(mDishListAdapter);
+
+                    sumNumberPrice = MelbourneUtils.sum_item_number_price(DishActivity.this);
+
+                    mTotalNum = sumNumberPrice.getNumber();
+                    mTotalPrice = sumNumberPrice.getPrice();
+
+                    mDishTotalNum.setText(String.valueOf(mTotalNum));
+                    mDishTotalPrice.setText("$" + String.valueOf(mTotalPrice));
+
+                    break;
+                case 2:
+                    // minus = 2
+
 //                    String shops_string2 = SharedPreferenceUtils
 //                            .getCurrentChoice(DishActivity.this);
 //                    Gson gson2 = new Gson();
 //                    Shop[] shops2 = gson2.fromJson(shops_string2, Shop[].class);
 //                    Plate plate2 = shops2[mShopId].getPlates()[mPlateId];
-//
-//                    mDishListAdapter.refresh(plate2);
-//                    mDishList.setAdapter(mDishListAdapter);
-//
-//
-//                    mTotalNum = MelbourneUtils.sum_number_all(shops2);
-//                    mTotalPrice = MelbourneUtils.sum_price_all(shops2);
-//
-//                    mDishTotalNum.setText(String.valueOf(mTotalNum));
-//                    mDishTotalPrice.setText("$" + String.valueOf(mTotalPrice));
-//
-//                    break;
-//
-//            }
+
+                    mItem = MelbourneUtils.updateItemUnits(DishActivity.this, mItem);
+                    mDishListAdapter.refresh(mItem);
+                    //mDishList.setAdapter(mDishListAdapter);
+
+
+                    sumNumberPrice = MelbourneUtils.sum_item_number_price(DishActivity.this);
+
+                    mTotalNum = sumNumberPrice.getNumber();
+                    mTotalPrice = sumNumberPrice.getPrice();
+
+                    mDishTotalNum.setText(String.valueOf(mTotalNum));
+                    mDishTotalPrice.setText("$" + String.valueOf(mTotalPrice));
+
+                    break;
+
+            }
         }
     };
     private SingleItemManagerThread mSingleItemThread;
@@ -116,10 +137,7 @@ public class DishActivity extends Activity {
         mSingleItemThread = new SingleItemManagerThread(mHandler, mItemId);
         mSingleItemThread.start();
 
-//        String shop_info = SharedPreferenceUtils.getCurrentChoice(this);
-//        Gson gson = new Gson();
-//        Shop[] shops = gson.fromJson(shop_info, Shop[].class);
-//        Plate plate = shops[mShopId].getPlates()[mPlateId];
+
 
 
         getActionBar().setTitle(mItemName);
@@ -142,8 +160,10 @@ public class DishActivity extends Activity {
         mDishTotalPrice = (TextView) findViewById(R.id.dish_price);
         mDishTotalNum = (TextView) findViewById(R.id.dish_num_total);
 
-//        mTotalNum = MelbourneUtils.sum_number_all(shops);
-//        mTotalPrice = MelbourneUtils.sum_price_all(shops);
+        sumNumberPrice = MelbourneUtils.sum_item_number_price(this);
+
+        mTotalNum = sumNumberPrice.getNumber();
+        mTotalPrice = sumNumberPrice.getPrice();
 
         mDishTotalNum.setText(String.valueOf(mTotalNum));
         mDishTotalPrice.setText("$" + String.valueOf(mTotalPrice));

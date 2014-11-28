@@ -82,26 +82,16 @@ public class PlateActivity extends Activity {
                     break;
                 // plus = 1
                 case 1:
-                    //totalPrice += DataResourceUtils.platePrices[mShopId][position];
-                    //totalNum++;
-                    // plateNumbers[position]++;
-
-//                    String shops_string1 = SharedPreferenceUtils.getCurrentChoice(PlateActivity.this);
-//                    Gson gson1 = new Gson();
-//                    Shop[] shops1 = gson1.fromJson(shops_string1, Shop[].class);
-
 
                     String itemsString1 = SharedPreferenceUtils.getLocalItems(PlateActivity.this, mShopId);
                     Type type1 = new TypeToken<ArrayList<item_iphone>>() {
                     }.getType();
                     ArrayList<item_iphone> items1 = gson.fromJson(itemsString1, type1);
-//                    items1.get(position).setUnit(items1.get(position).getUnit() + 1);
                     mItems.clear();
                     mItems.addAll(items1);
-//                    SharedPreferenceUtils.saveLocalItems(PlateActivity.this, gson.toJson(items1), mShopId);
 
                     mPlateListAdapter.refresh(mItems);
-                    mPlatesList.setAdapter(mPlateListAdapter);
+                    //mPlatesList.setAdapter(mPlateListAdapter);
 
                     sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
 
@@ -117,30 +107,17 @@ public class PlateActivity extends Activity {
 
                     } else {
 
-                        //totalPrice -= DataResourceUtils.platePrices[mShopId][position];
-                        //totalNum--;
-                        // plateNumbers[position]--;
-
-//                        String shops_string2 = SharedPreferenceUtils.getCurrentChoice(PlateActivity.this);
-//                        Gson gson2 = new Gson();
-//                        Shop[] shops2 = gson2.fromJson(shops_string2, Shop[].class);
-//
-//                        totalNum = MelbourneUtils.sum_number_all(shops2);
-//                        totalPrice = MelbourneUtils.sum_price_all(shops2);
-
-
 
                         String itemsString2 = SharedPreferenceUtils.getLocalItems(PlateActivity.this, mShopId);
                         Type type2 = new TypeToken<ArrayList<item_iphone>>() {
                         }.getType();
                         ArrayList<item_iphone> items2 = gson.fromJson(itemsString2, type2);
-//                        items2.get(position).setUnit(items2.get(position).getUnit() - 1);
                         mItems.clear();
                         mItems.addAll(items2);
-//                        SharedPreferenceUtils.saveLocalItems(PlateActivity.this, gson.toJson(items2), mShopId);
+
 
                         mPlateListAdapter.refresh(mItems);
-                        mPlatesList.setAdapter(mPlateListAdapter);
+                        //mPlatesList.setAdapter(mPlateListAdapter);
 
                         sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
 
@@ -241,8 +218,16 @@ public class PlateActivity extends Activity {
         totalPrice = sumNumberPrice.getPrice();
         totalNum = sumNumberPrice.getNumber();
 
+        String itemsString = SharedPreferenceUtils.getLocalItems(PlateActivity.this, mShopId);
+        Type type = new TypeToken<ArrayList<item_iphone>>() {
+        }.getType();
+        ArrayList<item_iphone> items = gson.fromJson(itemsString, type);
+
+        mItems.clear();
+        mItems.addAll(items);
+
         mPlateListAdapter.refresh(mItems);
-        mPlatesList.setAdapter(mPlateListAdapter);
+        //mPlatesList.setAdapter(mPlateListAdapter);
 
         mTotalNum.setText(String.valueOf(totalNum));
         mTotalPrice.setText("$" + String.valueOf(totalPrice));

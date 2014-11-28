@@ -12,9 +12,13 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.melbournestore.activities.R;
+import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.item_iphone;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class OrderListAdapter extends BaseAdapter {
@@ -22,6 +26,7 @@ public class OrderListAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
     Handler mHandler;
     Context mContext;
+    Gson gson = new Gson();
     ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
 
     public OrderListAdapter(Context context, Handler handler, ArrayList<item_iphone> items) {
@@ -89,28 +94,33 @@ public class OrderListAdapter extends BaseAdapter {
                 // plus = 1
                 message.what = 1;
 
-                mHandler.sendMessage(message);
-                // orderNumbers[position]++;
 
-//                mPlates[position].setNumber(mPlates[position].getNumber() + 1);
-//
-//                int shopId = mPlates[position].getShopId();
-//                int plateId = mPlates[position].getPlateId();
-//                String shop_string = SharedPreferenceUtils
-//                        .getCurrentChoice(mContext);
-//                Gson gson = new Gson();
-//                Shop[] shops = gson.fromJson(shop_string, Shop[].class);
-//                Plate[] plates = shops[shopId].getPlates();
-//                plates[plateId] = mPlates[position];
-//
-//                SharedPreferenceUtils.saveCurrentChoice(mContext,
-//                        gson.toJson(shops));
+
+                if (mItems.get(position).getUnit() < mItems.get(position).getStock()) {
+                    int mShopId1 = mItems.get(position).getShopId();
+                    String shopItemsString1 = SharedPreferenceUtils.getLocalItems(mContext, mShopId1);
+                    Type type1 = new TypeToken<ArrayList<item_iphone>>() {
+                    }.getType();
+                    ArrayList<item_iphone> shopItems1 = gson.fromJson(shopItemsString1, type1);
+                    for(int i=0;i<shopItems1.size();i++){
+                        if(shopItems1.get(i).getId()==mItems.get(position).getId()){
+                            shopItems1.get(i).setUnit(mItems.get(position).getUnit() + 1);
+                            break;
+                        }
+                    }
+                    SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(shopItems1), mShopId1);
+
+                    mItems.get(position).setUnit(mItems.get(position).getUnit() + 1);
+
+                }
 
                 holder.numbers_view.setText(String
                         .valueOf(mItems.get(position).getUnit()));
 
 
                 setComponentsStatus(holder.plus, holder.minus, position);
+
+                mHandler.sendMessage(message);
             }
         });
 
@@ -127,35 +137,33 @@ public class OrderListAdapter extends BaseAdapter {
                 // minus = 2
                 message.what = 2;
 
-                mHandler.sendMessage(message);
 
-//				if (orderNumbers[position] <= 0) {
-//					holder.minus.setEnabled(false);
-//					orderNumbers[position] = 0;
-//				} else {
-//					holder.minus.setEnabled(true);
-//					orderNumbers[position]--;
-//				}
 
-//                mPlates[position].setNumber(mPlates[position].getNumber() - 1);
-//
-//                int shopId = mPlates[position].getShopId();
-//                int plateId = mPlates[position].getPlateId();
-//                String shop_string = SharedPreferenceUtils
-//                        .getCurrentChoice(mContext);
-//                Gson gson = new Gson();
-//                Shop[] shops = gson.fromJson(shop_string, Shop[].class);
-//                Plate[] plates = shops[shopId].getPlates();
-//                plates[plateId] = mPlates[position];
-//
-//
-//                SharedPreferenceUtils.saveCurrentChoice(mContext,
-//                        gson.toJson(shops));
+
+
+                if (mItems.get(position).getUnit() > 0) {
+                    int mShopId2 = mItems.get(position).getShopId();
+                    String shopItemsString2 = SharedPreferenceUtils.getLocalItems(mContext, mShopId2);
+                    Type type2 = new TypeToken<ArrayList<item_iphone>>() {
+                    }.getType();
+                    ArrayList<item_iphone> shopItems2 = gson.fromJson(shopItemsString2, type2);
+                    for(int i=0;i<shopItems2.size();i++){
+                        if(shopItems2.get(i).getId()==mItems.get(position).getId()){
+                            shopItems2.get(i).setUnit(mItems.get(position).getUnit() - 1);
+                            break;
+                        }
+                    }
+                    SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(shopItems2), mShopId2);
+
+                    mItems.get(position).setUnit(mItems.get(position).getUnit() - 1);
+                }
 
                 holder.numbers_view.setText(String
                         .valueOf(mItems.get(position).getUnit()));
 
                 setComponentsStatus(holder.plus, holder.minus, position);
+
+                mHandler.sendMessage(message);
 
             }
         });

@@ -122,6 +122,21 @@ public class MelbourneUtils {
         return chosenItems;
     }
 
+    public static final item_iphone updateItemUnits(Context context, item_iphone item){
+        Gson gson = new Gson();
+        String itemsString = SharedPreferenceUtils.getLocalItems(context, item.getShopId());
+        Type type = new TypeToken<ArrayList<item_iphone>>() {
+        }.getType();
+        ArrayList<item_iphone> items = gson.fromJson(itemsString, type);
+        for(int i=0;i<items.size();i++){
+            if(item.getId()==items.get(i).getId()){
+                item.setUnit(items.get(i).getUnit());
+                break;
+            }
+        }
+        return item;
+    }
+
     public static final int sum_price_all(Plate[] plates) {
         int price_all = 0;
         for (int i = 0; i < plates.length; i++) {

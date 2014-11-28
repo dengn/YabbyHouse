@@ -79,6 +79,7 @@ public class SingleItemManagerThread extends Thread {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        message.what = 0;
         mHandler.sendMessage(message);
     }
 
