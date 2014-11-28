@@ -57,6 +57,9 @@ public class ChooseAddressActivity extends Activity {
         }
     };
     private String addr_suburb;
+    private String suburbPostCode;
+    private String areaName;
+    private int areaFee;
     private long mExitTime;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -89,13 +92,13 @@ public class ChooseAddressActivity extends Activity {
         chooseAddr_list = (ListView) findViewById(R.id.chooseAddr_list);
 
         mChooseAddressListAdapter = new ChooseAddressListAdapter(this,
-                mHandler, addr_unit, addr_street, addr_suburb);
+                mHandler, addr_unit, addr_street, addr_suburb, suburbPostCode);
         chooseAddr_list.setAdapter(mChooseAddressListAdapter);
 
         chooseAddrSuburb_list = (ListView) findViewById(R.id.chooseAddr_suburb);
 
         mChooseAddressSuburbListAdapter = new ChooseAddressSuburbListAdapter(this,
-                mHandler, addr_suburb);
+                mHandler, addr_suburb, areaFee);
         chooseAddrSuburb_list.setAdapter(mChooseAddressSuburbListAdapter);
 
     }
@@ -121,11 +124,15 @@ public class ChooseAddressActivity extends Activity {
             if (resultCode == RESULT_OK) {
                 // get the suburb
 
-                String suburb = data.getStringExtra("suburb");
-                addr_suburb = suburb;
+                addr_suburb = data.getStringExtra("name");
+                suburbPostCode = data.getStringExtra("postcode");
+                areaName = data.getStringExtra("area");
+                areaFee = data.getIntExtra("fee", 0);
+
+
                 mChooseAddressListAdapter.refresh(addr_unit, addr_street,
-                        addr_suburb);
-                mChooseAddressSuburbListAdapter.refresh(addr_suburb);
+                        addr_suburb, suburbPostCode);
+                mChooseAddressSuburbListAdapter.refresh(areaName, areaFee);
                 chooseAddr_list.setAdapter(mChooseAddressListAdapter);
                 chooseAddrSuburb_list.setAdapter(mChooseAddressSuburbListAdapter);
 

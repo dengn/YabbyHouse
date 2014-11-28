@@ -4,19 +4,17 @@ import java.util.ArrayList;
 
 public class Area {
 
-    private int id;
     private String name;
     private int fee;
     private int status;
-    private ArrayList<Suburb> suburbs;
+    private Suburb[] suburbs;
     private String update_time;
 
     public Area() {
 
     }
 
-    public Area(int id, String name, int fee, int status, ArrayList<Suburb> suburbs, String update_time) {
-        this.id = id;
+    public Area(String name, int fee, int status, Suburb[] suburbs, String update_time) {
         this.name = name;
         this.fee = fee;
         this.status = status;
@@ -24,13 +22,6 @@ public class Area {
         this.update_time = update_time;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -58,15 +49,14 @@ public class Area {
 
     public ArrayList<Suburb> getSuburbs() {
         ArrayList<Suburb> suburbList = new ArrayList<Suburb>();
-        for (int i = 0; i < suburbs.size(); i++) {
-            suburbList.add(suburbs.get(i));
+        for (int i = 0; i < suburbs.length; i++) {
+            suburbList.add(suburbs[i]);
         }
         return suburbList;
     }
 
-    public void setSuburbs(ArrayList<Suburb> suburbs) {
-        this.suburbs.clear();
-        this.suburbs.addAll(suburbs);
+    public void setSuburbs(Suburb[] suburbs) {
+        this.suburbs = suburbs;
     }
 
     public String getUpdateTime() {

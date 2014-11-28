@@ -20,10 +20,11 @@ import android.widget.ExpandableListView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.melbournestore.adaptors.SuburbListAdapter;
 import com.melbournestore.application.SysApplication;
 import com.melbournestore.models.Area;
-import com.melbournestore.models.Suburb;
+import com.melbournestore.network.AreaManagerThread;
 
 import java.util.ArrayList;
 
@@ -37,12 +38,24 @@ public class SuburbActivity extends Activity implements
 
 
             switch (msg.what) {
+                case 0:
+                    mAreas = (ArrayList<Area>) msg.obj;
+                    suburbListAdapter.refresh(mAreas);
+                    suburbList.setAdapter(suburbListAdapter);
+                    break;
                 // get the suburb chosen
                 case 1:
                     Bundle b = msg.getData();
-                    String suburbChosen = b.getString("suburb");
+                    String suburbName = b.getString("name");
+                    String suburbPostCode = b.getString("postcode");
+                    String areaName = b.getString("area");
+                    int areaFee = b.getInt("fee");
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("suburb", suburbChosen);
+                    returnIntent.putExtra("name", suburbName);
+                    returnIntent.putExtra("postcode", suburbPostCode);
+                    returnIntent.putExtra("area", areaName);
+                    returnIntent.putExtra("fee", areaFee);
+
                     setResult(RESULT_OK, returnIntent);
                     finish();
 
@@ -63,7 +76,10 @@ public class SuburbActivity extends Activity implements
     private SuburbListAdapter suburbListAdapter;
     private ExpandableListView suburbList;
 
-    private ArrayList<Area> areaList = new ArrayList<Area>();
+    private AreaManagerThread mAreaThread;
+    private Gson gson = new Gson();
+
+    private ArrayList<Area> mAreas = new ArrayList<Area>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,16 +88,15 @@ public class SuburbActivity extends Activity implements
 
         SysApplication.getInstance().addActivity(this);
 
-        //initActionBar();
+        mAreaThread = new AreaManagerThread(mHandler, SuburbActivity.this);
+        mAreaThread.start();
 
-        loadSomeData();
-        // search_suburb = (SearchView) findViewById(R.id.search_view);
+
         suburbList = (ExpandableListView) findViewById(R.id.suburb_list);
 
-        //headerView = new SuburbListHeaderView(this);
 
 
-        suburbListAdapter = new SuburbListAdapter(this, mHandler, areaList);
+        suburbListAdapter = new SuburbListAdapter(this, mHandler, mAreas);
 
         suburbList.setAdapter(suburbListAdapter);
 //        suburbList.setPinnedHeaderView(LayoutInflater.from(this).inflate(
@@ -106,105 +121,7 @@ public class SuburbActivity extends Activity implements
         }
     }
 
-    private void loadSomeData() {
 
-        ArrayList<Suburb> suburbList = new ArrayList<Suburb>();
-        Suburb suburb = new Suburb(1, "city", "92130", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(2, "issy les moulineaux", "92120", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(3, "seir", "92110", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(4, "w4teywr", "92120", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(5, "asfkowet", "92110", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(6, "wrteytrywt", "92120", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(7, "5yuurr", "92110", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(8, "wetyeryey", "92120", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(9, "sfafege", "92110", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(10, "dfhfjdstsdgtsegter", "92120", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(11, "serhthth", "92110", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(12, "asfwegwg", "92120", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(13, "qqqq", "92110", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(14, "yatst", "92120", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(15, "atrsrg", "92110", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(16, "Jiefang Bei", "92120", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(17, "Cross Roads", "92110", "12:30");
-        suburbList.add(suburb);
-
-
-        suburbList.add(suburb);
-
-        Area area = new Area(1, "City", 5, 0, suburbList, "13:00");
-
-        areaList.add(area);
-
-        suburbList = new ArrayList<Suburb>();
-        suburb = new Suburb(18, "chatelet", "75002", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(19, "Paristech", "16340", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(20, "Cite", "92220", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(21, "fggg", "75002", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(22, "rerwer", "16340", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(23, "rwetwywt", "92220", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(24, "yteyrt", "75002", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(25, "hdrhrey", "16340", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(26, "q3rowetwet", "92220", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(27, "wetwetwet", "75002", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(28, "sdgoweotowet", "16340", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(30, "South Area", "92220", "12:30");
-        suburbList.add(suburb);
-
-        area = new Area(2, "东南", 6, 0, suburbList, "13:00");
-        areaList.add(area);
-
-
-        suburbList = new ArrayList<Suburb>();
-        suburb = new Suburb(31, "Airport", "75002", "12:30");
-        suburbList.add(suburb);
-        suburb = new Suburb(32, "Two River", "75002", "12:30");
-        suburbList.add(suburb);
-
-        area = new Area(3, "北", 6, 0, suburbList, "13:00");
-        areaList.add(area);
-
-        suburbList = new ArrayList<Suburb>();
-        suburb = new Suburb(33, "University Town", "75002", "12:30");
-        suburbList.add(suburb);
-
-        area = new Area(4, "西", 6, 0, suburbList, "13:00");
-        areaList.add(area);
-
-
-        suburbList = new ArrayList<Suburb>();
-        suburb = new Suburb(34, "Northeast Area", "75002", "12:30");
-        suburbList.add(suburb);
-
-        area = new Area(5, "西北", 6, 0, suburbList, "13:00");
-        areaList.add(area);
-    }
     @Override
     public boolean onClose() {
         suburbListAdapter.filterData("");

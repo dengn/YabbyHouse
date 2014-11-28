@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.melbournestore.activities.ChooseAddressActivity;
 import com.melbournestore.activities.R;
 import com.melbournestore.activities.SuburbActivity;
-import com.melbournestore.utils.MelbourneUtils;
 
 public class ChooseAddressListAdapter extends BaseAdapter {
 
@@ -30,8 +29,9 @@ public class ChooseAddressListAdapter extends BaseAdapter {
     private String addr_unit;
     private String addr_street;
     private String addr_suburb;
+    private String postcode;
 
-    public ChooseAddressListAdapter(Context context, Handler handler, String unit, String street, String suburb) {
+    public ChooseAddressListAdapter(Context context, Handler handler, String unit, String street, String suburb, String postcode) {
         // TODO Auto-generated constructor stub
 
         mContext = context;
@@ -39,40 +39,42 @@ public class ChooseAddressListAdapter extends BaseAdapter {
         addr_unit = unit;
         addr_street = street;
         addr_suburb = suburb;
+        this.postcode = postcode;
 
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(String unit, String street, String suburb) {
+    public void refresh(String unit, String street, String suburb, String postcode) {
         addr_unit = unit;
         addr_street = street;
         addr_suburb = suburb;
+        this.postcode = postcode;
         notifyDataSetChanged();
     }
 
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
+
         return 4;
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
+
 
         viewHolder_edittext holder_edittext = null;
         viewHolder_activity holder_activity = null;
@@ -188,7 +190,7 @@ public class ChooseAddressListAdapter extends BaseAdapter {
                 holder_textview.info = (TextView) convertView.findViewById(R.id.postcode_info);
 
                 holder_textview.title.setText("邮编");
-                holder_textview.info.setText(MelbourneUtils.getPostcode(addr_suburb));
+                holder_textview.info.setText(postcode);
 
                 convertView.setTag(holder_textview);
 

@@ -57,7 +57,7 @@ public class RecommandationFragment extends Fragment {
 
             mAd = (ArrayList<advertisements>) msg.obj;
             mRecommadationListAdapter.refresh(mAd);
-            mRecommandationList.setAdapter(mRecommadationListAdapter);
+            //mRecommandationList.setAdapter(mRecommadationListAdapter);
 
 //            switch (msg.what) {
 //                case 1:

@@ -23,15 +23,22 @@ public class SuburbListAdapter extends BaseExpandableListAdapter {
 
     private Context mContext;
     private Handler mHandler;
-    private ArrayList<Area> mAreaList;
-    private ArrayList<Area> mOriginalList;
+    private ArrayList<Area> mAreaList = new ArrayList<Area>();
+    private ArrayList<Area> mOriginalList = new ArrayList<Area>();
 
     public SuburbListAdapter(Context context, Handler handler, ArrayList<Area> headList) {
         mContext = context;
         mHandler = handler;
-        mAreaList = new ArrayList<Area>();
+        mAreaList.clear();
         mAreaList.addAll(headList);
-        mOriginalList = new ArrayList<Area>();
+        mOriginalList.clear();
+        mOriginalList.addAll(headList);
+    }
+
+    public void refresh(ArrayList<Area> headList){
+        mAreaList.clear();
+        mAreaList.addAll(headList);
+        mOriginalList.clear();
         mOriginalList.addAll(headList);
     }
 
@@ -91,7 +98,9 @@ public class SuburbListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
+        final Area area = (Area) getGroup(groupPosition);
         final Suburb suburb = (Suburb) getChild(groupPosition, childPosition);
+
 
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -109,7 +118,10 @@ public class SuburbListAdapter extends BaseExpandableListAdapter {
                 Message message = new Message();
                 Bundle b = new Bundle();
                 // send the position
-                b.putString("suburb", suburb.getName().trim());
+                b.putString("name", suburb.getName().trim());
+                b.putString("postcode", suburb.getPostCode());
+                b.putString("area", area.getName());
+                b.putInt("fee", area.getFee());
                 message.setData(b);
 
                 // plus = 1
@@ -149,7 +161,7 @@ public class SuburbListAdapter extends BaseExpandableListAdapter {
                     }
                 }
                 if (newList.size() > 0) {
-                    Area nArea = new Area(area.getId(), area.getName(), area.getFee(), area.getStatus(), newList, area.getUpdateTime());
+                    Area nArea = new Area(area.getName(), area.getFee(), area.getStatus(), newList.toArray(new Suburb[newList.size()]), area.getUpdateTime());
                     mAreaList.add(nArea);
                 }
             }

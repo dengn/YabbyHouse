@@ -9,55 +9,57 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.melbournestore.activities.R;
-import com.melbournestore.utils.MelbourneUtils;
 
 public class ChooseAddressSuburbListAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
     private Handler mHandler;
     private Context mContext;
-    private String addr_suburb;
+    private String areaName;
+    private int areaFee;
 
     public ChooseAddressSuburbListAdapter(Context context, Handler handler,
-                                          String suburb) {
-        // TODO Auto-generated constructor stub
+                                          String areaName, int areaFee) {
+
 
         mContext = context;
         mHandler = handler;
 
-        addr_suburb = suburb;
+        this.areaName = areaName;
+        this.areaFee = areaFee;
 
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(String suburb) {
+    public void refresh(String areaName, int areaFee) {
 
-        addr_suburb = suburb;
+        this.areaName = areaName;
+        this.areaFee = areaFee;
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
+
         return 1;
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
+
 
         viewHolder_textView holder_textview = null;
 
@@ -70,11 +72,9 @@ public class ChooseAddressSuburbListAdapter extends BaseAdapter {
         holder_textview.info = (TextView) convertView
                 .findViewById(R.id.phone_info);
 
-        holder_textview.title.setText(MelbourneUtils
-                .getSuburbRegion(addr_suburb));
+        holder_textview.title.setText(areaName);
 
-        holder_textview.info.setText("配送费: $" + String.valueOf(MelbourneUtils
-                .getSuburbDeliveryPrice(addr_suburb)));
+        holder_textview.info.setText("配送费: $" + String.valueOf(areaFee));
 
         convertView.setTag(holder_textview);
 
