@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,13 +16,9 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.melbournestore.adaptors.ChooseAddressListAdapter;
 import com.melbournestore.adaptors.ChooseAddressSuburbListAdapter;
 import com.melbournestore.application.SysApplication;
-import com.melbournestore.db.SharedPreferenceUtils;
-import com.melbournestore.models.User;
-import com.melbournestore.utils.MelbourneUtils;
 
 public class ChooseAddressActivity extends Activity {
 
@@ -35,8 +32,8 @@ public class ChooseAddressActivity extends Activity {
 
     private ChooseAddressSuburbListAdapter mChooseAddressSuburbListAdapter;
 
-    private String addr_unit;
-    private String addr_street;
+    private String addr_unit = "";
+    private String addr_street = "";
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -46,20 +43,21 @@ public class ChooseAddressActivity extends Activity {
                 // unit = 1
                 case 1:
                     addr_unit = b.getString("unit");
-
+                    Log.d("ADDRESS", "addr_unit: " + addr_unit);
                     // street = 2
+                    break;
                 case 2:
                     addr_street = b.getString("street");
-
+                    Log.d("ADDRESS", "addr_street: " + addr_street);
                     break;
 
             }
         }
     };
-    private String addr_suburb;
-    private String suburbPostCode;
-    private String areaName;
-    private int areaFee;
+    private String addr_suburb = "";
+    private String suburbPostCode = "";
+    private String areaName = "";
+    private int areaFee = 0;
     private long mExitTime;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -79,15 +77,16 @@ public class ChooseAddressActivity extends Activity {
         getActionBar().setTitle("送货地址");
 
 
-        String users_string = SharedPreferenceUtils
-                .getLoginUser(ChooseAddressActivity.this);
-        Gson gson = new Gson();
-        User[] users = gson.fromJson(users_string, User[].class);
-        User activeUser = users[MelbourneUtils.getActiveUser(users)];
+//        String users_string = SharedPreferenceUtils
+//                .getLoginUser(ChooseAddressActivity.this);
+//        Gson gson = new Gson();
+//        User[] users = gson.fromJson(users_string, User[].class);
+//        User activeUser = users[MelbourneUtils.getActiveUser(users)];
+//
+//        addr_unit = activeUser.getUnitNo();
+//        addr_street = activeUser.getStreet();
+//        addr_suburb = activeUser.getSuburb();
 
-        addr_unit = activeUser.getUnitNo();
-        addr_street = activeUser.getStreet();
-        addr_suburb = activeUser.getSuburb();
 
         chooseAddr_list = (ListView) findViewById(R.id.chooseAddr_list);
 
@@ -101,6 +100,38 @@ public class ChooseAddressActivity extends Activity {
                 mHandler, addr_suburb, areaFee);
         chooseAddrSuburb_list.setAdapter(mChooseAddressSuburbListAdapter);
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save away the original text, so we still have it if the activity
+        // needs to be killed while paused.
+        savedInstanceState.putString("addr_unit", addr_unit);
+        savedInstanceState.putString("addr_street", addr_street);
+        savedInstanceState.putString("addr_suburb", addr_suburb);
+        savedInstanceState.putString("postcode", suburbPostCode);
+        savedInstanceState.putString("areaname", areaName);
+        savedInstanceState.putInt("areafee", areaFee);
+
+        Log.d("ADDRESS", "address status saved");
+        super.onSaveInstanceState(savedInstanceState);
+
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        addr_unit = savedInstanceState.getString("addr_unit");
+        addr_street = savedInstanceState.getString("addr_street");
+        addr_suburb = savedInstanceState.getString("addr_suburb");
+        suburbPostCode = savedInstanceState.getString("postcode");
+        areaName = savedInstanceState.getString("areaname");
+        areaFee = savedInstanceState.getInt("areafee");
+
+        mChooseAddressListAdapter.refresh(addr_unit, addr_street,
+                addr_suburb, suburbPostCode);
+        mChooseAddressSuburbListAdapter.refresh(areaName, areaFee);
+        Log.d("ADDRESS", "address status restored");
     }
 
     @Override
@@ -133,8 +164,8 @@ public class ChooseAddressActivity extends Activity {
                 mChooseAddressListAdapter.refresh(addr_unit, addr_street,
                         addr_suburb, suburbPostCode);
                 mChooseAddressSuburbListAdapter.refresh(areaName, areaFee);
-                chooseAddr_list.setAdapter(mChooseAddressListAdapter);
-                chooseAddrSuburb_list.setAdapter(mChooseAddressSuburbListAdapter);
+                //chooseAddr_list.setAdapter(mChooseAddressListAdapter);
+                //chooseAddrSuburb_list.setAdapter(mChooseAddressSuburbListAdapter);
 
             }
             if (resultCode == RESULT_CANCELED) {
@@ -174,21 +205,25 @@ public class ChooseAddressActivity extends Activity {
                                     }
                             ).show();
                 } else {
-                    String users_string = SharedPreferenceUtils
-                            .getLoginUser(ChooseAddressActivity.this);
-                    Gson gson = new Gson();
-                    User[] users = gson.fromJson(users_string, User[].class);
-                    User active_user = users[MelbourneUtils.getActiveUser(users)];
-                    active_user.setUnitNo(addr_unit);
-                    active_user.setStreet(addr_street);
-                    active_user.setSuburb(addr_suburb);
-
-                    SharedPreferenceUtils.saveLoginUser(ChooseAddressActivity.this,
-                            gson.toJson(users));
+//                    String users_string = SharedPreferenceUtils
+//                            .getLoginUser(ChooseAddressActivity.this);
+//                    Gson gson = new Gson();
+//                    User[] users = gson.fromJson(users_string, User[].class);
+//                    User active_user = users[MelbourneUtils.getActiveUser(users)];
+//                    active_user.setUnitNo(addr_unit);
+//                    active_user.setStreet(addr_street);
+//                    active_user.setSuburb(addr_suburb);
+//
+//                    SharedPreferenceUtils.saveLoginUser(ChooseAddressActivity.this,
+//                            gson.toJson(users));
 
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("address", addr_unit + "," + addr_street
                             + "," + addr_suburb);
+                    Log.d("ADDRESS", "submitted address: " + addr_unit + "," + addr_street
+                            + "," + addr_suburb);
+                    returnIntent.putExtra("area", areaName);
+                    returnIntent.putExtra("fee", areaFee);
                     setResult(RESULT_OK, returnIntent);
                     finish();
                 }

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.NavUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,6 +31,17 @@ public class SuburbActivity extends Activity implements
         SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
 
+    private SearchView search_suburb;
+    //private AmazingListView suburbList;
+    //private ArrayAdapter<String> suburb_chosen_adapter;
+    //private String[] suburb_chosen_names;
+    //private ArrayList<String> suburb_chosen_list;
+    private long mExitTime;
+    private SuburbListAdapter suburbListAdapter;
+    private ExpandableListView suburbList;
+    private AreaManagerThread mAreaThread;
+    private Gson gson = new Gson();
+    private ArrayList<Area> mAreas = new ArrayList<Area>();
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -65,21 +75,6 @@ public class SuburbActivity extends Activity implements
         }
 
     };
-
-    private SearchView search_suburb;
-    //private AmazingListView suburbList;
-    //private ArrayAdapter<String> suburb_chosen_adapter;
-    //private String[] suburb_chosen_names;
-    //private ArrayList<String> suburb_chosen_list;
-    private long mExitTime;
-
-    private SuburbListAdapter suburbListAdapter;
-    private ExpandableListView suburbList;
-
-    private AreaManagerThread mAreaThread;
-    private Gson gson = new Gson();
-
-    private ArrayList<Area> mAreas = new ArrayList<Area>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -185,9 +180,9 @@ public class SuburbActivity extends Activity implements
                 // activity and
                 // use NavUtils in the Support Package to ensure proper handling of
                 // Up.
-                Intent upIntent = NavUtils.getParentActivityIntent(this);
-                upIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivity(upIntent);
+//                Intent upIntent = NavUtils.getParentActivityIntent(this);
+//                upIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//                startActivity(upIntent);
                 finish();
                 return true;
 

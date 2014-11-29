@@ -217,19 +217,19 @@ public class SubmitOrderActivity extends Activity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
 
-                String users_string = SharedPreferenceUtils
-                        .getLoginUser(SubmitOrderActivity.this);
-                Gson gson = new Gson();
-                User[] users = gson.fromJson(users_string, User[].class);
-                User activeUser = users[MelbourneUtils.getActiveUser(users)];
-
-                String current_order = SharedPreferenceUtils
-                        .getCurrentOrder(SubmitOrderActivity.this);
-                Order_user currentOrder = gson.fromJson(current_order,
-                        Order_user.class);
-
-                mSubmitListAdapter.refresh(activeUser, currentOrder);
-                mSubmitList.setAdapter(mSubmitListAdapter);
+//                String users_string = SharedPreferenceUtils
+//                        .getLoginUser(SubmitOrderActivity.this);
+//                Gson gson = new Gson();
+//                User[] users = gson.fromJson(users_string, User[].class);
+//                User activeUser = users[MelbourneUtils.getActiveUser(users)];
+//
+//                String current_order = SharedPreferenceUtils
+//                        .getCurrentOrder(SubmitOrderActivity.this);
+//                Order_user currentOrder = gson.fromJson(current_order,
+//                        Order_user.class);
+//
+//                mSubmitListAdapter.refresh(activeUser, currentOrder);
+//                mSubmitList.setAdapter(mSubmitListAdapter);
             }
         }
     }
