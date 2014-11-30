@@ -23,12 +23,12 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,7 +51,9 @@ import com.melbournestore.models.Order_user;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
 import com.melbournestore.models.User;
+import com.melbournestore.models.user_iphone;
 import com.melbournestore.utils.MelbourneUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 /**
  * This example illustrates a common usage of the DrawerLayout widget in the
@@ -99,6 +101,7 @@ public class MainActivity extends Activity {
     Fragment myorders_fragment;
     Fragment googlemap_fragment;
     Fragment recommandation_fragment;
+    DisplayImageOptions options;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private DrawerListAdapter mDrawerListAdapter;
@@ -107,10 +110,9 @@ public class MainActivity extends Activity {
     private CharSequence mTitle;
     private String[] mMenuTitles;
     private Handler mHandler = new Handler();
-    private boolean isLoggedIn;
-    private String loginNumber;
-    private Bitmap mProfile;
     private long mExitTime;
+
+    private user_iphone mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,20 +121,7 @@ public class MainActivity extends Activity {
 
         SysApplication.getInstance().addActivity(this);
 
-        if (DEBUG) {
-            SharedPreferenceUtils.SharedPreferenceClearCurrentChoice(this);
-            SharedPreferenceUtils.SharedPreferenceClearCurrentOrder(this);
-            SharedPreferenceUtils.SharedPreferenceLoginUser(this);
-        }
 
-
-
-
-        SharedPreferenceUtils.setUpCurrentChoice(this);
-
-        SharedPreferenceUtils.setUpCurrentOrder(this);
-
-        setUpLoginUser();
 
         plate_fragment = new PlateFragment();
         plate_fragment.onAttach(this);
@@ -159,13 +148,17 @@ public class MainActivity extends Activity {
         // R.layout.drawer_list_item, mMenuTitles));
         // mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        String users_string = SharedPreferenceUtils
-                .getLoginUser(MainActivity.this);
-        Gson gson = new Gson();
-        User[] users = gson.fromJson(users_string, User[].class);
+        options = new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.loading_ads)    //在ImageView加载过程中显示图片
+                .showImageForEmptyUri(R.drawable.loading_ads)  //image连接地址为空时
+                .showImageOnFail(R.drawable.loading_ads)  //image加载失败
+                .cacheInMemory(true)  //加载图片时会在内存中加载缓存
+                .cacheOnDisc(true)   //加载图片时会在磁盘中加载缓存
+                .build();
 
-        mDrawerListAdapter = new DrawerListAdapter(MainActivity.this, mHandler,
-                users);
+
+        mDrawerListAdapter = new DrawerListAdapter(MainActivity.this, mHandler, options,
+                mUser);
 
         mDrawerList.setAdapter(mDrawerListAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -205,14 +198,10 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        String users_string = SharedPreferenceUtils
-                .getLoginUser(MainActivity.this);
-        Gson gson = new Gson();
-        User[] users = gson.fromJson(users_string, User[].class);
 
         getActionBar().setTitle(mTitle);
 
-        mDrawerListAdapter.refresh(users);
+        mDrawerListAdapter.refresh(mUser);
         mDrawerList.setAdapter(mDrawerListAdapter);
     }
 
@@ -270,12 +259,12 @@ public class MainActivity extends Activity {
             if (resultCode == RESULT_OK) {
                 // get the ID of the client
 
-                String users_string = SharedPreferenceUtils
-                        .getLoginUser(MainActivity.this);
+                String users_string = data.getStringExtra("user");
+                Log.d("LOGIN", users_string);
                 Gson gson = new Gson();
-                User[] users = gson.fromJson(users_string, User[].class);
+                mUser = gson.fromJson(users_string, user_iphone.class);
 
-                mDrawerListAdapter.refresh(users);
+                mDrawerListAdapter.refresh(mUser);
                 mDrawerList.setAdapter(mDrawerListAdapter);
                 mDrawerLayout.openDrawer(mDrawerList);
 
@@ -288,12 +277,8 @@ public class MainActivity extends Activity {
             if (resultCode == RESULT_OK) {
                 // get the profile photo
 
-                String users_string = SharedPreferenceUtils
-                        .getLoginUser(MainActivity.this);
-                Gson gson = new Gson();
-                User[] users = gson.fromJson(users_string, User[].class);
 
-                mDrawerListAdapter.refresh(users);
+                mDrawerListAdapter.refresh(mUser);
                 mDrawerList.setAdapter(mDrawerListAdapter);
                 mDrawerLayout.openDrawer(mDrawerList);
 
@@ -318,7 +303,7 @@ public class MainActivity extends Activity {
 
                 // Not logged in yet
                 if (MelbourneUtils.getActiveUser(users) < 0) {
-                    Intent intent = new Intent(this, LoginActivity.class);
+                    Intent intent = new Intent(this, SignUpActivity.class);
                     startActivityForResult(intent, LOGIN_CODE);
                 } else {
                     Intent intent = new Intent(this, MyAccountActivity.class);

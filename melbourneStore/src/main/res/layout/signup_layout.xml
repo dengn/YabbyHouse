@@ -6,17 +6,18 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/login_notice"
+        android:id="@+id/signup_notice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"
         android:layout_marginLeft="17dp"
         android:layout_marginTop="27dp"
+        android:text="请使用手机号码登录"
         android:textColor="@color/white"
         android:textSize="20dp" />
 
     <EditText
-        android:id="@+id/login_number"
+        android:id="@+id/signup_login_number"
         android:layout_width="match_parent"
         android:layout_height="67dp"
         android:layout_alignParentLeft="true"
@@ -33,33 +34,39 @@
         android:textColor="@color/white"
         android:textSize="23dp" />
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:layout_marginLeft="27dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:layout_height="1dip"
+        android:background="@color/lightgray" />
 
-        <CheckBox
-            android:id="@+id/login_aggrement_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/signup_password"
+        android:layout_width="match_parent"
+        android:layout_height="67dp"
+        android:layout_alignParentLeft="true"
+        android:width="200dp"
+        android:background="#50000000"
+        android:drawableLeft="@drawable/password_icon"
+        android:drawablePadding="10dp"
+        android:inputType="textPassword"
+        android:maxLength="10"
+        android:numeric="integer"
+        android:paddingLeft="17dp"
+        android:paddingRight="13dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="23dp" />
 
-        <TextView
-            android:id="@+id/login_text_agreement"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="20dp" />
-    </LinearLayout>
 
     <Button
-        android:id="@+id/login_button"
+        android:id="@+id/signup_button"
         android:layout_width="267dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
         android:background="@drawable/button_style"
-        android:text="同意协议并发送验证码"
+        android:text="登录"
         android:textColor="@color/white"
         android:textSize="23sp" />
     <!--       android:background="#50000000" -->

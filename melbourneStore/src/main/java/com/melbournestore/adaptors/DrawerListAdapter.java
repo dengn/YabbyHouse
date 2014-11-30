@@ -1,7 +1,6 @@
 package com.melbournestore.adaptors;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -13,10 +12,11 @@ import android.widget.TextView;
 
 import com.melbournestore.activities.R;
 import com.melbournestore.db.DataResourceUtils;
-import com.melbournestore.models.User;
-import com.melbournestore.utils.BitmapUtils;
+import com.melbournestore.models.user_iphone;
 import com.melbournestore.utils.CircleImageView;
-import com.melbournestore.utils.MelbourneUtils;
+import com.melbournestore.utils.Constant;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class DrawerListAdapter extends BaseAdapter {
 
@@ -24,46 +24,47 @@ public class DrawerListAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
     Handler mHandler;
     Context mContext;
-    User[] mUsers;
+    user_iphone mUser;
+    DisplayImageOptions mOptions;
 
-    public DrawerListAdapter(Context context, Handler handler, User[] users) {
-        // TODO Auto-generated constructor stub
+    public DrawerListAdapter(Context context, Handler handler, DisplayImageOptions options, user_iphone user) {
 
         mContext = context;
         mHandler = handler;
-        mUsers = users;
+        mOptions = options;
+        mUser = user;
 
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(User[] users) {
+    public void refresh(user_iphone user) {
 
-        mUsers = users;
+        mUser = user;
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
+
         return 6;
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
+
         viewHolder_normal holder_normal = null;
         viewHolder_login holder_login = null;
 
@@ -81,26 +82,18 @@ public class DrawerListAdapter extends BaseAdapter {
             holder_login.phone_number.setTextColor(Color.WHITE);
 
 
-            int active_value = MelbourneUtils.getActiveUser(mUsers);
-
-
-            if (active_value < 0) {
+            if (mUser == null) {
                 holder_login.phone_number.setText("未登录");
                 holder_login.profile
                         .setImageResource(R.drawable.sidebar_userphoto_default);
             } else {
 
-                User active_user = mUsers[active_value];
 
-                holder_login.phone_number.setText(active_user.getPhoneNumber());
+                holder_login.phone_number.setText(mUser.getPhoneNumber());
 
-                Bitmap profile = BitmapUtils.getMyBitMap(active_user.getPhoneNumber());
-                if (profile == null) {
-                    holder_login.profile
-                            .setImageResource(R.drawable.profile_userphoto);
-                } else {
-                    holder_login.profile.setImageBitmap(profile);
-                }
+
+                ImageLoader.getInstance().displayImage(Constant.URL_BASE_PHOTO + mUser.getHead_icon(), holder_login.profile, mOptions);
+
             }
 
         } else {

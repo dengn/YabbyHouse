@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sidebar_bg"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/verification_notice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="17dp"
+        android:layout_marginLeft="17dp"
+        android:layout_marginTop="27dp"
+        android:text="验证码已发送到手机"
+        android:textColor="@color/white"
+        android:textSize="20dp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/verification_code"
+            android:layout_width="match_parent"
+            android:layout_height="67dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:width="200dp"
+            android:background="#50000000"
+            android:drawablePadding="10dp"
+            android:maxLength="10"
+            android:numeric="integer"
+            android:paddingLeft="17dp"
+            android:paddingRight="13dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="23dp" />
+
+        <Button
+            android:id="@+id/resend"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_alignBottom="@+id/verification_code"
+            android:layout_alignRight="@+id/verification_code"
+            android:layout_alignTop="@+id/verification_code"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/button_style"
+            android:gravity="center"
+            android:text="重新发送"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/set_password"
+        android:layout_width="match_parent"
+        android:layout_height="67dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="20dp"
+        android:width="200dp"
+        android:background="#50000000"
+        android:drawablePadding="10dp"
+        android:inputType="textPassword"
+        android:maxLength="10"
+        android:numeric="integer"
+        android:paddingLeft="17dp"
+        android:paddingRight="13dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="23dp" />
+
+    <Button
+        android:id="@+id/finish_signup_button"
+        android:layout_width="267dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/button_style"
+        android:text="完成注册"
+        android:textColor="@color/white"
+        android:textSize="23sp" />
+
+</LinearLayout>

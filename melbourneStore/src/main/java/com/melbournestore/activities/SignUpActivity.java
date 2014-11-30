@@ -8,52 +8,59 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Html;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.melbournestore.application.SysApplication;
-import com.melbournestore.network.UserVerificationManagerThread;
+import com.melbournestore.network.UserLoginManagerThread;
 
-public class LoginActivity extends Activity {
+public class SignUpActivity extends Activity {
 
-    private TextView loginText;
-    private EditText loginNumber;
-    private CheckBox loginCheckbox;
-    private TextView loginTextAgreement;
-    private Button loginButton;
+    private TextView signInNotice;
+    private EditText signInNumber;
+    private EditText signInPassword;
 
-    private String mPhoneNumber;
-    private long mExitTime;
+    private Button signInButton;
 
+    private String mNumber;
+    private String mPassword;
+
+    private String mUser;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 //login failed, password or phone number is wrong
                 case 0:
-                    showNotice("验证码发送失败");
+                    showNotice("登录失败\n手机号码或密码错误");
                     break;
                 case 1:
-                    Intent intent = new Intent(LoginActivity.this, VerificationActivity.class);
-                    intent.putExtra("number", loginNumber.getText().toString());
-                    startActivity(intent);
-                    break;
+                    //login success, return to the main activity
+                    mUser = (String) msg.obj;
+                    Log.d("LOGIN", mUser);
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("user", mUser);
+                    setResult(RESULT_OK, returnIntent);
+                    finish();
             }
         }
-
     };
+    private Gson gson = new Gson();
+    private long mExitTime;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_layout);
+        setContentView(R.layout.signup_layout);
 
         SysApplication.getInstance().addActivity(this);
 
@@ -65,73 +72,45 @@ public class LoginActivity extends Activity {
         // button will take the user one step up in the application's hierarchy.
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        getActionBar().setTitle("注册");
+        getActionBar().setTitle("用户登录");
 
-        loginText = (TextView) findViewById(R.id.login_notice);
-        loginText.setText("请使用手机号码登录");
+        signInNotice = (TextView) findViewById(R.id.signup_notice);
+        signInNotice.setText("请使用手机号码登录");
 
-        loginNumber = (EditText) findViewById(R.id.login_number);
-        loginNumber.setHint("澳大利亚10位号码");
+        signInNumber = (EditText) findViewById(R.id.signup_login_number);
+        signInNumber.setHint("澳大利亚10位号码");
 
-        loginCheckbox = (CheckBox) findViewById(R.id.login_aggrement_checkbox);
-        loginCheckbox.setText("");
+        signInPassword = (EditText) findViewById(R.id.signup_password);
+        signInPassword.setHint("密码");
 
-        loginTextAgreement = (TextView) findViewById(R.id.login_text_agreement);
-        loginTextAgreement.setText("同意<"
-                + Html.fromHtml("<u>" + "墨尔本送餐服务协议" + "</u>") + ">");
 
-        loginTextAgreement.setOnClickListener(new OnClickListener() {
+        signInButton = (Button) findViewById(R.id.signup_button);
+        signInButton.getBackground().setAlpha(80);
+        signInButton.setText("登录");
 
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Intent intent = new Intent(LoginActivity.this,
-                        DeliveryAgreementActivity.class);
-                startActivity(intent);
-            }
-
-        });
-
-        loginButton = (Button) findViewById(R.id.login_button);
-        loginButton.getBackground().setAlpha(80);
-        loginButton.setText("同意协议并发送验证码");
-
-        loginButton.setOnClickListener(new OnClickListener() {
+        signInButton.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-
-                if (!loginCheckbox.isChecked()) {
-                    new AlertDialog.Builder(LoginActivity.this)
-                            .setMessage("请同意墨尔本送餐服务协议")
-                            .setPositiveButton("确定",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(
-                                                DialogInterface dialoginterface,
-                                                int i) {
-
-                                        }
-                                    }
-                            ).show();
-                } else if ((loginNumber.getText().length() != 10)
-                        || !loginNumber.getText().toString().subSequence(0, 2)
+                if (signInNumber.getText().toString().equals("")) {
+                    showNotice("请输入手机号码");
+                } else if ((signInNumber.getText().length() != 10)
+                        || !signInNumber.getText().toString().subSequence(0, 2)
                         .equals("04")) {
-                    new AlertDialog.Builder(LoginActivity.this)
-                            .setMessage("手机号码不是澳洲手机\n请输入04开头号码")
-                            .setPositiveButton("确定",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(
-                                                DialogInterface dialoginterface,
-                                                int i) {
-
-                                        }
-                                    }
-                            ).show();
+                    showNotice("手机号码不是澳洲手机\n" +
+                            "请输入04开头号码");
+                } else if (signInPassword.getText().toString().equals("")) {
+                    showNotice("请输入密码");
+                } else if (signInPassword.getText().length() < 6) {
+                    showNotice("请输入6位以上密码");
                 } else {
-
-                    UserVerificationManagerThread mVerificationThread = new UserVerificationManagerThread(mHandler, LoginActivity.this, loginNumber.getText().toString());
-                    mVerificationThread.start();
+                    //get the input number and password
+                    mNumber = signInNumber.getText().toString();
+                    mPassword = signInPassword.getText().toString();
+                    Log.d("SIGNUP", "mNumber: " + mNumber + " mPassword: " + mPassword);
+                    UserLoginManagerThread mUserLoginThread = new UserLoginManagerThread(mHandler, SignUpActivity.this, mNumber, mPassword);
+                    mUserLoginThread.start();
 
                 }
 
@@ -140,7 +119,7 @@ public class LoginActivity extends Activity {
 //                    mPhoneNumber = loginNumber.getText().toString();
 //
 //                    String users_string = SharedPreferenceUtils
-//                            .getLoginUser(LoginActivity.this);
+//                            .getLoginUser(SignUpActivity.this);
 //                    Gson gson = new Gson();
 //                    User[] users = gson.fromJson(users_string, User[].class);
 //
@@ -166,7 +145,7 @@ public class LoginActivity extends Activity {
 //                            users = user_array.toArray(new User[0]);
 //                        }
 //
-//                        SharedPreferenceUtils.saveLoginUser(LoginActivity.this,
+//                        SharedPreferenceUtils.saveLoginUser(SignUpActivity.this,
 //                                gson.toJson(users));
 //
 //                    } else {
@@ -179,10 +158,13 @@ public class LoginActivity extends Activity {
 //                        user.setSuburb("");
 //
 //                        users[0] = user;
-//                        SharedPreferenceUtils.saveLoginUser(LoginActivity.this,
+//                        SharedPreferenceUtils.saveLoginUser(SignUpActivity.this,
 //                                gson.toJson(users));
 //                    }
 //
+//                    UserLoginManagerThread mUserLoginThread = new UserLoginManagerThread(mHandler, SignUpActivity.this, loginNumber.getText()
+//                            .toString());
+//                    mUserLoginThread.start();
 //
 //                    Intent returnIntent = new Intent();
 //                    returnIntent.putExtra("number", loginNumber.getText()
@@ -198,7 +180,7 @@ public class LoginActivity extends Activity {
     }
 
     private void showNotice(String text) {
-        new AlertDialog.Builder(LoginActivity.this)
+        new AlertDialog.Builder(SignUpActivity.this)
                 .setMessage(text)
                 .setPositiveButton("确定",
                         new DialogInterface.OnClickListener() {
@@ -210,6 +192,22 @@ public class LoginActivity extends Activity {
                         }
                 ).show();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.signup, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    /* Called whenever we call invalidateOptionsMenu() */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        menu.findItem(R.id.signup).setVisible(true);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -224,6 +222,11 @@ public class LoginActivity extends Activity {
                 // upIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 // startActivity(upIntent);
                 finish();
+                return true;
+            case R.id.signup:
+
+                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);

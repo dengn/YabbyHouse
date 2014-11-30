@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!--
@@ -17,7 +18,6 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-
     <style name="MyListBackContent">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
@@ -36,9 +36,7 @@
         <item name="android:layout_margin">5dp</item>
         <item name="android:layout_width">80dp</item>
         <item name="android:layout_height">30dp</item>
-
     </style>
-
 
     <style name="MyListImage">
         <item name="android:layout_width">64dp</item>
@@ -55,7 +53,6 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-
     <style name="textShadow">
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#FFFFFF</item>
@@ -66,5 +63,21 @@
         <item name="android:background">@null</item>
     </style>
 
+    <style name="FullscreenTheme" parent="android:Theme.NoTitleBar">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">@style/ButtonBar</item>
+        <item name="metaButtonBarButtonStyle">@style/ButtonBarButton</item>
+    </style>
+
+    <style name="ButtonBar">
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingRight">2dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:background">@android:drawable/bottom_bar</item>
+    </style>
+
+    <style name="ButtonBarButton" />
 
 </resources>

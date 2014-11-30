@@ -1,4 +1,4 @@
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright 2013 The Android Open Source Project
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,7 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-
-
-
-
 -->
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.melbournestore.activities"
     android:versionCode="1"
@@ -36,8 +31,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.melbounrnestore.activities.permission.MAPS_RECEIVE" />
-
-
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <!-- Required OpenGL ES 2.0. for Maps V2 -->
@@ -54,7 +47,7 @@
         android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PlateActivity"
             android:parentActivityName=".MainActivity"
@@ -68,7 +61,8 @@
             android:parentActivityName=".ShoppingCartActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <!-- 防止android软键盘出现把原来的布局顶上去 -->>
+        <!-- 防止android软键盘出现把原来的布局顶上去 -->
+        >
         <activity
             android:name=".ChooseAddressActivity"
             android:parentActivityName=".SubmitOrderActivity"
@@ -89,7 +83,12 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivity"
-            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".VerificationActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".MyAccountActivity"
@@ -130,6 +129,8 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyChjr-GiKbDpJXWnsjCPthUqsRZxzTsmKA" />
+
+
     </application>
 
 </manifest>

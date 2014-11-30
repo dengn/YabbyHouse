@@ -17,7 +17,6 @@
     <item name="darkgreen" type="color">#FF669900</item>
     <item name="darkorange" type="color">#FFFF8800</item>
     <item name="darkred" type="color">#FFCC0000</item>
-
     <item name="white" type="color">#FFFFFF</item>
     <item name="black" type="color">#000000</item>
     <item name="gray" type="color">#888888</item>
@@ -35,10 +34,10 @@
         <item>@color/darkgreen</item>
         <item>@color/darkorange</item>
         <item>@color/darkred</item>
-
         <item>@color/white</item>
         <item>@color/black</item>
     </integer-array>
 
+    <color name="black_overlay">#66000000</color>
 
-</resources> 
+</resources>
