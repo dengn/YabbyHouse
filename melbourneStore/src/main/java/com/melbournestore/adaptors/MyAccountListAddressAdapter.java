@@ -15,55 +15,57 @@ import android.widget.TextView;
 import com.melbournestore.activities.ChooseAddressActivity;
 import com.melbournestore.activities.MyAccountActivity;
 import com.melbournestore.activities.R;
-import com.melbournestore.models.User;
+import com.melbournestore.models.user_iphone;
 import com.melbournestore.utils.MelbourneUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 public class MyAccountListAddressAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
     private Context mContext;
     private Handler mHandler;
-    private User mActiveUser;
+    private DisplayImageOptions mOptions;
+    private user_iphone mUser;
 
     public MyAccountListAddressAdapter(Context context, Handler handler,
-                                       User activeUser) {
-        // TODO Auto-generated constructor stub
+                                       DisplayImageOptions options, user_iphone user) {
+
         mContext = context;
         mHandler = handler;
-
-        mActiveUser = activeUser;
+        mOptions = options;
+        mUser = user;
 
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(User activeUser) {
-        mActiveUser = activeUser;
+    public void refresh(user_iphone user) {
+        mUser = user;
 
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
+
         return 1;
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
+
 
         viewHolder_address holder_address = null;
 
@@ -82,7 +84,7 @@ public class MyAccountListAddressAdapter extends BaseAdapter {
 
         String address = "";
 
-        address = MelbourneUtils.getCompleteAddress(mActiveUser);
+        address = MelbourneUtils.getCompleteAddress(mUser);
 
         holder_address.address.setText(address);
         holder_address.rightArrow

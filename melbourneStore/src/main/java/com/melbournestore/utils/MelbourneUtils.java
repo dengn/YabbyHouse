@@ -13,6 +13,7 @@ import com.melbournestore.models.Shop_iPhone;
 import com.melbournestore.models.User;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.models.number_price;
+import com.melbournestore.models.user_iphone;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -237,12 +238,12 @@ public class MelbourneUtils {
         }
     }
 
-    public static final String getCompleteAddress(User user) {
+    public static final String getCompleteAddress(user_iphone user) {
         String address = "";
         if (!user.getUnitNo().equals("") || !user.getStreet().equals("")
-                || !user.getSuburb().equals("")) {
+                || !user.getSuburb().getName().equals("")) {
             address = user.getUnitNo() + "," + user.getStreet() + ","
-                    + user.getSuburb();
+                    + user.getSuburb().getName();
         }
         return address;
     }

@@ -12,8 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.melbournestore.activities.R;
-import com.melbournestore.models.User;
-import com.melbournestore.utils.BitmapUtils;
+import com.melbournestore.models.user_iphone;
+import com.melbournestore.utils.Constant;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class MyAccountListAdapter extends BaseAdapter {
 
@@ -21,46 +23,53 @@ public class MyAccountListAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
     private Context mContext;
     private Handler mHandler;
-    private User mActiveUser;
+    DisplayImageOptions mOptions;
+    private user_iphone mUser;
+    private int mOrderNum;
+    private int mCouponNum;
 
-    public MyAccountListAdapter(Context context, Handler handler, User activeUser) {
-        // TODO Auto-generated constructor stub
+    public MyAccountListAdapter(Context context, Handler handler, DisplayImageOptions options, user_iphone user, int orderNum, int couponNum) {
 
         mContext = context;
         mHandler = handler;
-        mActiveUser = activeUser;
+        mOptions = options;
+        mUser = user;
+        mOrderNum = orderNum;
+        mCouponNum = couponNum;
 
 
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(User activeUser) {
-        mActiveUser = activeUser;
+    public void refresh(user_iphone user, int orderNum, int couponNum) {
+        mUser = user;
+        mOrderNum = orderNum;
+        mCouponNum = couponNum;
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
+
         return 2;
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
+
 
         viewHolder_profile holder_profile = null;
         viewHolder_like holder_like = null;
@@ -77,24 +86,39 @@ public class MyAccountListAdapter extends BaseAdapter {
                 holder_profile.number = (TextView) convertView
                         .findViewById(R.id.myaccount_profile_number);
 
-                // set images
-                if (BitmapUtils.getMyBitMap(mActiveUser.getPhoneNumber()) == null) {
+//                // set images
+//                if (BitmapUtils.getMyBitMap(mUser.getPhoneNumber()) == null) {
+//                    holder_profile.profile
+//                            .setImageResource(R.drawable.profile_userphoto);
+//                } else {
+//                    holder_profile.profile.setImageBitmap(BitmapUtils.getMyBitMap(mActiveUser.getPhoneNumber()));
+//                }
+
+                if (mUser.getPhoneNumber().equals("")) {
+                    holder_profile.number.setText("未登录");
                     holder_profile.profile
-                            .setImageResource(R.drawable.profile_userphoto);
+                            .setImageResource(R.drawable.sidebar_userphoto_default);
                 } else {
-                    holder_profile.profile.setImageBitmap(BitmapUtils.getMyBitMap(mActiveUser.getPhoneNumber()));
+
+
+                    holder_profile.number.setText(mUser.getPhoneNumber());
+
+
+                    ImageLoader.getInstance().displayImage(Constant.URL_BASE_PHOTO + mUser.getHead_icon(), holder_profile.profile, mOptions);
+
                 }
 
-                holder_profile.number.setText(mActiveUser.getPhoneNumber());
+
+//                holder_profile.number.setText(mUser.getPhoneNumber());
 
                 holder_profile.profile.setOnClickListener(new OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
-                        // TODO Auto-generated method stub
+
                         Message message = new Message();
 
-                        message.what = 1;
+                        message.what = 0;
 
                         mHandler.sendMessage(message);
                     }
@@ -116,14 +140,17 @@ public class MyAccountListAdapter extends BaseAdapter {
                 holder_like.coupon = (TextView) convertView
                         .findViewById(R.id.myaccount_coupon);
 
-                holder_like.like.setText("0\n喜欢");
-                if (mActiveUser.getOrders() == null) {
-                    holder_like.order.setText("0\n订单");
-                } else {
-                    holder_like.order.setText(String.valueOf(mActiveUser.getOrders().length) + "\n订单");
-                }
+                holder_like.like.setText(String.valueOf(mUser.getGood_count())+"\n喜欢");
+//                if (mActiveUser.getOrders() == null) {
+//                    holder_like.order.setText("0\n订单");
+//                } else {
+//                    holder_like.order.setText(String.valueOf(mActiveUser.getOrders().length) + "\n订单");
+//                }
 
-                holder_like.coupon.setText("0\n优惠券");
+                holder_like.order.setText(String.valueOf(mOrderNum)+"\n订单");
+
+
+                holder_like.coupon.setText(String.valueOf(mCouponNum)+"\n优惠券");
 
                 convertView.setTag(holder_like);
 

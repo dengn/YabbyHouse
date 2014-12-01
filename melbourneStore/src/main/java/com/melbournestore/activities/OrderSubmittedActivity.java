@@ -154,8 +154,8 @@ public class OrderSubmittedActivity extends Activity {
         notice_info2.setText("");
 
         submitted_totalprice.setText("总计费用: $" + String.valueOf(MelbourneUtils.sum_price_all(plates) + order.getDeliveryFee()));
-        submitted_delivery_number.setText("送货电话: " + activeUser.getPhoneNumber());
-        submitted_delivery_address.setText("送货地址: " + MelbourneUtils.getCompleteAddress(activeUser));
+        submitted_delivery_number.setText("送货电话: " );
+        submitted_delivery_address.setText("送货地址: " );
         submitted_delivery_time.setText("送货时间: " + order.getDeliveryTime());
         submitted_preference.setText("偏   好: " + order.getRemark());
         submitted_ordernumber.setText("订单号码: " + order.getCreateTime());

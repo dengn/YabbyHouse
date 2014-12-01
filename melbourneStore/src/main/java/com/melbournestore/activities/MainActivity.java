@@ -50,9 +50,9 @@ import com.melbournestore.fragments.RecommandationFragment;
 import com.melbournestore.models.Order_user;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
+import com.melbournestore.models.Suburb;
 import com.melbournestore.models.User;
 import com.melbournestore.models.user_iphone;
-import com.melbournestore.utils.MelbourneUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 /**
@@ -112,7 +112,11 @@ public class MainActivity extends Activity {
     private Handler mHandler = new Handler();
     private long mExitTime;
 
-    private user_iphone mUser;
+    private int mOrderNum;
+    private int mCouponNum;
+
+    private user_iphone mUser = new user_iphone("","","",0,"",new Suburb(0, "", "", ""));
+    Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -260,8 +264,10 @@ public class MainActivity extends Activity {
                 // get the ID of the client
 
                 String users_string = data.getStringExtra("user");
-                Log.d("LOGIN", users_string);
-                Gson gson = new Gson();
+                mOrderNum = data.getIntExtra("order_num", 0);
+                mCouponNum = data.getIntExtra("coupon_num", 0);
+                Log.d("LOGIN", "Main Activity: "+users_string);
+
                 mUser = gson.fromJson(users_string, user_iphone.class);
 
                 mDrawerListAdapter.refresh(mUser);
@@ -296,17 +302,17 @@ public class MainActivity extends Activity {
                 // mDrawerList.setItemChecked(position, true);
                 // setTitle(mMenuTitles[position]);
 
-                String users_string = SharedPreferenceUtils
-                        .getLoginUser(MainActivity.this);
-                Gson gson = new Gson();
-                User[] users = gson.fromJson(users_string, User[].class);
+
 
                 // Not logged in yet
-                if (MelbourneUtils.getActiveUser(users) < 0) {
+                if (mUser.getPhoneNumber().equals("")) {
                     Intent intent = new Intent(this, SignUpActivity.class);
                     startActivityForResult(intent, LOGIN_CODE);
                 } else {
                     Intent intent = new Intent(this, MyAccountActivity.class);
+                    intent.putExtra("user", gson.toJson(mUser));
+                    intent.putExtra("order_num", mOrderNum);
+                    intent.putExtra("coupon_num", mCouponNum);
                     startActivityForResult(intent, MY_ACCOUNT_CODE);
                 }
 

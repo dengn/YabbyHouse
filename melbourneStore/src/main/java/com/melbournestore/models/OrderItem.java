@@ -7,13 +7,13 @@ public class OrderItem {
     private String name;
     private String desc;
     private int price;
-    private float count;
+    private String count;
 
     public OrderItem() {
 
     }
 
-    public OrderItem(int id, int item_id, String name, String desc, int price, float count) {
+    public OrderItem(int id, int item_id, String name, String desc, int price, String count) {
         this.id = id;
         this.item_id = item_id;
         this.name = name;
@@ -62,11 +62,11 @@ public class OrderItem {
         this.price = price;
     }
 
-    public float getCount() {
+    public String getCount() {
         return count;
     }
 
-    public void setCount(int count) {
+    public void setCount(String count) {
         this.count = count;
     }
 

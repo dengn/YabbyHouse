@@ -18,8 +18,9 @@ public class Order {
     private String deliverying_time;
     private String complete_time;
     private int status;
-    private OrderItem items;
+    private OrderItem[] items;
     private Suburb suburb;
+    private user_coupon[] coupons;
 
 
     public Order() {
@@ -28,7 +29,7 @@ public class Order {
 
     public Order(int id, String phone_number, String unit_no, String street, String post_code, String delivery_time
             , int delivery_fee, String remark, String create_time, String update_time, String confirm_time, String distributing_time
-            , String deliverying_time, String complete_time, int status, OrderItem items, Suburb suburb) {
+            , String deliverying_time, String complete_time, int status, OrderItem[] items, Suburb suburb, user_coupon[] coupons) {
         this.id = id;
         this.phone_number = phone_number;
         this.unit_no = unit_no;
@@ -46,6 +47,7 @@ public class Order {
         this.status = status;
         this.items = items;
         this.suburb = suburb;
+        this.coupons = coupons;
     }
 
     public int getId() {
@@ -168,11 +170,11 @@ public class Order {
         this.status = status;
     }
 
-    public OrderItem getItems() {
+    public OrderItem[] getItems() {
         return items;
     }
 
-    public void setItems(OrderItem items) {
+    public void setItems(OrderItem[] items) {
         this.items = items;
     }
 
@@ -182,6 +184,13 @@ public class Order {
 
     public void setSuburb(Suburb suburb) {
         this.suburb = suburb;
+    }
+
+    public user_coupon[] getCoupon(){
+        return coupons;
+    }
+    public void setCoupons(user_coupon[] coupons){
+        this.coupons = coupons;
     }
 
 }

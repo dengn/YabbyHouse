@@ -3,6 +3,7 @@ package com.melbournestore.adaptors;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,8 @@ public class DrawerListAdapter extends BaseAdapter {
     public void refresh(user_iphone user) {
 
         mUser = user;
+        Log.d("DRAWER", "user phone number: "+mUser.getPhoneNumber());
+        Log.d("DRAWER", "user head icon: "+mUser.getHead_icon());
         notifyDataSetChanged();
     }
 
@@ -82,7 +85,7 @@ public class DrawerListAdapter extends BaseAdapter {
             holder_login.phone_number.setTextColor(Color.WHITE);
 
 
-            if (mUser == null) {
+            if (mUser.getPhoneNumber().equals("")) {
                 holder_login.phone_number.setText("未登录");
                 holder_login.profile
                         .setImageResource(R.drawable.sidebar_userphoto_default);

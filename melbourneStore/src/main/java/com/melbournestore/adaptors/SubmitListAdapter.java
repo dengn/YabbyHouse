@@ -19,7 +19,6 @@ import com.melbournestore.activities.R;
 import com.melbournestore.activities.SubmitOrderActivity;
 import com.melbournestore.models.Order_user;
 import com.melbournestore.models.User;
-import com.melbournestore.utils.MelbourneUtils;
 
 public class SubmitListAdapter extends BaseAdapter {
 
@@ -119,7 +118,7 @@ public class SubmitListAdapter extends BaseAdapter {
 
                 String address = "";
 
-                address = MelbourneUtils.getCompleteAddress(mActiveUser);
+                //address = MelbourneUtils.getCompleteAddress(mActiveUser);
 
                 holder_activity.title.setText("运送地址");
                 holder_activity.info.setHint("详细地址");

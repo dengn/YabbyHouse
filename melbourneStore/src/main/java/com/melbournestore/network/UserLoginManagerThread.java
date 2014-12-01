@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.melbournestore.models.Coupon;
+import com.melbournestore.models.Order;
 import com.melbournestore.models.user_iphone;
 import com.melbournestore.utils.Constant;
 
@@ -116,6 +118,35 @@ public class UserLoginManagerThread extends Thread {
     }
 
 
+    /**
+     * Transform JSON String to orders
+     */
+    public static Order[] getOrders(String jsonString) {
+        Gson gson = new Gson();
+        Type listType = new TypeToken<HashMap<String, Order[]>>() {
+        }.getType();
+        HashMap<String, Order[]> mOrders = gson.fromJson(jsonString, listType);
+        Order[] orders = mOrders.get("orders");
+
+
+        return orders;
+    }
+
+    /**
+     * Transform JSON String to coupons
+     */
+    public static Coupon[] getCoupons(String jsonString) {
+        Gson gson = new Gson();
+        Type listType = new TypeToken<HashMap<String, Coupon[]>>() {
+        }.getType();
+        HashMap<String, Coupon[]> mCoupons = gson.fromJson(jsonString, listType);
+        Coupon[] coupons = mCoupons.get("user_coupons");
+
+
+        return coupons;
+    }
+
+
     @Override
     public void run() {
 
@@ -125,6 +156,7 @@ public class UserLoginManagerThread extends Thread {
         pairs.add(new BasicNameValuePair("device_token", ""));
         //String result = handlePut(Constant.URL_BASE+"user/verification", pairs);
         String result = handlePost(Constant.URL_BASE + "user", pairs);
+        user_iphone user = getUser(result);
 
         Log.d("USERTHREAD", result);
 
@@ -133,8 +165,17 @@ public class UserLoginManagerThread extends Thread {
             message.what = 0;
             mHandler.sendMessage(message);
         } else {
+
+            String order_result = handleGet(Constant.URL_BASE + "user/" + mNumber+"/orders");
+            Order[] orders = getOrders(order_result);
+
+            String coupon_result = handleGet(Constant.URL_BASE + "user/" + mNumber+"/coupons");
+            Coupon[] coupons = getCoupons(coupon_result);
+
             Message message = mHandler.obtainMessage();
-            message.obj = result;
+            message.obj = gson.toJson(user);
+            message.arg1 = orders.length;
+            message.arg2 = coupons.length;
             message.what = 1;
             mHandler.sendMessage(message);
 

@@ -36,6 +36,9 @@ public class SignUpActivity extends Activity {
     private String mPassword;
 
     private String mUser;
+
+    private int mOrderNum;
+    private int mCouponNum;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -46,10 +49,15 @@ public class SignUpActivity extends Activity {
                     break;
                 case 1:
                     //login success, return to the main activity
+
                     mUser = (String) msg.obj;
+                    mOrderNum = msg.arg1;
+                    mCouponNum = msg.arg2;
                     Log.d("LOGIN", mUser);
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("user", mUser);
+                    returnIntent.putExtra("order_num", mOrderNum);
+                    returnIntent.putExtra("coupon_num", mCouponNum);
                     setResult(RESULT_OK, returnIntent);
                     finish();
             }
