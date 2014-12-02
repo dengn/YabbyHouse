@@ -22,6 +22,7 @@ import com.melbournestore.adaptors.ADPagerAdapter;
 import com.melbournestore.application.SysApplication;
 import com.melbournestore.db.DataResourceUtils;
 import com.melbournestore.db.SharedPreferenceUtils;
+import com.melbournestore.models.Order;
 import com.melbournestore.models.Order_user;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.User;
@@ -42,6 +43,10 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
     private CirclePageIndicator indicator;
     private boolean locker = true;
 
+    private Order mOrder;
+
+    private Gson gson = new Gson();
+
     private TextView current_order_info;
     private long mExitTime;
 
@@ -56,7 +61,8 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         // Set up action bar.
         final ActionBar actionBar = getActionBar();
 
-        int position = getIntent().getIntExtra("position", 0);
+        String mOrderString = getIntent().getStringExtra("order");
+        mOrder = gson.fromJson(mOrderString, Order.class);
 
         // Specify that the Home button should show an "Up" caret, indicating
         // that touching the

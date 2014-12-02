@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.melbournestore.application.SysApplication;
+import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.network.UserLoginManagerThread;
 
 public class SignUpActivity extends Activity {
@@ -51,6 +52,7 @@ public class SignUpActivity extends Activity {
                     //login success, return to the main activity
 
                     mUser = (String) msg.obj;
+                    SharedPreferenceUtils.saveLoginUser(SignUpActivity.this, mUser);
                     mOrderNum = msg.arg1;
                     mCouponNum = msg.arg2;
                     Log.d("LOGIN", mUser);

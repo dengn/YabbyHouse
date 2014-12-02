@@ -167,9 +167,11 @@ public class UserLoginManagerThread extends Thread {
         } else {
 
             String order_result = handleGet(Constant.URL_BASE + "user/" + mNumber+"/orders");
+            Log.d("ORDERTHREAD", order_result);
             Order[] orders = getOrders(order_result);
 
             String coupon_result = handleGet(Constant.URL_BASE + "user/" + mNumber+"/coupons");
+            Log.d("COUPONTHREAD", coupon_result);
             Coupon[] coupons = getCoupons(coupon_result);
 
             Message message = mHandler.obtainMessage();

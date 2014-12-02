@@ -19,47 +19,61 @@ import com.melbournestore.activities.ChatActivity;
 import com.melbournestore.activities.R;
 import com.melbournestore.adaptors.MyOrderListAdapter;
 import com.melbournestore.db.SharedPreferenceUtils;
-import com.melbournestore.models.User;
-import com.melbournestore.utils.MelbourneUtils;
+import com.melbournestore.models.Order;
+import com.melbournestore.models.user_iphone;
+import com.melbournestore.network.DeleteOrderManagerThread;
+import com.melbournestore.network.OrderManagerThread;
 import com.melbournestore.utils.SwipeListView;
+
+import java.util.ArrayList;
 
 public class MyOrdersFragment extends Fragment {
 
 
     MyOrderListAdapter myOrderListAdapter;
+    private Order[] mOrders;
+    private OrderManagerThread mOrderThread;
+    private DeleteOrderManagerThread mDeleteOrderThread;
+    private String mContactNumber;
+    private Gson gson = new Gson();
     private Context mContext;
+    private SwipeListView myOrdersList;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == 1) {
-                //delete clicked
-                Bundle b = msg.getData();
-                int position = b.getInt("position");
+            switch (msg.what) {
+                case 0:
+                    mOrders = (Order[]) msg.obj;
+                    myOrderListAdapter.refresh(mOrders);
 
-                String users_string = SharedPreferenceUtils
-                        .getLoginUser(mContext);
-                Gson gson = new Gson();
-                User[] users = gson.fromJson(users_string, User[].class);
-                User activeUser = users[MelbourneUtils.getActiveUser(users)];
+                    break;
 
-                activeUser = MelbourneUtils.deleteOrder(activeUser, position);
+                case 1:
+                    //delete order
+                    int deleteId = (Integer) msg.obj;
+                    ArrayList<Order> updatedOrders = new ArrayList<Order>();
+                    for (int i = 0; i < mOrders.length; i++) {
+                        if (mOrders[i].getId() != deleteId) {
+                            updatedOrders.add(mOrders[i]);
+                        }
+                    }
+                    mOrders = updatedOrders.toArray(new Order[updatedOrders.size()]);
+                    myOrderListAdapter.refresh(mOrders);
 
-                SharedPreferenceUtils.saveLoginUser(mContext, gson.toJson(users));
-
-                myOrderListAdapter.refresh(activeUser);
-                myOrdersList.setAdapter(myOrderListAdapter);
-
+                    mDeleteOrderThread = new DeleteOrderManagerThread(mHandler, mContext, deleteId);
+                    mDeleteOrderThread.start();
+                    break;
 
             }
+
         }
     };
-    private SwipeListView myOrdersList;
-
-    //private Context mContext;
 
     public MyOrdersFragment() {
 
     }
+
+    //private Context mContext;
 
     @Override
     public void onAttach(Activity activity) {
@@ -71,6 +85,13 @@ public class MyOrdersFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        String userString = SharedPreferenceUtils.getLoginUser(mContext);
+        user_iphone user = gson.fromJson(userString, user_iphone.class);
+        mContactNumber = user.getPhoneNumber();
+
+        mOrderThread = new OrderManagerThread(mHandler, mContext, mContactNumber);
+        mOrderThread.start();
     }
 
     @Override
@@ -93,89 +114,19 @@ public class MyOrdersFragment extends Fragment {
         }
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_myorders, container, false);
         myOrdersList = (SwipeListView) rootView.findViewById(R.id.my_orders);
 
-        String users_string = SharedPreferenceUtils
-                .getLoginUser(mContext);
-        Gson gson = new Gson();
-        User[] users = gson.fromJson(users_string, User[].class);
-        User activeUser = users[MelbourneUtils.getActiveUser(users)];
-
-        myOrderListAdapter = new MyOrderListAdapter(mContext, myOrdersList.getRightViewWidth(), mHandler, activeUser);
-
-
-//        myOrdersList.setSwipeListViewListener(new BaseSwipeListViewListener() {
-//            @Override
-//            public void onOpened(int position, boolean toRight) {
-//            }
-//
-//            @Override
-//            public void onClosed(int position, boolean fromRight) {
-//            }
-//
-//            @Override
-//            public void onListChanged() {
-//            }
-//
-//            @Override
-//            public void onMove(int position, float x) {
-//            }
-//
-//            @Override
-//            public void onStartOpen(int position, int action, boolean right) {
-//                Log.d("swipe", String.format("onStartOpen %d - action %d", position, action));
-//
-//            }
-//
-//            @Override
-//            public void onStartClose(int position, boolean right) {
-//                Log.d("swipe", String.format("onStartClose %d", position));
-//
-//            }
-//
-//            @Override
-//            public void onClickFrontView(int position) {
-//                Log.d("swipe", String.format("onClickFrontView %d", position));
-//
-//
-//                //myOrdersList.openAnimate(position); //when you touch front view it will open
-//                Intent intent = new Intent(mContext, CurrentOrderActivity.class);
-//                intent.putExtra("position", position);
-//                ((Activity) mContext).startActivity(intent);
-//
-//            }
-//
-//            @Override
-//            public void onClickBackView(int position) {
-//                Log.d("swipe", String.format("onClickBackView %d", position));
-//
-//                //myOrdersList.closeAnimate(position);//when you touch back view it will close
-//            }
-//
-//            @Override
-//            public void onDismiss(int[] reverseSortedPositions) {
-//
-//            }
-//
-//        });
-
-//        myOrdersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(mContext, CurrentOrderActivity.class);
-//                intent.putExtra("position", position);
-//                ((Activity) mContext).startActivity(intent);
-//            }
-//        });
-
+        myOrderListAdapter = new MyOrderListAdapter(mContext, myOrdersList.getRightViewWidth(), mHandler, mOrders);
 
         myOrdersList.setAdapter(myOrderListAdapter);
 
         return rootView;
     }
+
+
+
 }

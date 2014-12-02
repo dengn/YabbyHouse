@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.melbournestore.db.DataResourceUtils;
 import com.melbournestore.db.SharedPreferenceUtils;
+import com.melbournestore.models.OrderItem;
 import com.melbournestore.models.Order_user;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
@@ -75,7 +76,7 @@ public class MelbourneUtils {
         return price_all;
     }
 
-    public static final number_price sum_item_number_price(Context context){
+    public static final number_price sum_item_number_price(Context context) {
         Gson gson = new Gson();
         String shopsString = SharedPreferenceUtils.getLocalShops(context);
         Type type = new TypeToken<ArrayList<Shop_iPhone>>() {
@@ -84,15 +85,15 @@ public class MelbourneUtils {
 
         int item_numbers = 0;
         int item_prices = 0;
-        for(int i=0;i<shops.size();i++){
+        for (int i = 0; i < shops.size(); i++) {
             String itemsString = SharedPreferenceUtils.getLocalItems(context, shops.get(i).getId());
             type = new TypeToken<ArrayList<item_iphone>>() {
             }.getType();
             ArrayList<item_iphone> items = gson.fromJson(itemsString, type);
-            for(int j=0;j<items.size();j++){
+            for (int j = 0; j < items.size(); j++) {
 
-                item_numbers+=items.get(j).getUnit();
-                item_prices+=items.get(j).getUnit()*(int)Float.parseFloat(items.get(j).getPrice());
+                item_numbers += items.get(j).getUnit();
+                item_prices += items.get(j).getUnit() * (int) Float.parseFloat(items.get(j).getPrice());
             }
         }
         number_price sumNumberPrice = new number_price(item_numbers, item_prices);
@@ -123,14 +124,14 @@ public class MelbourneUtils {
         return chosenItems;
     }
 
-    public static final item_iphone updateItemUnits(Context context, item_iphone item){
+    public static final item_iphone updateItemUnits(Context context, item_iphone item) {
         Gson gson = new Gson();
         String itemsString = SharedPreferenceUtils.getLocalItems(context, item.getShopId());
         Type type = new TypeToken<ArrayList<item_iphone>>() {
         }.getType();
         ArrayList<item_iphone> items = gson.fromJson(itemsString, type);
-        for(int i=0;i<items.size();i++){
-            if(item.getId()==items.get(i).getId()){
+        for (int i = 0; i < items.size(); i++) {
+            if (item.getId() == items.get(i).getId()) {
                 item.setUnit(items.get(i).getUnit());
                 break;
             }
@@ -138,23 +139,23 @@ public class MelbourneUtils {
         return item;
     }
 
-    public static final ArrayList<Integer> getLocalItemsId(ArrayList<item_iphone> items){
+    public static final ArrayList<Integer> getLocalItemsId(ArrayList<item_iphone> items) {
         ArrayList<Integer> itemIds = new ArrayList<Integer>();
-        for(int i=0;i<items.size();i++){
+        for (int i = 0; i < items.size(); i++) {
             itemIds.add(items.get(i).getId());
         }
         return itemIds;
     }
 
 
-    public static final void createLocalItems(Context context, ArrayList<item_iphone> items){
+    public static final void createLocalItems(Context context, ArrayList<item_iphone> items) {
 
         //HashMap<Integer, ArrayList<item_iphone>> shopItems = new HashMap<Integer, ArrayList<item_iphone>>();
 
         ArrayList<Integer> shopIds = new ArrayList<Integer>();
 
-        for(int i=0;i<items.size();i++){
-            if(shopIds.contains(items.get(i).getShopId())){
+        for (int i = 0; i < items.size(); i++) {
+            if (shopIds.contains(items.get(i).getShopId())) {
                 shopIds.add(items.get(i).getShopId());
 
             }
@@ -162,10 +163,10 @@ public class MelbourneUtils {
 
 
         Gson gson = new Gson();
-        for(int i=0;i<shopIds.size();i++){
+        for (int i = 0; i < shopIds.size(); i++) {
             ArrayList<item_iphone> localItems = new ArrayList<item_iphone>();
-            for(int j=0;j<items.size();j++){
-                if(shopIds.get(i)==items.get(j).getShopId()){
+            for (int j = 0; j < items.size(); j++) {
+                if (shopIds.get(i) == items.get(j).getShopId()) {
                     localItems.add(items.get(j));
                 }
             }
@@ -177,6 +178,14 @@ public class MelbourneUtils {
         int price_all = 0;
         for (int i = 0; i < plates.length; i++) {
             price_all += plates[i].getNumber() * plates[i].getPrice();
+        }
+        return price_all;
+    }
+
+    public static final int sum_price_items(OrderItem[] orders) {
+        int price_all = 0;
+        for (int i = 0; i < orders.length; i++) {
+            price_all += orders[i].getPrice() * (int) Float.parseFloat(orders[i].getCount());
         }
         return price_all;
     }
@@ -242,7 +251,7 @@ public class MelbourneUtils {
         String address = "";
         if (!user.getUnitNo().equals("") || !user.getStreet().equals("")
                 || !user.getSuburb().getName().equals("")) {
-            address = user.getUnitNo() + "," + user.getStreet() + ","
+            address = user.getUnitNo() + " " + user.getStreet() + ","
                     + user.getSuburb().getName();
         }
         return address;
@@ -275,13 +284,15 @@ public class MelbourneUtils {
 
     public static final String getStatusString(int status) {
         if (status == 0) {
-            return "等待确认";
+            return new String("待确认");
         } else if (status == 1) {
-            return "已确认";
+            return new String("待配送");
         } else if (status == 2) {
-            return "订单已完成";
+            return new String("准备中");
+        } else if (status == 3) {
+            return new String("配送中");
         } else {
-            return "";
+            return new String("");
         }
     }
 
@@ -354,6 +365,22 @@ public class MelbourneUtils {
         System.arraycopy(DataResourceUtils.plateNames[1], 0, plates, DataResourceUtils.plateNames[0].length, DataResourceUtils.plateNames[1].length);
         System.arraycopy(DataResourceUtils.plateNames[2], 0, plates, DataResourceUtils.plateNames[0].length + DataResourceUtils.plateNames[1].length, DataResourceUtils.plateNames[2].length);
         return plates;
+    }
+
+    public static final String getAllItemsNames(OrderItem[] items) {
+        String names = "";
+        if (items.length == 1) {
+            names = items[0].getName();
+        } else if (items.length > 1) {
+            for (int i = 0; i < items.length - 1; i++) {
+                names += items[i].getName() + "、";
+            }
+            names += items[items.length - 1];
+        }
+        if (names.length() > 10) {
+            names = names.substring(0, 10) + "...";
+        }
+        return names;
     }
 
 }

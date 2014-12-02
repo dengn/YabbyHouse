@@ -2,7 +2,6 @@ package com.melbournestore.network;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -22,19 +21,18 @@ import java.util.HashMap;
 /**
  * Created by OLEDCOMM on 01/12/2014.
  */
-public class CouponManagerThread extends Thread{
+public class CouponManagerThread extends Thread {
     Handler mHandler;
     Context mContext;
     Gson gson = new Gson();
     String mUserNumber;
-    int mCallCode;
 
 
-    public CouponManagerThread(Handler handler, Context context, String userNumber, int callCode) {
+    public CouponManagerThread(Handler handler, Context context, String userNumber) {
         mHandler = handler;
         mContext = context;
         mUserNumber = userNumber;
-        mCallCode = callCode;
+
     }
 
     public static String handleGet(String strUrl) {
@@ -72,29 +70,29 @@ public class CouponManagerThread extends Thread{
     @Override
     public void run() {
 
-        String result = handleGet(Constant.URL_BASE + "user/" + mUserNumber+"/coupons");
+        String result = handleGet(Constant.URL_BASE + "user/" + mUserNumber + "/coupons");
 
-        Log.d("COUPONHREAD", result);
+        Log.d("COUPONTHREAD", result);
         Coupon[] mCoupons = getCoupons(result);
 
 
-        switch(mCallCode){
-            case 0:
-                //called from MyAccountActivity page
-                Message message = mHandler.obtainMessage();
-                message.obj = mCoupons.length;
-                Log.d("ACCOUNT", "mCoupons.length: "+String.valueOf(mCoupons.length));
-                message.what = 1;
-                mHandler.sendMessage(message);
-                break;
-            case 1:
-                //called by the other
-                message = mHandler.obtainMessage();
-                message.obj = mCoupons;
-                message.what = 2;
-                mHandler.sendMessage(message);
-                break;
-        }
+//        switch(mCallCode){
+//            case 0:
+//                //called from MyAccountActivity page
+//                Message message = mHandler.obtainMessage();
+//                message.obj = mCoupons.length;
+//                Log.d("ACCOUNT", "mCoupons.length: "+String.valueOf(mCoupons.length));
+//                message.what = 1;
+//                mHandler.sendMessage(message);
+//                break;
+//            case 1:
+//                //called by the other
+//                message = mHandler.obtainMessage();
+//                message.obj = mCoupons;
+//                message.what = 2;
+//                mHandler.sendMessage(message);
+//                break;
+//        }
 
     }
 

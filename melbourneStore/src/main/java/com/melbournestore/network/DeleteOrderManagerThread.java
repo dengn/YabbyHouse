@@ -2,12 +2,9 @@ package com.melbournestore.network;
 
 import android.content.Context;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.melbournestore.models.Order;
 import com.melbournestore.utils.Constant;
 
 import org.apache.http.HttpResponse;
@@ -16,29 +13,29 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-import java.lang.reflect.Type;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by OLEDCOMM on 01/12/2014.
+ * Created by dengn on 2014/12/1.
  */
-public class OrderManagerThread extends Thread {
+public class DeleteOrderManagerThread extends Thread {
 
     Handler mHandler;
     Context mContext;
+    int mId;
     Gson gson = new Gson();
-    String mUserNumber;
 
 
-    public OrderManagerThread(Handler handler, Context context, String userNumber) {
+    public DeleteOrderManagerThread(Handler handler, Context context, int id) {
         mHandler = handler;
         mContext = context;
-        mUserNumber = userNumber;
-
+        mId = id;
     }
 
     public static String handleGet(String strUrl) {
@@ -78,53 +75,35 @@ public class OrderManagerThread extends Thread {
         return result;
     }
 
+    public static String handlePut(String strUrl, List<NameValuePair> params) {
+        String result = null;
+        HttpPut request = new HttpPut(strUrl);//实例化get请求
+        DefaultHttpClient client = new DefaultHttpClient();//实例化客户端
 
-    /**
-     * Transform JSON String to orders
-     */
-    public static Order[] getOrders(String jsonString) {
-        Gson gson = new Gson();
-        Type listType = new TypeToken<HashMap<String, Order[]>>() {
-        }.getType();
-        HashMap<String, Order[]> mOrders = gson.fromJson(jsonString, listType);
-        Order[] orders = mOrders.get("orders");
-
-
-        return orders;
+        try {
+            request.setEntity(new UrlEncodedFormEntity(params));
+            HttpResponse response = client.execute(request);//执行该请求,得到服务器端的响应内容
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                result = EntityUtils.toString(response.getEntity());//把响应结果转成String
+            } else {
+                result = response.getStatusLine().toString();
+            }
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+        return result;
     }
 
     @Override
     public void run() {
 
-
-        String result = handleGet(Constant.URL_BASE + "user/" + mUserNumber + "/orders");
-
-        Log.d("ORDERTHREAD", result);
-        Order[] mOrders = getOrders(result);
+        List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+        pairs.add(new BasicNameValuePair("order_id", String.valueOf(mId)));
 
 
-        Message message = mHandler.obtainMessage();
-        message.obj = mOrders;
-        message.what = 0;
-        mHandler.sendMessage(message);
+        String result = handlePost(Constant.URL_BASE + "delete_order", pairs);
 
-//        switch(mCallCode){
-//            case 0:
-//                //called from MyAccountActivity page
-//                Message message = mHandler.obtainMessage();
-//                message.obj = mOrders.length;
-//                Log.d("ACCOUNT", "mOrders.length: "+String.valueOf(mOrders.length));
-//                message.what = 3;
-//                mHandler.sendMessage(message);
-//                break;
-//            case 1:
-//                //called by the other
-//                message = mHandler.obtainMessage();
-//                message.obj = mOrders;
-//                message.what = 4;
-//                mHandler.sendMessage(message);
-//                break;
-//        }
+        Log.d("DELETEORDERTHREAD", result);
 
 
     }

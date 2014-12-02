@@ -3,7 +3,6 @@ package com.melbournestore.adaptors;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -16,9 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.melbournestore.activities.CurrentOrderActivity;
 import com.melbournestore.activities.R;
-import com.melbournestore.models.User;
+import com.melbournestore.models.Order;
 import com.melbournestore.utils.MelbourneUtils;
 
 public class MyOrderListAdapter extends BaseAdapter {
@@ -26,52 +26,51 @@ public class MyOrderListAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
     private Context mContext;
     private Handler mHandler;
-    private User mUser;
+    private Order[] mOrders;
+    private Gson gson = new Gson();
 
     private int mRightWidth = 0;
 
-    public MyOrderListAdapter(Context context, int rightWidth, Handler handler, User user) {
+    public MyOrderListAdapter(Context context, int rightWidth, Handler handler, Order[] orders) {
 
         mContext = context;
         mRightWidth = rightWidth;
         mHandler = handler;
-        mUser = user;
+        mOrders = orders;
 
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(User user) {
-        mUser = user;
+    public void refresh(Order[] orders) {
+        mOrders = orders;
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
-        if (mUser.getOrders() == null) {
+        if (mOrders == null) {
             return 0;
         } else {
-            return mUser.getOrders().length;
+            return mOrders.length;
         }
-
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
+
         final Holder holder = new Holder();
         View rowView;
         rowView = inflater.inflate(R.layout.myorder_list_item, null);
@@ -86,11 +85,13 @@ public class MyOrderListAdapter extends BaseAdapter {
 
         holder.delete = (TextView) rowView.findViewById(R.id.myorder_delete);
 
-        holder.time_view.setText(mUser.getOrders()[position].getCreateTime());
-        holder.names_view.setText(MelbourneUtils.getAllPlateNames(mUser.getOrders()[position].getPlates()));
-        holder.price_view.setText(String.valueOf(MelbourneUtils.sum_price_all(mUser.getOrders()[position].getPlates()) + mUser.getOrders()[position].getDeliveryFee()));
+        holder.time_view.setText(mOrders[position].getDeliveryTime());
+        holder.names_view.setText(MelbourneUtils.getAllItemsNames(mOrders[position].getItems()));
+        holder.price_view.setText("$" + String.valueOf(MelbourneUtils.sum_price_items(mOrders[position].getItems()) + mOrders[position].getDeliveryFee()));
 
-        holder.status_view.setText(MelbourneUtils.getStatusString(mUser.getOrders()[position].getStatus()));
+//        Log.d("ORDER", MelbourneUtils.getStatusString(mOrders[position].getStatus()));
+        holder.status_view.setText(MelbourneUtils.getStatusString(mOrders[position].getStatus()));
+//        holder.status_view.setText("待配送");
 
         holder.delete.setText("删除");
 
@@ -108,8 +109,9 @@ public class MyOrderListAdapter extends BaseAdapter {
 
                 Log.d("DEBUG", "myorder_list_item clicked");
 
+
                 Intent intent = new Intent(mContext, CurrentOrderActivity.class);
-                intent.putExtra("position", position);
+                intent.putExtra("order", gson.toJson(mOrders[position]));
                 ((Activity) mContext).startActivity(intent);
             }
 
@@ -125,9 +127,7 @@ public class MyOrderListAdapter extends BaseAdapter {
                 // delete
                 message.what = 1;
 
-                Bundle b = new Bundle();
-                b.putInt("position", position);
-                message.setData(b);
+                message.obj = mOrders[position].getId();
 
                 mHandler.sendMessage(message);
 

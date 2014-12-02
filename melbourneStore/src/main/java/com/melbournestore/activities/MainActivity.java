@@ -102,6 +102,8 @@ public class MainActivity extends Activity {
     Fragment googlemap_fragment;
     Fragment recommandation_fragment;
     DisplayImageOptions options;
+    //= new user_iphone("","","",0,"",new Suburb(0, "", "", ""));
+    Gson gson = new Gson();
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private DrawerListAdapter mDrawerListAdapter;
@@ -111,12 +113,9 @@ public class MainActivity extends Activity {
     private String[] mMenuTitles;
     private Handler mHandler = new Handler();
     private long mExitTime;
-
     private int mOrderNum;
     private int mCouponNum;
-
-    private user_iphone mUser = new user_iphone("","","",0,"",new Suburb(0, "", "", ""));
-    Gson gson = new Gson();
+    private user_iphone mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +124,12 @@ public class MainActivity extends Activity {
 
         SysApplication.getInstance().addActivity(this);
 
-
+        if (SharedPreferenceUtils.getFirstTimeLaunch(this)) {
+            mUser = new user_iphone("", "", "", 0, "", new Suburb(0, "", "", ""));
+        } else {
+            String mUserString = SharedPreferenceUtils.getLoginUser(this);
+            mUser = gson.fromJson(mUserString, user_iphone.class);
+        }
 
         plate_fragment = new PlateFragment();
         plate_fragment.onAttach(this);
@@ -266,7 +270,7 @@ public class MainActivity extends Activity {
                 String users_string = data.getStringExtra("user");
                 mOrderNum = data.getIntExtra("order_num", 0);
                 mCouponNum = data.getIntExtra("coupon_num", 0);
-                Log.d("LOGIN", "Main Activity: "+users_string);
+                Log.d("LOGIN", "Main Activity: " + users_string);
 
                 mUser = gson.fromJson(users_string, user_iphone.class);
 
@@ -303,7 +307,6 @@ public class MainActivity extends Activity {
                 // setTitle(mMenuTitles[position]);
 
 
-
                 // Not logged in yet
                 if (mUser.getPhoneNumber().equals("")) {
                     Intent intent = new Intent(this, SignUpActivity.class);
@@ -334,14 +337,18 @@ public class MainActivity extends Activity {
             case 2:
 
                 // Fragment myorders_fragment = new MyOrdersFragment();
+                if (mUser.getPhoneNumber().equals("")) {
+                    Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+                    startActivity(intent);
+                } else {
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.content_frame, myorders_fragment).commit();
 
-                fragmentManager.beginTransaction()
-                        .replace(R.id.content_frame, myorders_fragment).commit();
-
-                // update selected myorder_list_item and title, then close the drawer
-                mDrawerList.setItemChecked(position, true);
-                setTitle(mMenuTitles[position - 1]);
-                mDrawerLayout.closeDrawer(mDrawerList);
+                    // update selected myorder_list_item and title, then close the drawer
+                    mDrawerList.setItemChecked(position, true);
+                    setTitle(mMenuTitles[position - 1]);
+                    mDrawerLayout.closeDrawer(mDrawerList);
+                }
                 break;
             case 3:
 

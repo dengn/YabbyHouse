@@ -5,6 +5,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#60000000"
+        android:gravity="center"
+        android:text="温馨提示：已确认的订单将无法删除"
+        android:textColor="@color/gray"
+        android:textSize="18sp" />
 
     <com.melbournestore.utils.SwipeListView
         android:id="@+id/my_orders"
