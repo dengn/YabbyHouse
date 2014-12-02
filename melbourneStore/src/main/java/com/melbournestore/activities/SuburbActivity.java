@@ -58,11 +58,13 @@ public class SuburbActivity extends Activity implements
                     Bundle b = msg.getData();
                     String suburbName = b.getString("name");
                     String suburbPostCode = b.getString("postcode");
+                    int suburbId = b.getInt("suburbId");
                     String areaName = b.getString("area");
                     int areaFee = b.getInt("fee");
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("name", suburbName);
                     returnIntent.putExtra("postcode", suburbPostCode);
+                    returnIntent.putExtra("suburbId", suburbId);
                     returnIntent.putExtra("area", areaName);
                     returnIntent.putExtra("fee", areaFee);
 

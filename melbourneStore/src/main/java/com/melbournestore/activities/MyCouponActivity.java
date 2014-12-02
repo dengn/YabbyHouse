@@ -3,15 +3,49 @@ package com.melbournestore.activities;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.melbournestore.adaptors.MyCouponListAdapter;
 import com.melbournestore.application.SysApplication;
+import com.melbournestore.db.SharedPreferenceUtils;
+import com.melbournestore.models.user_coupon;
+import com.melbournestore.models.user_iphone;
+import com.melbournestore.network.CouponManagerThread;
 
 public class MyCouponActivity extends Activity {
 
     private long mExitTime;
+
+    private ListView mCouponList;
+    private MyCouponListAdapter mCouponListAdapter;
+
+    private user_coupon[] mCoupons;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    mCoupons = (user_coupon[]) msg.obj;
+                    Log.d("COUPON", "mCoupons len: " + String.valueOf(mCoupons.length));
+                    mCouponListAdapter.refresh(mCoupons);
+                    mCouponList.setAdapter(mCouponListAdapter);
+                    break;
+
+
+            }
+
+        }
+    };
+    private String mContactNumber;
+    private Gson gson = new Gson();
+    private CouponManagerThread mCouponThread;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +62,18 @@ public class MyCouponActivity extends Activity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         getActionBar().setTitle("我的优惠券");
+
+        mCouponList = (ListView) findViewById(R.id.coupon_list);
+        mCouponListAdapter = new MyCouponListAdapter(this, mHandler, mCoupons);
+        mCouponList.setAdapter(mCouponListAdapter);
+
+        String userString = SharedPreferenceUtils.getLoginUser(this);
+        user_iphone user = gson.fromJson(userString, user_iphone.class);
+        mContactNumber = user.getPhoneNumber();
+
+
+        mCouponThread = new CouponManagerThread(mHandler, this, mContactNumber);
+        mCouponThread.start();
 
     }
 

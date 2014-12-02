@@ -120,6 +120,7 @@ public class SuburbListAdapter extends BaseExpandableListAdapter {
                 // send the position
                 b.putString("name", suburb.getName().trim());
                 b.putString("postcode", suburb.getPostCode());
+                b.putInt("suburbId", suburb.getId());
                 b.putString("area", area.getName());
                 b.putInt("fee", area.getFee());
                 message.setData(b);

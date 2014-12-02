@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -51,41 +52,19 @@ public class MyAccountActivity extends Activity {
     public static final int REQUEST_CODE_IMAGE = 6;
 
     // public static final int IMAGE_REQUEST_CODE = 6;
-
+    DisplayImageOptions options;
     private Button mLogout;
-
     private ListView mMyAccountList;
     private ListView mMyAccountListAddress;
     private ListView mMyAccountListCoupon;
-
     private MyAccountListAdapter mMyAccountListAdapter;
     private MyAccountListAddressAdapter mMyAccountListAdapterAddress;
     private MyAccountListCouponAdapter mMyAccountListAdapterCoupon;
-
-    DisplayImageOptions options;
-
     private user_iphone mUser;
 
     private int mOrderNum=0;
 
     private int mCouponNum=0;
-
-    private String mNumber="";
-    private String mPassword="";
-
-    private Gson gson = new Gson();
-
-    private PopupWindow mpopupWindow;
-
-    private OrderManagerThread mOrderThread;
-    private CouponManagerThread mCouponThread;
-
-    private int callOrderCode =0;
-    private int callCouponCode = 0;
-
-    private UserLoginManagerThread mLoginThread;
-
-
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -98,7 +77,7 @@ public class MyAccountActivity extends Activity {
                     break;
 
                 case 1:
-                    String mUserString =(String) msg.obj;
+                    String mUserString = (String) msg.obj;
                     SharedPreferenceUtils.saveLoginUser(MyAccountActivity.this, mUserString);
 
                     mUser = gson.fromJson(mUserString, user_iphone.class);
@@ -137,6 +116,15 @@ public class MyAccountActivity extends Activity {
             }
         }
     };
+    private String mNumber="";
+    private String mPassword="";
+    private Gson gson = new Gson();
+    private PopupWindow mpopupWindow;
+    private OrderManagerThread mOrderThread;
+    private CouponManagerThread mCouponThread;
+    private int callOrderCode =0;
+    private int callCouponCode = 0;
+    private UserLoginManagerThread mLoginThread;
     private long mExitTime;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -165,6 +153,7 @@ public class MyAccountActivity extends Activity {
         mNumber = SharedPreferenceUtils.getUserNumber(this);
         mPassword = SharedPreferenceUtils.getUserPassword(this);
 
+        Log.d("LOGIN", "mNumber: " + mNumber + " mPassword; " + mPassword);
 
         mLoginThread = new UserLoginManagerThread(mHandler, this, mNumber, mPassword);
         mLoginThread.start();

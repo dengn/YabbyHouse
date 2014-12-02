@@ -7,8 +7,9 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.melbournestore.models.Coupon;
+import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.Order;
+import com.melbournestore.models.user_coupon;
 import com.melbournestore.models.user_iphone;
 import com.melbournestore.utils.Constant;
 
@@ -135,12 +136,12 @@ public class UserLoginManagerThread extends Thread {
     /**
      * Transform JSON String to coupons
      */
-    public static Coupon[] getCoupons(String jsonString) {
+    public static user_coupon[] getCoupons(String jsonString) {
         Gson gson = new Gson();
-        Type listType = new TypeToken<HashMap<String, Coupon[]>>() {
+        Type listType = new TypeToken<HashMap<String, user_coupon[]>>() {
         }.getType();
-        HashMap<String, Coupon[]> mCoupons = gson.fromJson(jsonString, listType);
-        Coupon[] coupons = mCoupons.get("user_coupons");
+        HashMap<String, user_coupon[]> mCoupons = gson.fromJson(jsonString, listType);
+        user_coupon[] coupons = mCoupons.get("user_coupons");
 
 
         return coupons;
@@ -172,8 +173,10 @@ public class UserLoginManagerThread extends Thread {
 
             String coupon_result = handleGet(Constant.URL_BASE + "user/" + mNumber+"/coupons");
             Log.d("COUPONTHREAD", coupon_result);
-            Coupon[] coupons = getCoupons(coupon_result);
+            user_coupon[] coupons = getCoupons(coupon_result);
 
+            SharedPreferenceUtils.saveUserNumber(mContext, mNumber);
+            SharedPreferenceUtils.saveUserPassword(mContext, mPassword);
             Message message = mHandler.obtainMessage();
             message.obj = gson.toJson(user);
             message.arg1 = orders.length;

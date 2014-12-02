@@ -23,6 +23,7 @@ import com.melbournestore.application.SysApplication;
 import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.Area;
 import com.melbournestore.models.user_iphone;
+import com.melbournestore.network.AddressManagerThread;
 import com.melbournestore.utils.MelbourneUtils;
 
 import java.util.ArrayList;
@@ -41,18 +42,6 @@ public class ChooseAddressActivity extends Activity {
 
     private String addr_unit = "";
     private String addr_street = "";
-    private String addr_suburb = "";
-    private String suburbPostCode = "";
-    private String areaName = "";
-    private int areaFee = 0;
-    private long mExitTime;
-
-    private user_iphone mUser;
-
-    private ArrayList<Area> mAreas;
-
-    private Gson gson = new Gson();
-
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -75,7 +64,15 @@ public class ChooseAddressActivity extends Activity {
             }
         }
     };
-
+    private String addr_suburb = "";
+    private int suburbId;
+    private String suburbPostCode = "";
+    private String areaName = "";
+    private int areaFee = 0;
+    private long mExitTime;
+    private user_iphone mUser;
+    private ArrayList<Area> mAreas;
+    private Gson gson = new Gson();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +96,7 @@ public class ChooseAddressActivity extends Activity {
         addr_unit = mUser.getUnitNo();
         addr_street = mUser.getStreet();
         addr_suburb = mUser.getSuburb().getName();
+        suburbId = mUser.getSuburb().getId();
         suburbPostCode = mUser.getSuburb().getPostCode();
         Area mArea = MelbourneUtils.getAreaFromSuburb(mUser.getSuburb(), this);
         areaName = mArea.getName();
@@ -137,6 +135,7 @@ public class ChooseAddressActivity extends Activity {
         savedInstanceState.putString("addr_unit", addr_unit);
         savedInstanceState.putString("addr_street", addr_street);
         savedInstanceState.putString("addr_suburb", addr_suburb);
+        savedInstanceState.putInt("suburbid", suburbId);
         savedInstanceState.putString("postcode", suburbPostCode);
         savedInstanceState.putString("areaname", areaName);
         savedInstanceState.putInt("areafee", areaFee);
@@ -152,6 +151,7 @@ public class ChooseAddressActivity extends Activity {
         addr_unit = savedInstanceState.getString("addr_unit");
         addr_street = savedInstanceState.getString("addr_street");
         addr_suburb = savedInstanceState.getString("addr_suburb");
+        suburbId = savedInstanceState.getInt("suburbId");
         suburbPostCode = savedInstanceState.getString("postcode");
         areaName = savedInstanceState.getString("areaname");
         areaFee = savedInstanceState.getInt("areafee");
@@ -185,6 +185,7 @@ public class ChooseAddressActivity extends Activity {
 
                 addr_suburb = data.getStringExtra("name");
                 suburbPostCode = data.getStringExtra("postcode");
+                suburbId = data.getIntExtra("suburbId", 0);
                 areaName = data.getStringExtra("area");
                 areaFee = data.getIntExtra("fee", 0);
 
@@ -245,6 +246,8 @@ public class ChooseAddressActivity extends Activity {
 //                    SharedPreferenceUtils.saveLoginUser(ChooseAddressActivity.this,
 //                            gson.toJson(users));
 
+                    AddressManagerThread addressThread = new AddressManagerThread(mHandler, this, mUser.getPhoneNumber(), addr_unit, addr_street, suburbId);
+                    addressThread.start();
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("address", addr_unit + "," + addr_street
                             + "," + addr_suburb);
