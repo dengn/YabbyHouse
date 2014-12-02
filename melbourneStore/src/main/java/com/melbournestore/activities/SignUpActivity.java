@@ -53,6 +53,8 @@ public class SignUpActivity extends Activity {
 
                     mUser = (String) msg.obj;
                     SharedPreferenceUtils.saveLoginUser(SignUpActivity.this, mUser);
+                    SharedPreferenceUtils.saveUserNumber(SignUpActivity.this, mNumber);
+                    SharedPreferenceUtils.saveUserPassword(SignUpActivity.this, mPassword);
                     mOrderNum = msg.arg1;
                     mCouponNum = msg.arg2;
                     Log.d("LOGIN", mUser);

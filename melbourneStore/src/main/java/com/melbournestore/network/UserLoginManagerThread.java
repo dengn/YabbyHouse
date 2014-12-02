@@ -164,7 +164,7 @@ public class UserLoginManagerThread extends Thread {
             Message message = mHandler.obtainMessage();
             message.what = 0;
             mHandler.sendMessage(message);
-        } else {
+        } else if(result.contains("user")){
 
             String order_result = handleGet(Constant.URL_BASE + "user/" + mNumber+"/orders");
             Log.d("ORDERTHREAD", order_result);

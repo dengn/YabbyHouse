@@ -31,12 +31,12 @@ import com.melbournestore.adaptors.MyAccountListAddressAdapter;
 import com.melbournestore.adaptors.MyAccountListCouponAdapter;
 import com.melbournestore.application.SysApplication;
 import com.melbournestore.db.SharedPreferenceUtils;
-import com.melbournestore.models.User;
+import com.melbournestore.models.Suburb;
 import com.melbournestore.models.user_iphone;
 import com.melbournestore.network.CouponManagerThread;
 import com.melbournestore.network.OrderManagerThread;
+import com.melbournestore.network.UserLoginManagerThread;
 import com.melbournestore.utils.BitmapUtils;
-import com.melbournestore.utils.MelbourneUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import java.io.FileNotFoundException;
@@ -70,6 +70,9 @@ public class MyAccountActivity extends Activity {
 
     private int mCouponNum=0;
 
+    private String mNumber="";
+    private String mPassword="";
+
     private Gson gson = new Gson();
 
     private PopupWindow mpopupWindow;
@@ -79,6 +82,8 @@ public class MyAccountActivity extends Activity {
 
     private int callOrderCode =0;
     private int callCouponCode = 0;
+
+    private UserLoginManagerThread mLoginThread;
 
 
     private Handler mHandler = new Handler() {
@@ -91,6 +96,22 @@ public class MyAccountActivity extends Activity {
 
                     showPopMenu();
                     break;
+
+                case 1:
+                    String mUserString =(String) msg.obj;
+                    SharedPreferenceUtils.saveLoginUser(MyAccountActivity.this, mUserString);
+
+                    mUser = gson.fromJson(mUserString, user_iphone.class);
+
+                    mOrderNum = msg.arg1;
+                    mCouponNum = msg.arg2;
+                    mMyAccountListAdapter.refresh(mUser, mOrderNum, mCouponNum);
+                    mMyAccountList.setAdapter(mMyAccountListAdapter);
+                    mMyAccountListAdapterAddress.refresh(mUser);
+                    mMyAccountListAddress.setAdapter(mMyAccountListAdapterAddress);
+
+                    break;
+
 //                case 1:
 //                    //get Coupon
 //                    mCouponNum = (Integer)msg.obj;
@@ -141,6 +162,13 @@ public class MyAccountActivity extends Activity {
         mOrderNum = intent.getIntExtra("order_num", 0);
         mCouponNum = intent.getIntExtra("coupon_num", 0);
 
+        mNumber = SharedPreferenceUtils.getUserNumber(this);
+        mPassword = SharedPreferenceUtils.getUserPassword(this);
+
+
+        mLoginThread = new UserLoginManagerThread(mHandler, this, mNumber, mPassword);
+        mLoginThread.start();
+
         mUser = gson.fromJson(users_string, user_iphone.class);
 
 
@@ -169,12 +197,10 @@ public class MyAccountActivity extends Activity {
 
                 //SysApplication.setLoginStatus(false);
 
-                String users_string = SharedPreferenceUtils.getLoginUser(MyAccountActivity.this);
-                Gson gson = new Gson();
-                User[] users = gson.fromJson(users_string, User[].class);
-
-                SharedPreferenceUtils.saveLoginUser(MyAccountActivity.this, gson.toJson(MelbourneUtils.setUsersDeactive(users)));
-
+                user_iphone user = new user_iphone("", "", "", 0, "", new Suburb(0, "", "", ""));
+                SharedPreferenceUtils.saveLoginUser(MyAccountActivity.this, gson.toJson(user));
+                SharedPreferenceUtils.saveUserNumber(MyAccountActivity.this, "");
+                SharedPreferenceUtils.saveUserPassword(MyAccountActivity.this, "");
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("logout", true);
                 setResult(RESULT_OK, returnIntent);

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.Area;
 import com.melbournestore.utils.Constant;
 
@@ -28,6 +29,8 @@ public class AreaManagerThread extends Thread {
     Handler mHandler;
 
     Context mContext;
+
+    Gson gson = new Gson();
 
     public AreaManagerThread(Handler handler, Context context) {
         mHandler = handler;
@@ -80,7 +83,7 @@ public class AreaManagerThread extends Thread {
 
         Log.d("THREAD", result);
         ArrayList<Area> mAreas = getAreas(result);
-
+        SharedPreferenceUtils.saveAreas(mContext, gson.toJson(mAreas));
 
 
         Message message = mHandler.obtainMessage();

@@ -12,12 +12,14 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.melbournestore.activities.R;
 import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.item_iphone;
+import com.melbournestore.network.ItemGoodManagerThread;
 import com.melbournestore.utils.Constant;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -32,6 +34,7 @@ public class DishListAdapter extends BaseAdapter {
     private Context mContext;
     private Handler mHandler;
     private item_iphone mItem;
+    private boolean likeClicked = false;
 
     private Gson gson = new Gson();
 
@@ -117,6 +120,30 @@ public class DishListAdapter extends BaseAdapter {
 
                 holder_dish.price.setText("$" + String.valueOf(mItem.getPrice()));
                 holder_dish.like.setImageResource(R.drawable.other_icon_like);
+
+                holder_dish.like.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+
+                        String number = SharedPreferenceUtils.getUserNumber(mContext);
+                        ItemGoodManagerThread itemThread = new ItemGoodManagerThread(mHandler, mContext, mItem.getId(), number);
+                        itemThread.start();
+
+                        if (!likeClicked) {
+                            holder_dish.like
+                                    .setImageResource(R.drawable.other_icon_liked);
+
+
+                            likeClicked = true;
+                        } else {
+                            Toast.makeText(mContext, "亲，今天已经点过赞了。", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+
+                    }
+
+                });
 
                 holder_dish.like_num.setText(String.valueOf(mItem.getGood()));
                 holder_dish.stock.setText("今日库存" + String.valueOf(mItem.getStock()) + "份");

@@ -1,16 +1,19 @@
 package com.melbournestore.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.melbournestore.db.DataResourceUtils;
 import com.melbournestore.db.SharedPreferenceUtils;
+import com.melbournestore.models.Area;
 import com.melbournestore.models.OrderItem;
 import com.melbournestore.models.Order_user;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
 import com.melbournestore.models.Shop_iPhone;
+import com.melbournestore.models.Suburb;
 import com.melbournestore.models.User;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.models.number_price;
@@ -382,5 +385,28 @@ public class MelbourneUtils {
         }
         return names;
     }
+
+    public static final Area getAreaFromSuburb(Suburb suburb, Context context){
+        String mAreaString = SharedPreferenceUtils.getAreas(context);
+        Log.d("AREA", mAreaString);
+        Gson gson = new Gson();
+        Type listType = new TypeToken<ArrayList<Area>>() {
+        }.getType();
+        ArrayList<Area> areas = gson.fromJson(mAreaString, listType);
+        Area mArea=new Area();
+        for(int i=0;i<areas.size();i++){
+            for(int j=0;j<areas.get(i).getSuburbs().size();j++){
+
+
+                if(suburb.getName().equals(areas.get(i).getSuburbs().get(j).getName())){
+                    mArea = areas.get(i);
+                }
+            }
+        }
+        Log.d("AREA", "marea name: "+mArea.getName());
+        return mArea;
+    }
+
+
 
 }

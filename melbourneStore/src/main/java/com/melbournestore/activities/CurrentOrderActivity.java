@@ -2,8 +2,6 @@ package com.melbournestore.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
@@ -20,12 +18,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.melbournestore.adaptors.ADPagerAdapter;
 import com.melbournestore.application.SysApplication;
-import com.melbournestore.db.DataResourceUtils;
-import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.Order;
-import com.melbournestore.models.Order_user;
-import com.melbournestore.models.Plate;
-import com.melbournestore.models.User;
+import com.melbournestore.models.OrderItem;
 import com.melbournestore.ui.CirclePageIndicator;
 import com.melbournestore.utils.MelbourneUtils;
 
@@ -83,15 +77,6 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         List<View> views = new ArrayList<View>();
 
 
-        String order_info = "";
-
-
-        String users_string = SharedPreferenceUtils
-                .getLoginUser(CurrentOrderActivity.this);
-
-        Gson gson = new Gson();
-        User[] users = gson.fromJson(users_string, User[].class);
-        User activeUser = users[MelbourneUtils.getActiveUser(users)];
 
 
         // TODO
@@ -101,7 +86,7 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         views.add(view);
 
 
-        views.add(getCurrentOrderStatusView(activeUser, position));
+        views.add(getCurrentOrderStatusView(mOrder));
         size = views.size();
 
         adapter = new ADPagerAdapter(this, views);
@@ -181,11 +166,9 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         return super.onKeyDown(keyCode, event);
     }
 
-    private View getCurrentOrderStatusView(User activeUser, int position) {
+    private View getCurrentOrderStatusView(Order mOrder) {
 
-        Order_user order = activeUser.getOrders()[position];
-
-        Plate[] plates = order.getPlates();
+        OrderItem[] items = mOrder.getItems();
 
         View order_detail = LayoutInflater.from(this).inflate(R.layout.order_submitted_layout, null);
 
@@ -195,35 +178,37 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
 
         int currentshop = -1;
 
-        for (int i = 0; i < plates.length; i++) {
+        for (int i = 0; i < items.length; i++) {
             //order_info += DataResourceUtils.shopItems[plates[i].getShopId()] + "\n";
             //order_info += plates[i].getName() + " " + String.valueOf(plates[i].getNumber()) + "份  $" + String.valueOf(plates[i].getNumber() * plates[i].getPrice()) + "\n";
 
-            if (currentshop != plates[i].getShopId()) {
-
-                currentshop = plates[i].getShopId();
-
-                TextView shop_view = new TextView(this);
-                shop_view.setTextColor(Color.WHITE);
-                shop_view.setTextSize(20);
-                shop_view.setTypeface(null, Typeface.BOLD);
-                shop_view.setText(DataResourceUtils.shopItems[plates[i].getShopId()]);
-                submitted_items_list.addView(shop_view);
 
 
-                View whitebar_view = LayoutInflater.from(this).inflate(R.layout.textview_whitebar, null);
-                submitted_items_list.addView(whitebar_view);
-
-            }
+//            if (currentshop != plates[i].getShopId()) {
+//
+//                currentshop = plates[i].getShopId();
+//
+//                TextView shop_view = new TextView(this);
+//                shop_view.setTextColor(Color.WHITE);
+//                shop_view.setTextSize(20);
+//                shop_view.setTypeface(null, Typeface.BOLD);
+//                shop_view.setText(DataResourceUtils.shopItems[plates[i].getShopId()]);
+//                submitted_items_list.addView(shop_view);
+//
+//
+//                View whitebar_view = LayoutInflater.from(this).inflate(R.layout.textview_whitebar, null);
+//                submitted_items_list.addView(whitebar_view);
+//
+//            }
             //add view for each plate myorder_list_item
 
             View item_view = LayoutInflater.from(this).inflate(R.layout.submitted_item, null);
             TextView submitted_item_name = (TextView) item_view.findViewById(R.id.submitted_item_name);
             TextView submitted_item_number = (TextView) item_view.findViewById(R.id.submitted_item_number);
             TextView submitted_item_price = (TextView) item_view.findViewById(R.id.submitted_item_price);
-            submitted_item_name.setText(plates[i].getName());
-            submitted_item_number.setText(String.valueOf(plates[i].getNumber()) + "份");
-            submitted_item_price.setText("$ " + String.valueOf(plates[i].getNumber() * plates[i].getPrice()));
+            submitted_item_name.setText(items[i].getName());
+            submitted_item_number.setText(String.valueOf((int)Float.parseFloat(items[i].getCount())) + "份");
+            submitted_item_price.setText("$ " + String.valueOf((int)Float.parseFloat(items[i].getCount()) * items[i].getPrice()));
             submitted_items_list.addView(item_view);
 
 
@@ -241,13 +226,13 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         submitted_ordertime = (TextView) order_detail.findViewById(R.id.submitted_ordertime);
 
 
-        submitted_totalprice.setText("总计费用: $" + String.valueOf(MelbourneUtils.sum_price_all(plates) + order.getDeliveryFee()));
-        submitted_delivery_number.setText("送货电话: " + activeUser.getPhoneNumber());
+        submitted_totalprice.setText("总计费用: $" + String.valueOf(MelbourneUtils.sum_price_items(items)));
+        submitted_delivery_number.setText("送货电话: " + mOrder.getPhoneNumber());
         submitted_delivery_address.setText("送货地址: " );
-        submitted_delivery_time.setText("送货时间: " + order.getDeliveryTime());
-        submitted_preference.setText("偏   好: " + order.getRemark());
-        submitted_ordernumber.setText("订单号码: " + order.getCreateTime());
-        submitted_ordertime.setText("订单时间: " + order.getCreateTime());
+        submitted_delivery_time.setText("送货时间: " + mOrder.getDeliveryTime());
+        submitted_preference.setText("偏   好: " + mOrder.getRemark());
+        submitted_ordernumber.setText("订单号码: " + String.valueOf(mOrder.getId()));
+        submitted_ordertime.setText("订单时间: " + mOrder.getCreateTime());
 
 
         return order_detail;

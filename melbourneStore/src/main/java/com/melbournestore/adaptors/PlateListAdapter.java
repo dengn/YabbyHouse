@@ -20,6 +20,7 @@ import com.melbournestore.activities.DishActivity;
 import com.melbournestore.activities.R;
 import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.item_iphone;
+import com.melbournestore.network.ItemGoodManagerThread;
 import com.melbournestore.utils.Constant;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -140,25 +141,14 @@ public class PlateListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
+                String number = SharedPreferenceUtils.getUserNumber(mContext);
+                ItemGoodManagerThread itemThread = new ItemGoodManagerThread(mHandler, mContext, mItems.get(position).getId(), number);
+                itemThread.start();
+
                 if (!likeClicked) {
                     holder.like_view
                             .setImageResource(R.drawable.other_icon_liked);
 
-                    holder.like_number_view.setText(String
-                            .valueOf(mItems.get(position).getGood() + 1)
-                            + "         今日库存"
-                            + String.valueOf(mItems.get(position).getStock()) + "份");
-
-//                    mItems.get(position).setGood(mItems.get(position).getGood() + 1);
-//
-//
-//                    int shopId = mPlates[position].getShopId();
-//                    String shop_string = SharedPreferenceUtils.getCurrentChoice(mContext);
-//                    Gson gson = new Gson();
-//                    Shop[] shops = gson.fromJson(shop_string, Shop[].class);
-//                    shops[shopId].setPlates(mPlates);
-//                    SharedPreferenceUtils
-//                            .saveCurrentChoice(mContext, gson.toJson(shops));
 
                     likeClicked = true;
                 } else {

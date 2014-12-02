@@ -79,6 +79,39 @@ public class SharedPreferenceUtils {
         return pref.edit().putString("user_login", info).commit();
     }
 
+    // The SharedPrefrence file to store User Password
+    public static String getUserPassword(Context context){
+        SharedPreferences pref = context.getSharedPreferences("user_password", 0);
+        return pref.getString("user_password", "");
+    }
+
+    public static boolean saveUserPassword(Context context, String info){
+        SharedPreferences pref = context.getSharedPreferences("user_password", 0);
+        return pref.edit().putString("user_password", info).commit();
+    }
+
+    // The SharedPrefrence file to store User Phone Number
+    public static String getUserNumber(Context context){
+        SharedPreferences pref = context.getSharedPreferences("user_number", 0);
+        return pref.getString("user_number", "");
+    }
+
+    public static boolean saveUserNumber(Context context, String info){
+        SharedPreferences pref = context.getSharedPreferences("user_number", 0);
+        return pref.edit().putString("user_number", info).commit();
+    }
+
+    // The SharedPrefrence file to store Areas
+    public static String getAreas(Context context){
+        SharedPreferences pref = context.getSharedPreferences("areas", 0);
+        return pref.getString("areas", "");
+    }
+
+    public static boolean saveAreas(Context context, String info){
+        SharedPreferences pref = context.getSharedPreferences("areas", 0);
+        return pref.edit().putString("areas", info).commit();
+    }
+
     // The SharedPrefrence file to store Orders.
     public static String getCurrentOrder(Context context) {
         SharedPreferences pref = context.getSharedPreferences("current_order",

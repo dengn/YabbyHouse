@@ -53,6 +53,7 @@ import com.melbournestore.models.Shop;
 import com.melbournestore.models.Suburb;
 import com.melbournestore.models.User;
 import com.melbournestore.models.user_iphone;
+import com.melbournestore.network.AreaManagerThread;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 /**
@@ -111,7 +112,7 @@ public class MainActivity extends Activity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private String[] mMenuTitles;
-    private Handler mHandler = new Handler();
+    private Handler mHandler = new Handler(){};
     private long mExitTime;
     private int mOrderNum;
     private int mCouponNum;
@@ -126,10 +127,15 @@ public class MainActivity extends Activity {
 
         if (SharedPreferenceUtils.getFirstTimeLaunch(this)) {
             mUser = new user_iphone("", "", "", 0, "", new Suburb(0, "", "", ""));
+            SharedPreferenceUtils.saveLoginUser(MainActivity.this, gson.toJson(mUser));
         } else {
             String mUserString = SharedPreferenceUtils.getLoginUser(this);
+            Log.d("LOGIN", mUserString);
             mUser = gson.fromJson(mUserString, user_iphone.class);
         }
+
+        AreaManagerThread mAreaThread = new AreaManagerThread(mHandler, this);
+        mAreaThread.start();
 
         plate_fragment = new PlateFragment();
         plate_fragment.onAttach(this);
@@ -206,7 +212,8 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-
+        String mUserString = SharedPreferenceUtils.getLoginUser(this);
+        mUser = gson.fromJson(mUserString, user_iphone.class);
         getActionBar().setTitle(mTitle);
 
         mDrawerListAdapter.refresh(mUser);

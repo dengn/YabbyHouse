@@ -16,9 +16,16 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.melbournestore.adaptors.ChooseAddressListAdapter;
 import com.melbournestore.adaptors.ChooseAddressSuburbListAdapter;
 import com.melbournestore.application.SysApplication;
+import com.melbournestore.db.SharedPreferenceUtils;
+import com.melbournestore.models.Area;
+import com.melbournestore.models.user_iphone;
+import com.melbournestore.utils.MelbourneUtils;
+
+import java.util.ArrayList;
 
 public class ChooseAddressActivity extends Activity {
 
@@ -34,12 +41,26 @@ public class ChooseAddressActivity extends Activity {
 
     private String addr_unit = "";
     private String addr_street = "";
+    private String addr_suburb = "";
+    private String suburbPostCode = "";
+    private String areaName = "";
+    private int areaFee = 0;
+    private long mExitTime;
+
+    private user_iphone mUser;
+
+    private ArrayList<Area> mAreas;
+
+    private Gson gson = new Gson();
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             Bundle b = msg.getData();
 
             switch (msg.what) {
+
+
                 // unit = 1
                 case 1:
                     addr_unit = b.getString("unit");
@@ -54,11 +75,7 @@ public class ChooseAddressActivity extends Activity {
             }
         }
     };
-    private String addr_suburb = "";
-    private String suburbPostCode = "";
-    private String areaName = "";
-    private int areaFee = 0;
-    private long mExitTime;
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +92,17 @@ public class ChooseAddressActivity extends Activity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         getActionBar().setTitle("送货地址");
+
+
+        String mUserString = SharedPreferenceUtils.getLoginUser(this);
+        mUser = gson.fromJson(mUserString, user_iphone.class);
+        addr_unit = mUser.getUnitNo();
+        addr_street = mUser.getStreet();
+        addr_suburb = mUser.getSuburb().getName();
+        suburbPostCode = mUser.getSuburb().getPostCode();
+        Area mArea = MelbourneUtils.getAreaFromSuburb(mUser.getSuburb(), this);
+        areaName = mArea.getName();
+        areaFee = mArea.getFee();
 
 
 //        String users_string = SharedPreferenceUtils
@@ -97,7 +125,7 @@ public class ChooseAddressActivity extends Activity {
         chooseAddrSuburb_list = (ListView) findViewById(R.id.chooseAddr_suburb);
 
         mChooseAddressSuburbListAdapter = new ChooseAddressSuburbListAdapter(this,
-                mHandler, addr_suburb, areaFee);
+                mHandler, areaName, areaFee);
         chooseAddrSuburb_list.setAdapter(mChooseAddressSuburbListAdapter);
 
     }

@@ -81,6 +81,7 @@
                 android:id="@+id/plate_like_number_stock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:layout_gravity="center"
                 android:text="TextView"
                 android:textColor="@color/white"
