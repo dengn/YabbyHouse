@@ -30,17 +30,11 @@ import com.melbournestore.adaptors.SubmitListCouponAdapter;
 import com.melbournestore.adaptors.SubmitListMemoAdapter;
 import com.melbournestore.application.SysApplication;
 import com.melbournestore.db.SharedPreferenceUtils;
-import com.melbournestore.models.Order_user;
-import com.melbournestore.models.Plate;
-import com.melbournestore.models.Shop;
-import com.melbournestore.models.User;
 import com.melbournestore.models.user_iphone;
-import com.melbournestore.utils.MelbourneUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -64,6 +58,15 @@ public class SubmitOrderActivity extends Activity {
     private PopupWindow mTimePickerPopup;
 
     private user_iphone mUser;
+
+    private String mUnitNo="";
+    private String mStreet ="";
+    private String mSuburb ="";
+    private String mArea ="";
+    private int mFee = 0;
+
+    private String mDeliveryTime="";
+    private String mRemark ="";
 
     private Handler mHandler = new Handler() {
         @Override
@@ -128,47 +131,47 @@ public class SubmitOrderActivity extends Activity {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
 
-                String users_string = SharedPreferenceUtils
-                        .getLoginUser(SubmitOrderActivity.this);
-                Gson gson = new Gson();
-                User[] users = gson.fromJson(users_string, User[].class);
-                User activeUser = users[MelbourneUtils.getActiveUser(users)];
-
-                String current_order = SharedPreferenceUtils
-                        .getCurrentOrder(SubmitOrderActivity.this);
-                Order_user currentOrder = gson.fromJson(current_order,
-                        Order_user.class);
-
-                String current_choice = SharedPreferenceUtils
-                        .getCurrentChoice(SubmitOrderActivity.this);
-                Shop[] shops = gson.fromJson(current_choice, Shop[].class);
-                Plate[] plates = MelbourneUtils.getPlatesChosen(shops);
-                currentOrder.setPlates(plates);
-                currentOrder.setDeliveryFee(MelbourneUtils.getSuburbDeliveryPrice(activeUser.getSuburb()));
-
-                if (activeUser.getOrders() == null) {
-                    Order_user[] userOrder = new Order_user[1];
-                    userOrder[0] = currentOrder;
-                    activeUser.setOrders(userOrder);
-                } else if (activeUser.getOrders().length == 0) {
-                    Order_user[] userOrder = new Order_user[1];
-                    userOrder[0] = currentOrder;
-                    activeUser.setOrders(userOrder);
-                } else {
-                    ArrayList<Order_user> userOrder_array = new ArrayList<Order_user>(
-                            Arrays.asList(activeUser.getOrders()));
-                    userOrder_array.add(currentOrder);
-                    activeUser.setOrders(userOrder_array
-                            .toArray(new Order_user[0]));
-                }
-                currentOrder.setStatus(0);
-                currentOrder.setCreateTime(MelbourneUtils.getSystemTime());
-
-                SharedPreferenceUtils.saveCurrentOrder(SubmitOrderActivity.this,
-                        gson.toJson(currentOrder));
-
-                SharedPreferenceUtils.saveLoginUser(SubmitOrderActivity.this,
-                        gson.toJson(users));
+//                String users_string = SharedPreferenceUtils
+//                        .getLoginUser(SubmitOrderActivity.this);
+//                Gson gson = new Gson();
+//                User[] users = gson.fromJson(users_string, User[].class);
+//                User activeUser = users[MelbourneUtils.getActiveUser(users)];
+//
+//                String current_order = SharedPreferenceUtils
+//                        .getCurrentOrder(SubmitOrderActivity.this);
+//                Order_user currentOrder = gson.fromJson(current_order,
+//                        Order_user.class);
+//
+//                String current_choice = SharedPreferenceUtils
+//                        .getCurrentChoice(SubmitOrderActivity.this);
+//                Shop[] shops = gson.fromJson(current_choice, Shop[].class);
+//                Plate[] plates = MelbourneUtils.getPlatesChosen(shops);
+//                currentOrder.setPlates(plates);
+//                currentOrder.setDeliveryFee(MelbourneUtils.getSuburbDeliveryPrice(activeUser.getSuburb()));
+//
+//                if (activeUser.getOrders() == null) {
+//                    Order_user[] userOrder = new Order_user[1];
+//                    userOrder[0] = currentOrder;
+//                    activeUser.setOrders(userOrder);
+//                } else if (activeUser.getOrders().length == 0) {
+//                    Order_user[] userOrder = new Order_user[1];
+//                    userOrder[0] = currentOrder;
+//                    activeUser.setOrders(userOrder);
+//                } else {
+//                    ArrayList<Order_user> userOrder_array = new ArrayList<Order_user>(
+//                            Arrays.asList(activeUser.getOrders()));
+//                    userOrder_array.add(currentOrder);
+//                    activeUser.setOrders(userOrder_array
+//                            .toArray(new Order_user[0]));
+//                }
+//                currentOrder.setStatus(0);
+//                currentOrder.setCreateTime(MelbourneUtils.getSystemTime());
+//
+//                SharedPreferenceUtils.saveCurrentOrder(SubmitOrderActivity.this,
+//                        gson.toJson(currentOrder));
+//
+//                SharedPreferenceUtils.saveLoginUser(SubmitOrderActivity.this,
+//                        gson.toJson(users));
 
                 Intent intent = new Intent(SubmitOrderActivity.this,
                         OrderSubmittedActivity.class);
@@ -184,13 +187,13 @@ public class SubmitOrderActivity extends Activity {
         mSubmitCouponList = (ListView) findViewById(R.id.submit_coupon_list);
 
 
-        mSubmitListAdapter = new SubmitListAdapter(this, mHandler, mUser);
+        mSubmitListAdapter = new SubmitListAdapter(this, mHandler, mUser, mUnitNo, mStreet, mSuburb, mDeliveryTime);
         mSubmitList.setAdapter(mSubmitListAdapter);
 
-        mSubmitListMemoAdapter = new SubmitListMemoAdapter(this, mHandler);
+        mSubmitListMemoAdapter = new SubmitListMemoAdapter(this, mHandler, mRemark);
         mSubmitMemoList.setAdapter(mSubmitListMemoAdapter);
 
-        mSubmitListCouponAdapter = new SubmitListCouponAdapter(this, mHandler, mUser);
+        mSubmitListCouponAdapter = new SubmitListCouponAdapter(this, mHandler,  mArea, mFee, mUser);
         mSubmitCouponList.setAdapter(mSubmitListCouponAdapter);
 
         mSubmitOrders.setText("确认下单");
@@ -207,6 +210,19 @@ public class SubmitOrderActivity extends Activity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
 
+                 // String address = data.getStringExtra("address");
+                mUnitNo = data.getStringExtra("unit");
+                mStreet = data.getStringExtra("street");
+                mSuburb = data.getStringExtra("suburb");
+                mArea = data.getStringExtra("area");
+                mFee = data.getIntExtra("fee", 0);
+
+
+                mSubmitListAdapter.refresh(mUnitNo, mStreet, mSuburb, mDeliveryTime);
+                mSubmitList.setAdapter(mSubmitListAdapter);
+
+                mSubmitListCouponAdapter.refresh(mArea, mFee, mUser);
+                mSubmitCouponList.setAdapter(mSubmitListCouponAdapter);
 //                String users_string = SharedPreferenceUtils
 //                        .getLoginUser(SubmitOrderActivity.this);
 //                Gson gson = new Gson();
@@ -329,7 +345,7 @@ public class SubmitOrderActivity extends Activity {
                 if(day.getCurrentItem()==0){
                     Date date=new Date();
                     date=c.getTime(); //这个时间就是日期往后推一天的结果
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
                     delivery_time += formatter.format(date);
                 }
                 else{
@@ -337,14 +353,14 @@ public class SubmitOrderActivity extends Activity {
                     c.setTime(date);
                     c.add(Calendar.DATE,1);
                     date=c.getTime(); //这个时间就是日期往后推一天的结果
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
                     delivery_time += formatter.format(date);
                 }
 
                 delivery_time+=" "+getPossibleDeliveryHours()[hours.getCurrentItem()];
+                mDeliveryTime = delivery_time;
 
-
-                mSubmitListAdapter.refresh(mUser);
+                mSubmitListAdapter.refresh(mUnitNo, mStreet, mSuburb, mDeliveryTime);
                 mSubmitList.setAdapter(mSubmitListAdapter);
                 mTimePickerPopup.dismiss();
             }
@@ -361,24 +377,27 @@ public class SubmitOrderActivity extends Activity {
         private String[] getPossibleDeliveryHours() {
         Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
-        int start_time;
-        if(hour<20){
-            start_time = 20;
-        }
-        else{
-            start_time =hour+1;
-        }
+        int start_time =20;
+//        if(hour<20){
+//            start_time = 20;
+//        }
+//        else{
+//            start_time =hour+1;
+//        }
 
         ArrayList<String> time = new ArrayList<String>();
-        for (int i = start_time; i < 24; i++) {
-            for (int j = 0; j < 4; j++) {
-                if (j == 0) {
-                    time.add(String.valueOf(i) + ":00");
-                } else {
-                    time.add(String.valueOf(i) + ":" + String.valueOf(j * 15));
-                }
-            }
-        }
+        time.add("20点 - 21点");
+        time.add("21点 - 22点");
+        time.add("23点 - 24点");
+//        for (int i = start_time; i < 24; i++) {
+//            for (int j = 0; j < 4; j++) {
+//                if (j == 0) {
+//                    time.add(String.valueOf(i) + ":00");
+//                } else {
+//                    time.add(String.valueOf(i) + ":" + String.valueOf(j * 15));
+//                }
+//            }
+//        }
         String[] returned_time = new String[time.size()];
         returned_time = time.toArray(returned_time);
         return returned_time;

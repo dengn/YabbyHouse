@@ -59,6 +59,7 @@ public class SuburbActivity extends Activity implements
                     String suburbName = b.getString("name");
                     String suburbPostCode = b.getString("postcode");
                     int suburbId = b.getInt("suburbId");
+
                     String areaName = b.getString("area");
                     int areaFee = b.getInt("fee");
                     Intent returnIntent = new Intent();

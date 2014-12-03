@@ -86,6 +86,10 @@ public class MyAccountListAddressAdapter extends BaseAdapter {
 
         address = MelbourneUtils.getCompleteAddress(mUser);
 
+        if(address.length()>26){
+            address=address.substring(0,26)+"...";
+        }
+
         holder_address.address.setText(address);
         holder_address.rightArrow
                 .setImageResource(R.drawable.other_icon_rightarrow);

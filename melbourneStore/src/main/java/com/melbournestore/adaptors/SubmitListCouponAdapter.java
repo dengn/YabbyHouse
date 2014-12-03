@@ -28,21 +28,26 @@ public class SubmitListCouponAdapter extends BaseAdapter {
     final int TYPE_EMPTY = 1;
     Handler mHandler;
     Context mContext;
+    String mArea;
+    int mFee;
     user_iphone mUser;
 
-    public SubmitListCouponAdapter(Context context, Handler handler, user_iphone user) {
+    public SubmitListCouponAdapter(Context context, Handler handler, String area, int fee, user_iphone user) {
         // TODO Auto-generated constructor stub
 
 
         mContext = context;
         mHandler = handler;
+        mArea = area;
+        mFee = fee;
         mUser = user;
-
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(user_iphone user) {
+    public void refresh(String area, int fee, user_iphone user) {
+        mArea = area;
+        mFee = fee;
         mUser = user;
         notifyDataSetChanged();
     }
@@ -94,10 +99,19 @@ public class SubmitListCouponAdapter extends BaseAdapter {
                 holder_url.title = (TextView) convertView.findViewById(R.id.delivery_title);
                 holder_url.info = (TextView) convertView.findViewById(R.id.delivery_info);
 
+                String areaName ="";
+                String areaFee ="";
+                if(mArea.equals("")&&(mFee==0)){
+                    Area area = MelbourneUtils.getAreaFromSuburb(mUser.getSuburb(), mContext);
+                    areaName = area.getName();
+                    areaFee = String.valueOf(area.getFee());
+                }
+                else{
+                    areaName =mArea;
+                    areaFee =String.valueOf(mFee);
+                }
 
-                Area area = MelbourneUtils.getAreaFromSuburb(mUser.getSuburb(), mContext);
-
-                holder_url.title.setText("配送费(" + area.getName() + " + $" + String.valueOf(area.getFee()) + ")");
+                holder_url.title.setText("配送费(" + areaName + " + $" + areaFee + ")");
                 holder_url.info.setText(Html.fromHtml("<u>" + "派送说明" + "</u>"));
 
                 convertView.setTag(holder_url);

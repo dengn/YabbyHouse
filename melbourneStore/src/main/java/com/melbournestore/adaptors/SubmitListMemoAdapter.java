@@ -4,10 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -21,15 +22,15 @@ public class SubmitListMemoAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
     Handler mHandler;
     Context mContext;
-    private String memo;
+    private String mMemo;
 
-    public SubmitListMemoAdapter(Context context, Handler handler) {
+    public SubmitListMemoAdapter(Context context, Handler handler, String memo) {
         // TODO Auto-generated constructor stub
 
 
         mContext = context;
         mHandler = handler;
-
+        mMemo = memo;
 
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -71,33 +72,40 @@ public class SubmitListMemoAdapter extends BaseAdapter {
         holder_edittext.title = (TextView) convertView.findViewById(R.id.memo_title);
         holder_edittext.memo = (EditText) convertView.findViewById(R.id.memo_info);
 
-        holder_edittext.title.setText("偏         好");
-        holder_edittext.memo.setHint("请输入备注");
+        holder_edittext.title.setText("备        注");
+        holder_edittext.memo.setHint("请输入饮食偏好。\n如：少葱，加麻加辣等。");
+        holder_edittext.memo.setText(mMemo);
         holder_edittext.memo.setSingleLine(false);
         holder_edittext.memo.setGravity(Gravity.TOP);
         holder_edittext.memo.setHorizontallyScrolling(false);
 
-        holder_edittext.memo.setOnFocusChangeListener(new OnFocusChangeListener() {
-            public void onFocusChange(View v, boolean hasFocus) {
+        holder_edittext.memo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
 
-                if (!hasFocus) {
-                    final int position = v.getId();
-                    final EditText Caption = (EditText) v;
-                    memo = Caption.getText().toString();
+            }
 
-                    Message message = new Message();
-                    Bundle b = new Bundle();
-                    // send the position
-                    b.putString("memo", memo);
-                    message.setData(b);
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                Message message = new Message();
+                Bundle b = new Bundle();
+                // send the position
+                b.putString("memo", charSequence.toString());
+                message.setData(b);
 
-                    // memo = 2
-                    message.what = 2;
+                // memo = 2
+                message.what = 2;
 
-                    mHandler.sendMessage(message);
-                }
+                mHandler.sendMessage(message);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
+
+
 
         convertView.setTag(holder_edittext);
 

@@ -466,5 +466,28 @@ public class MelbourneUtils {
         return shops.get(index).getName();
     }
 
+    public static final Suburb getSuburbFromAreaNameAndSuburb(String area, String suburb, Context context){
+        String areaString = SharedPreferenceUtils.getAreas(context);
+        Type typeArea = new TypeToken<ArrayList<Area>>() {
+        }.getType();
+        Gson gson = new Gson();
+        ArrayList<Area> areas = gson.fromJson(areaString, typeArea);
+        int area_index =0;
+        for(int i=0;i<areas.size();i++){
+            if(area.equals(areas.get(i))){
+                area_index = i;
+                break;
+            }
+        }
+        int suburb_index =0;
+        for(int i=0;i<areas.get(area_index).getSuburbs().size();i++){
+            if(suburb.equals(areas.get(area_index).getSuburbs().get(i))){
+                suburb_index = i;
+                break;
+            }
+        }
+
+        return areas.get(area_index).getSuburbs().get(suburb_index);
+    }
 
 }

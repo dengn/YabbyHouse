@@ -33,21 +33,32 @@ public class SubmitListAdapter extends BaseAdapter {
     user_iphone mUser;
     Order_user mCurrentOrder;
 
-    public SubmitListAdapter(Context context, Handler handler, user_iphone user) {
+    String mUnit;
+    String mStreet;
+    String mSuburb;
+    String mDeliveryTime;
+
+    public SubmitListAdapter(Context context, Handler handler, user_iphone user, String unit, String street, String suburb, String deliveryTime) {
         // TODO Auto-generated constructor stub
 
-
+        mUser = user;
         mContext = context;
         mHandler = handler;
-        mUser = user;
+        mUnit = unit;
+        mStreet = street;
+        mSuburb = suburb;
+        mDeliveryTime = deliveryTime;
 
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(user_iphone user) {
+    public void refresh(String unit, String street, String suburb, String deliveryTime) {
 
-        mUser = user;
+        mUnit = unit;
+        mStreet = street;
+        mSuburb = suburb;
+        mDeliveryTime = deliveryTime;
         notifyDataSetChanged();
     }
 
@@ -115,12 +126,22 @@ public class SubmitListAdapter extends BaseAdapter {
                 holder_activity.info = (TextView) convertView.findViewById(R.id.address_info);
                 holder_activity.rightArrow = (ImageView) convertView.findViewById(R.id.address_rightarrow);
 
-                String address = "";
+                String address ="";
+                if(mUnit.equals("")&&mStreet.equals("")&&mSuburb.equals("")){
+                    address = MelbourneUtils.getCompleteAddress(mUser);
+                }else {
+                    address = mUnit + " " + mStreet + "," + mSuburb;
+                }
 
-                address = MelbourneUtils.getCompleteAddress(mUser);
+                if(address.length()>26){
+                    address=address.substring(0,26)+"...";
+                }
 
-                holder_activity.title.setText("运送地址");
-                holder_activity.info.setHint("详细地址");
+
+
+
+                holder_activity.title.setText("送货地址");
+                holder_activity.info.setHint("请输入详细地址。");
                 holder_activity.info.setText(address);
                 holder_activity.rightArrow.setImageResource(R.drawable.other_icon_rightarrow);
 
@@ -148,8 +169,9 @@ public class SubmitListAdapter extends BaseAdapter {
                 holder_checkbox.rightArrow = (ImageView) convertView.findViewById(R.id.time_rightarrow);
 
 
-                holder_checkbox.title.setText("运送时间");
-                holder_checkbox.info.setHint("范围20:00 - 24:00");
+                holder_checkbox.title.setText("运餐时间");
+                holder_checkbox.info.setHint("请选择送餐时间范围。");
+                holder_checkbox.info.setText(mDeliveryTime);
                 holder_checkbox.rightArrow.setImageResource(R.drawable.other_icon_rightarrow);
 
                 convertView.setTag(holder_checkbox);

@@ -255,7 +255,15 @@ public class MyAccountActivity extends Activity {
 
                 // Make sure the request was successful
                 if (resultCode == RESULT_OK) {
-
+//                    String unit = data.getStringExtra("unit");
+//                    String street = data.getStringExtra("street");
+//                    String suburb = data.getStringExtra("suburb");
+//                    String areaName = data.getStringExtra("area");
+//                    int fee = data.getIntExtra("fee", 0);
+//
+//                    mUser.setUnitNo(unit);
+//                    mUser.setStreet(street);
+//                    mUser.setSuburb(MelbourneUtils.getSuburbFromAreaNameAndSuburb(areaName, suburb, this));
 
 
                     mMyAccountListAdapterAddress.refresh(mUser);

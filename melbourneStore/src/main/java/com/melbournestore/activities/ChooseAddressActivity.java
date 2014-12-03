@@ -249,10 +249,9 @@ public class ChooseAddressActivity extends Activity {
                     AddressManagerThread addressThread = new AddressManagerThread(mHandler, this, mUser.getPhoneNumber(), addr_unit, addr_street, suburbId);
                     addressThread.start();
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("address", addr_unit + "," + addr_street
-                            + "," + addr_suburb);
-                    Log.d("ADDRESS", "submitted address: " + addr_unit + "," + addr_street
-                            + "," + addr_suburb);
+                    returnIntent.putExtra("unit",addr_unit);
+                    returnIntent.putExtra("street",addr_street);
+                    returnIntent.putExtra("suburb",addr_suburb);
                     returnIntent.putExtra("area", areaName);
                     returnIntent.putExtra("fee", areaFee);
                     setResult(RESULT_OK, returnIntent);
