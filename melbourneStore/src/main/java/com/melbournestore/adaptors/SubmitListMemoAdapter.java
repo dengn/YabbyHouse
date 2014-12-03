@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -13,7 +14,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.melbournestore.activities.R;
-import com.melbournestore.models.Order_user;
 
 public class SubmitListMemoAdapter extends BaseAdapter {
 
@@ -21,23 +21,22 @@ public class SubmitListMemoAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
     Handler mHandler;
     Context mContext;
-    Order_user mCurrentOrder;
     private String memo;
 
-    public SubmitListMemoAdapter(Context context, Handler handler, Order_user currentOrder) {
+    public SubmitListMemoAdapter(Context context, Handler handler) {
         // TODO Auto-generated constructor stub
 
 
         mContext = context;
         mHandler = handler;
-        mCurrentOrder = currentOrder;
+
 
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(Order_user currentOrder) {
-        mCurrentOrder = currentOrder;
+    public void refresh() {
+
         notifyDataSetChanged();
     }
 
@@ -73,8 +72,10 @@ public class SubmitListMemoAdapter extends BaseAdapter {
         holder_edittext.memo = (EditText) convertView.findViewById(R.id.memo_info);
 
         holder_edittext.title.setText("偏         好");
-        holder_edittext.memo.setText(mCurrentOrder.getRemark());
         holder_edittext.memo.setHint("请输入备注");
+        holder_edittext.memo.setSingleLine(false);
+        holder_edittext.memo.setGravity(Gravity.TOP);
+        holder_edittext.memo.setHorizontallyScrolling(false);
 
         holder_edittext.memo.setOnFocusChangeListener(new OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {

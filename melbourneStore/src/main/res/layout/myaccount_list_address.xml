@@ -11,38 +11,39 @@
         android:layout_height="1dip"
         android:background="@color/lightgray" />
 
-    <TableRow
-        android:id="@+id/myaccount_like_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="1dip"
-        android:padding="1dip">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="7dp"
+        android:layout_marginTop="7dp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/myaccount_address_title"
-            android:layout_width="120dp"
+            android:layout_width="80dp"
             android:layout_height="33dp"
-            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_gravity="left|center_vertical"
+            android:gravity="left"
             android:layout_marginLeft="5dp"
             android:textColor="@color/white"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/myaccount_address_info"
-            android:layout_width="200dp"
+            android:layout_width="240dp"
             android:layout_height="33dp"
-            android:layout_marginBottom="7dp"
-            android:layout_marginTop="7dp"
+            android:layout_gravity="right|center_vertical"
+            android:gravity="right"
             android:textColor="@color/white"
-            android:textSize="13sp" />
+            android:textSize="17sp" />
 
         <ImageView
             android:id="@+id/myaccount_address_rightarrow"
             android:layout_width="40dp"
             android:layout_height="33dp"
-            android:layout_marginBottom="7dp"
-            android:layout_marginRight="3dp"
-            android:layout_marginTop="7dp" />
-    </TableRow>
+            android:layout_gravity="right|center_vertical"
+ />
+    </LinearLayout>
+
 
 </LinearLayout>

@@ -35,7 +35,7 @@
                 android:src="@drawable/other_icon_clock" />
 
             <TextView
-                android:id="@+id/price_total"
+                android:id="@+id/currentOrder_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -51,11 +51,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
 
             <ImageView
+                android:id="@+id/currentOrder_status1_circle"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
@@ -80,6 +81,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/currentOrder_status1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="订单已提交"
@@ -87,6 +89,7 @@
                         android:textSize="25sp" />
 
                     <TextView
+                        android:id="@+id/currentOrder_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
@@ -96,12 +99,12 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/currentOrder_status1_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="8dp"
                     android:gravity="right"
-                    android:text="16:30"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
 
@@ -117,6 +120,7 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/currentOrder_status2_circle"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
@@ -141,6 +145,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/currentOrder_status2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="订单已确认"
@@ -149,12 +154,12 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/currentOrder_status2_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="8dp"
                     android:gravity="right"
-                    android:text="20:30"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
 
@@ -170,6 +175,7 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/currentOrder_status3_circle"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
@@ -194,6 +200,62 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/currentOrder_status3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="订单准备中"
+                        android:textColor="@color/white"
+                        android:textSize="25sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/currentOrder_status3_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="8dp"
+                    android:gravity="right"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/currentOrder_status4_circle"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="40dp"
+                android:background="@drawable/circle" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#40000000"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/currentOrder_status4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="订单配送中"
@@ -202,12 +264,12 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/currentOrder_status4_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="8dp"
                     android:gravity="right"
-                    android:text="20:40"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
 
@@ -223,6 +285,7 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/currentOrder_status5_circle"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
@@ -247,6 +310,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/currentOrder_status5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="订单已完成"
@@ -255,12 +319,12 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/currentOrder_status5_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="8dp"
                     android:gravity="right"
-                    android:text="20:50"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
 

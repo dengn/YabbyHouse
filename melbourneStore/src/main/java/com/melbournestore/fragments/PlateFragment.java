@@ -27,6 +27,7 @@ import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
 import com.melbournestore.models.Shop_iPhone;
 import com.melbournestore.models.item_iphone;
+import com.melbournestore.network.ItemManagerThread;
 import com.melbournestore.network.SearchItemManagerThread;
 import com.melbournestore.network.ShopManagerThread;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -55,12 +56,18 @@ public class PlateFragment extends Fragment {
     SearchView search_plate;
     private ArrayList<Shop_iPhone> mShops = new ArrayList<Shop_iPhone>();
     private ArrayList<item_iphone> mSearchItems = new ArrayList<item_iphone>();
+    private Handler mHandler_item = new Handler();
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case 0:
                     mShops = (ArrayList<Shop_iPhone>) msg.obj;
+                    for(int i=0;i<mShops.size();i++){
+                        ItemManagerThread itemThread = new ItemManagerThread(mHandler_item, mContext, mShops.get(i).getId());
+                        itemThread.start();
+                    }
+
                     category_adapter.refresh(mShops);
                     category.setAdapter(category_adapter);
                     break;

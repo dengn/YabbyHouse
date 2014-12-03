@@ -2,6 +2,8 @@ package com.melbournestore.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +46,7 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
 
     private TextView current_order_info;
     private long mExitTime;
+
 
     //private TextView submitted_totalprice, submitted_delivery_number, submitted_delivery_address, submitted_delivery_time, submitted_preference, submitted_ordernumber, submitted_ordertime;
 
@@ -77,12 +81,9 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         List<View> views = new ArrayList<View>();
 
 
-
-
         // TODO
-        View view = LayoutInflater.from(this).inflate(
-                R.layout.current_order_process_layout, null);
 
+        View view = getCurrentOrderStatusFlow(mOrder);
         views.add(view);
 
 
@@ -166,40 +167,108 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         return super.onKeyDown(keyCode, event);
     }
 
-    private View getCurrentOrderStatusView(Order mOrder) {
 
-        OrderItem[] items = mOrder.getItems();
+    private View getCurrentOrderStatusFlow(Order mOrder){
+        View view = LayoutInflater.from(this).inflate(
+                R.layout.current_order_process_layout, null);
+
+        TextView currentOrder_status = (TextView) view.findViewById(R.id.currentOrder_status);
+        TextView currentOrder_number = (TextView) view.findViewById(R.id.currentOrder_id);
+        ImageView currentOrder_status1_circle = (ImageView) view.findViewById(R.id.currentOrder_status1_circle);
+        TextView currentOrder_status1_time = (TextView) view.findViewById(R.id.currentOrder_status1_time);
+        ImageView currentOrder_status2_circle = (ImageView) view.findViewById(R.id.currentOrder_status2_circle);
+        TextView currentOrder_status2_time = (TextView) view.findViewById(R.id.currentOrder_status2_time);
+        ImageView currentOrder_status3_circle = (ImageView) view.findViewById(R.id.currentOrder_status3_circle);
+        TextView currentOrder_status3_time = (TextView) view.findViewById(R.id.currentOrder_status3_time);
+        ImageView currentOrder_status4_circle = (ImageView) view.findViewById(R.id.currentOrder_status4_circle);
+        TextView currentOrder_status4_time = (TextView) view.findViewById(R.id.currentOrder_status4_time);
+        ImageView currentOrder_status5_circle = (ImageView) view.findViewById(R.id.currentOrder_status5_circle);
+        TextView currentOrder_status5_time = (TextView) view.findViewById(R.id.currentOrder_status5_time);
+
+        currentOrder_status.setText(MelbourneUtils.getCurrentOrderStatusString(mOrder.getStatus()));
+        currentOrder_number.setText("订单号: "+String.valueOf(mOrder.getId()));
+        if(mOrder.getStatus()==0) {
+            currentOrder_status1_circle.setBackgroundResource(R.drawable.circle_white);
+            currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
+        }
+
+        else if(mOrder.getStatus()==1) {
+            currentOrder_status1_circle.setBackgroundResource(R.drawable.circle_white);
+            currentOrder_status2_circle.setBackgroundResource(R.drawable.circle_white);
+            currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
+            currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
+        }
+        else if(mOrder.getStatus()==2){
+            currentOrder_status1_circle.setBackgroundResource(R.drawable.circle_white);
+            currentOrder_status2_circle.setBackgroundResource(R.drawable.circle_white);
+            currentOrder_status3_circle.setBackgroundResource(R.drawable.circle_white);
+            currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
+            currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
+            currentOrder_status3_time.setText(mOrder.getDistributingTime().split(" ")[1]);
+        }else if(mOrder.getStatus()==3){
+            currentOrder_status1_circle.setBackgroundResource(R.drawable.circle_white);
+            currentOrder_status2_circle.setBackgroundResource(R.drawable.circle_white);
+            currentOrder_status3_circle.setBackgroundResource(R.drawable.circle_white);
+            currentOrder_status4_circle.setBackgroundResource(R.drawable.circle_white);
+            currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
+            currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
+            currentOrder_status3_time.setText(mOrder.getDistributingTime().split(" ")[1]);
+            currentOrder_status4_time.setText(mOrder.getDeliveryingTime().split(" ")[1]);
+        }
+        else if(mOrder.getStatus()==4){
+            currentOrder_status1_circle.setBackgroundResource(R.drawable.circle_white);
+            currentOrder_status2_circle.setBackgroundResource(R.drawable.circle_white);
+            currentOrder_status3_circle.setBackgroundResource(R.drawable.circle_white);
+            currentOrder_status4_circle.setBackgroundResource(R.drawable.circle_white);
+            currentOrder_status5_circle.setBackgroundResource(R.drawable.circle_white);
+            currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
+            currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
+            currentOrder_status3_time.setText(mOrder.getDistributingTime().split(" ")[1]);
+            currentOrder_status4_time.setText(mOrder.getDeliveryingTime().split(" ")[1]);
+            currentOrder_status5_time.setText(mOrder.getCompleteTime().split(" ")[1]);
+        }
+
+
+        return view;
+    }
+
+    private View getCurrentOrderStatusView(Order mOrder) {
 
         View order_detail = LayoutInflater.from(this).inflate(R.layout.order_submitted_layout, null);
 
 
-        LinearLayout submitted_items_list = (LinearLayout) order_detail.findViewById(R.id.submitted_items_list);
+        final LinearLayout submitted_items_list = (LinearLayout) order_detail.findViewById(R.id.submitted_items_list);
+
+        final OrderItem[] items = mOrder.getItems();
 
 
-        int currentshop = -1;
+        String currentShopName = "";
+
+
 
         for (int i = 0; i < items.length; i++) {
             //order_info += DataResourceUtils.shopItems[plates[i].getShopId()] + "\n";
             //order_info += plates[i].getName() + " " + String.valueOf(plates[i].getNumber()) + "份  $" + String.valueOf(plates[i].getNumber() * plates[i].getPrice()) + "\n";
 
 
+            if (!currentShopName.equals(MelbourneUtils.getShopNameFromItemId(items[i].getItemId(), CurrentOrderActivity.this))) {
 
-//            if (currentshop != plates[i].getShopId()) {
-//
-//                currentshop = plates[i].getShopId();
-//
-//                TextView shop_view = new TextView(this);
-//                shop_view.setTextColor(Color.WHITE);
-//                shop_view.setTextSize(20);
-//                shop_view.setTypeface(null, Typeface.BOLD);
-//                shop_view.setText(DataResourceUtils.shopItems[plates[i].getShopId()]);
-//                submitted_items_list.addView(shop_view);
-//
-//
-//                View whitebar_view = LayoutInflater.from(this).inflate(R.layout.textview_whitebar, null);
-//                submitted_items_list.addView(whitebar_view);
-//
-//            }
+                currentShopName = MelbourneUtils.getShopNameFromItemId(items[i].getItemId(), CurrentOrderActivity.this);
+
+                TextView shop_view = new TextView(CurrentOrderActivity.this);
+                shop_view.setTextColor(Color.WHITE);
+                shop_view.setTextSize(20);
+                shop_view.setTypeface(null, Typeface.BOLD);
+                shop_view.setText(currentShopName);
+                submitted_items_list.addView(shop_view);
+
+
+                View whitebar_view = LayoutInflater.from(CurrentOrderActivity.this).inflate(R.layout.textview_whitebar, null);
+                submitted_items_list.addView(whitebar_view);
+
+            }
+
+
             //add view for each plate myorder_list_item
 
             View item_view = LayoutInflater.from(this).inflate(R.layout.submitted_item, null);
@@ -207,8 +276,8 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
             TextView submitted_item_number = (TextView) item_view.findViewById(R.id.submitted_item_number);
             TextView submitted_item_price = (TextView) item_view.findViewById(R.id.submitted_item_price);
             submitted_item_name.setText(items[i].getName());
-            submitted_item_number.setText(String.valueOf((int)Float.parseFloat(items[i].getCount())) + "份");
-            submitted_item_price.setText("$ " + String.valueOf((int)Float.parseFloat(items[i].getCount()) * items[i].getPrice()));
+            submitted_item_number.setText(String.valueOf((int) Float.parseFloat(items[i].getCount())) + "份");
+            submitted_item_price.setText("$ " + String.valueOf((int) Float.parseFloat(items[i].getCount()) * items[i].getPrice()));
             submitted_items_list.addView(item_view);
 
 
@@ -226,9 +295,9 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         submitted_ordertime = (TextView) order_detail.findViewById(R.id.submitted_ordertime);
 
 
-        submitted_totalprice.setText("总计费用: $" + String.valueOf(MelbourneUtils.sum_price_items(items)));
+        submitted_totalprice.setText("总计费用: $" + String.valueOf(MelbourneUtils.sum_price_items(items)+mOrder.getDeliveryFee()));
         submitted_delivery_number.setText("送货电话: " + mOrder.getPhoneNumber());
-        submitted_delivery_address.setText("送货地址: " );
+        submitted_delivery_address.setText("送货地址: " + MelbourneUtils.getCompleteAddress(mOrder));
         submitted_delivery_time.setText("送货时间: " + mOrder.getDeliveryTime());
         submitted_preference.setText("偏   好: " + mOrder.getRemark());
         submitted_ordernumber.setText("订单号码: " + String.valueOf(mOrder.getId()));

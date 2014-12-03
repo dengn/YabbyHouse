@@ -94,8 +94,12 @@ public class DrawerListAdapter extends BaseAdapter {
 
                 holder_login.phone_number.setText(mUser.getPhoneNumber());
 
-
-                ImageLoader.getInstance().displayImage(Constant.URL_BASE_PHOTO + mUser.getHead_icon(), holder_login.profile, mOptions);
+                if(!mUser.getHead_icon().equals("")) {
+                    ImageLoader.getInstance().displayImage(Constant.URL_BASE_PHOTO + mUser.getHead_icon(), holder_login.profile, mOptions);
+                }else{
+                    holder_login.profile
+                            .setImageResource(R.drawable.sidebar_userphoto_default);
+                }
 
             }
 

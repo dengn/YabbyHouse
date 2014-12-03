@@ -16,7 +16,8 @@ import android.widget.TextView;
 import com.melbournestore.activities.DeliveryNoticeActivity;
 import com.melbournestore.activities.MyCouponActivity;
 import com.melbournestore.activities.R;
-import com.melbournestore.models.User;
+import com.melbournestore.models.Area;
+import com.melbournestore.models.user_iphone;
 import com.melbournestore.utils.MelbourneUtils;
 
 public class SubmitListCouponAdapter extends BaseAdapter {
@@ -27,22 +28,22 @@ public class SubmitListCouponAdapter extends BaseAdapter {
     final int TYPE_EMPTY = 1;
     Handler mHandler;
     Context mContext;
-    User mActiveUser;
+    user_iphone mUser;
 
-    public SubmitListCouponAdapter(Context context, Handler handler, User activeUser) {
+    public SubmitListCouponAdapter(Context context, Handler handler, user_iphone user) {
         // TODO Auto-generated constructor stub
 
 
         mContext = context;
         mHandler = handler;
-        mActiveUser = activeUser;
+        mUser = user;
 
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(User activeUser) {
-        mActiveUser = activeUser;
+    public void refresh(user_iphone user) {
+        mUser = user;
         notifyDataSetChanged();
     }
 
@@ -94,9 +95,9 @@ public class SubmitListCouponAdapter extends BaseAdapter {
                 holder_url.info = (TextView) convertView.findViewById(R.id.delivery_info);
 
 
-                String suburb = mActiveUser.getSuburb();
+                Area area = MelbourneUtils.getAreaFromSuburb(mUser.getSuburb(), mContext);
 
-                holder_url.title.setText("配送费(" + MelbourneUtils.getSuburbRegion(suburb) + " + $" + String.valueOf(MelbourneUtils.getSuburbDeliveryPrice(suburb)) + ")");
+                holder_url.title.setText("配送费(" + area.getName() + " + $" + String.valueOf(area.getFee()) + ")");
                 holder_url.info.setText(Html.fromHtml("<u>" + "派送说明" + "</u>"));
 
                 convertView.setTag(holder_url);

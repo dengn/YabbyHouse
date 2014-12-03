@@ -98,12 +98,6 @@ public class ShopManagerThread extends Thread {
 
         Message message = mHandler.obtainMessage();
         message.obj = mShops;
-        try {
-            sleep(5);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         message.what = 0;
         mHandler.sendMessage(message);
     }

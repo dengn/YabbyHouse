@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import com.melbournestore.db.DataResourceUtils;
 import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.Area;
+import com.melbournestore.models.Order;
 import com.melbournestore.models.OrderItem;
 import com.melbournestore.models.Order_user;
 import com.melbournestore.models.Plate;
@@ -260,6 +261,16 @@ public class MelbourneUtils {
         return address;
     }
 
+    public static final String getCompleteAddress(Order order) {
+        String address = "";
+        if (!order.getUnitNo().equals("") || !order.getStreet().equals("")
+                || !order.getSuburb().getName().equals("")) {
+            address = order.getUnitNo() + " " + order.getStreet() + ","
+                    + order.getSuburb().getName();
+        }
+        return address;
+    }
+
     public static final String getSystemTime() {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -294,9 +305,34 @@ public class MelbourneUtils {
             return new String("准备中");
         } else if (status == 3) {
             return new String("配送中");
+        } else if (status == 4) {
+            return new String("已完成");
         } else {
             return new String("");
         }
+    }
+
+    public static final String getCurrentOrderStatusString(int status) {
+        String string = "";
+        switch (status) {
+            case 0:
+                string = new String("订单已提交");
+                break;
+            case 1:
+                string = new String("订单已确认");
+                break;
+            case 2:
+                string = new String("订单准备中");
+                break;
+            case 3:
+                string = new String("订单配送中");
+                break;
+            case 4:
+                string = new String("订单已完成");
+                break;
+
+        }
+        return string;
     }
 
 
@@ -386,27 +422,49 @@ public class MelbourneUtils {
         return names;
     }
 
-    public static final Area getAreaFromSuburb(Suburb suburb, Context context){
+    public static final Area getAreaFromSuburb(Suburb suburb, Context context) {
         String mAreaString = SharedPreferenceUtils.getAreas(context);
         Log.d("AREA", mAreaString);
         Gson gson = new Gson();
         Type listType = new TypeToken<ArrayList<Area>>() {
         }.getType();
         ArrayList<Area> areas = gson.fromJson(mAreaString, listType);
-        Area mArea=new Area();
-        for(int i=0;i<areas.size();i++){
-            for(int j=0;j<areas.get(i).getSuburbs().size();j++){
+        Area mArea = new Area();
+        for (int i = 0; i < areas.size(); i++) {
+            for (int j = 0; j < areas.get(i).getSuburbs().size(); j++) {
 
 
-                if(suburb.getName().equals(areas.get(i).getSuburbs().get(j).getName())){
+                if (suburb.getName().equals(areas.get(i).getSuburbs().get(j).getName())) {
                     mArea = areas.get(i);
                 }
             }
         }
-        Log.d("AREA", "marea name: "+mArea.getName());
+        Log.d("AREA", "marea name: " + mArea.getName());
         return mArea;
     }
 
+    public static final String getShopNameFromItemId(int itemId, Context context) {
+        String shopsString = SharedPreferenceUtils.getLocalShops(context);
+        Type type_shop = new TypeToken<ArrayList<Shop_iPhone>>() {
+        }.getType();
+        Gson gson = new Gson();
+        ArrayList<Shop_iPhone> shops = gson.fromJson(shopsString, type_shop);
+        int index = 0;
+        LOOP:
+        for (int i = 0; i < shops.size(); i++) {
+            String itemsString = SharedPreferenceUtils.getLocalItems(context, shops.get(i).getId());
+            Type type_item = new TypeToken<ArrayList<item_iphone>>() {
+            }.getType();
+            ArrayList<item_iphone> items = gson.fromJson(itemsString, type_item);
+            for (int j = 0; j < items.size(); j++) {
+                if (itemId == items.get(j).getId()) {
+                    index = i;
+                    break LOOP;
+                }
+            }
+        }
+        return shops.get(index).getName();
+    }
 
 
 }

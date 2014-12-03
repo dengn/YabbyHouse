@@ -34,6 +34,7 @@ import com.melbournestore.models.Order_user;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
 import com.melbournestore.models.User;
+import com.melbournestore.models.user_iphone;
 import com.melbournestore.utils.MelbourneUtils;
 
 import java.text.DateFormat;
@@ -62,6 +63,8 @@ public class SubmitOrderActivity extends Activity {
     private SubmitListCouponAdapter mSubmitListCouponAdapter;
     private PopupWindow mTimePickerPopup;
 
+    private user_iphone mUser;
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -82,14 +85,7 @@ public class SubmitOrderActivity extends Activity {
                     Bundle b2 = msg.getData();
                     String memo = b2.getString("memo");
 
-                    String current_order = SharedPreferenceUtils
-                            .getCurrentOrder(SubmitOrderActivity.this);
-                    Gson gson = new Gson();
-                    Order_user currentOrder = gson.fromJson(current_order,
-                            Order_user.class);
-                    currentOrder.setRemark(memo);
-                    SharedPreferenceUtils.saveCurrentOrder(
-                            SubmitOrderActivity.this, gson.toJson(currentOrder));
+
 
             }
 
@@ -116,6 +112,12 @@ public class SubmitOrderActivity extends Activity {
 
         Intent intent = getIntent();
         priceTotal = intent.getIntExtra("total_price", 0);
+
+
+        String userString = SharedPreferenceUtils
+                .getLoginUser(SubmitOrderActivity.this);
+        Gson gson = new Gson();
+        mUser = gson.fromJson(userString, user_iphone.class);
 
         mSubmitOrders = (Button) findViewById(R.id.submit_order);
         mSubmitOrders.getBackground().setAlpha(80);
@@ -181,26 +183,14 @@ public class SubmitOrderActivity extends Activity {
         mSubmitMemoList = (ListView) findViewById(R.id.submit_memo_list);
         mSubmitCouponList = (ListView) findViewById(R.id.submit_coupon_list);
 
-        String users_string = SharedPreferenceUtils
-                .getLoginUser(SubmitOrderActivity.this);
-        Gson gson = new Gson();
-        User[] users = gson.fromJson(users_string, User[].class);
-        User activeUser = users[MelbourneUtils.getActiveUser(users)];
 
-        String current_order = SharedPreferenceUtils
-                .getCurrentOrder(SubmitOrderActivity.this);
-        Order_user currentOrder = gson
-                .fromJson(current_order, Order_user.class);
-
-        mSubmitListAdapter = new SubmitListAdapter(this, mHandler, activeUser,
-                currentOrder);
+        mSubmitListAdapter = new SubmitListAdapter(this, mHandler, mUser);
         mSubmitList.setAdapter(mSubmitListAdapter);
 
-        mSubmitListMemoAdapter = new SubmitListMemoAdapter(this, mHandler,
-                currentOrder);
+        mSubmitListMemoAdapter = new SubmitListMemoAdapter(this, mHandler);
         mSubmitMemoList.setAdapter(mSubmitListMemoAdapter);
 
-        mSubmitListCouponAdapter = new SubmitListCouponAdapter(this, mHandler, activeUser);
+        mSubmitListCouponAdapter = new SubmitListCouponAdapter(this, mHandler, mUser);
         mSubmitCouponList.setAdapter(mSubmitListCouponAdapter);
 
         mSubmitOrders.setText("确认下单");
@@ -320,11 +310,6 @@ public class SubmitOrderActivity extends Activity {
         mTimePickerPopup.update();
 
 
-        String current_order = SharedPreferenceUtils
-                .getCurrentOrder(SubmitOrderActivity.this);
-        Gson gson = new Gson();
-        final Order_user currentOrder = gson.fromJson(current_order,
-                Order_user.class);
 
 
 
@@ -333,11 +318,7 @@ public class SubmitOrderActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                String users_string = SharedPreferenceUtils
-                        .getLoginUser(SubmitOrderActivity.this);
-                Gson gson = new Gson();
-                User[] users = gson.fromJson(users_string, User[].class);
-                User activeUser = users[MelbourneUtils.getActiveUser(users)];
+
 
                 Calendar c = Calendar.getInstance();
                 String delivery_time = "";
@@ -361,13 +342,9 @@ public class SubmitOrderActivity extends Activity {
                 }
 
                 delivery_time+=" "+getPossibleDeliveryHours()[hours.getCurrentItem()];
-                currentOrder.setDeliveryTime(delivery_time);
 
 
-                SharedPreferenceUtils.saveCurrentOrder(
-                        SubmitOrderActivity.this, gson.toJson(currentOrder));
-
-                mSubmitListAdapter.refresh(activeUser, currentOrder);
+                mSubmitListAdapter.refresh(mUser);
                 mSubmitList.setAdapter(mSubmitListAdapter);
                 mTimePickerPopup.dismiss();
             }
@@ -407,88 +384,6 @@ public class SubmitOrderActivity extends Activity {
         return returned_time;
     }
 
-//    private void showTimePicker() {
-//        View view = View.inflate(this, R.layout.delivery_time_popup, null);
-//
-//        DatePicker datePicker = (DatePicker) view
-//                .findViewById(R.id.delivery_time_picker);
-//        Button deliveryTimeConfirm = (Button) view
-//                .findViewById(R.id.delivery_time_confirm);
-//
-//        String current_order = SharedPreferenceUtils
-//                .getCurrentOrder(SubmitOrderActivity.this);
-//        Gson gson = new Gson();
-//        final Order_user currentOrder = gson.fromJson(current_order,
-//                Order_user.class);
-//
-//        currentOrder.setDeliveryTime("2013.08.20 18:00");
-//
-//        datePicker.init(2013, 8, 20, new OnDateChangedListener() {
-//
-//            @Override
-//            public void onDateChanged(DatePicker view, int year,
-//                                      int monthOfYear, int dayOfMonth) {
-//                // 获取一个日历对象，并初始化为当前选中的时间
-//                Calendar calendar = Calendar.getInstance();
-//                calendar.set(year, monthOfYear, dayOfMonth);
-//                SimpleDateFormat format = new SimpleDateFormat(
-//                        "yyyy年MM月dd日  HH:mm");
-//
-//                currentOrder.setDeliveryTime(format.format(calendar.getTime()));
-//            }
-//        });
-//
-//        deliveryTimeConfirm.setOnClickListener(new OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                // TODO Auto-generated method stub
-//
-//                String users_string = SharedPreferenceUtils
-//                        .getLoginUser(SubmitOrderActivity.this);
-//                Gson gson = new Gson();
-//                User[] users = gson.fromJson(users_string, User[].class);
-//                User activeUser = users[MelbourneUtils.getActiveUser(users)];
-//
-//                SharedPreferenceUtils.saveCurrentOrder(
-//                        SubmitOrderActivity.this, gson.toJson(currentOrder));
-//
-//                mSubmitListAdapter.refresh(activeUser, currentOrder);
-//                mSubmitList.setAdapter(mSubmitListAdapter);
-//                mTimePickerPopup.dismiss();
-//            }
-//
-//        });
-//
-//        view.setOnClickListener(new OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//
-//                mTimePickerPopup.dismiss();
-//            }
-//        });
-//
-//        LinearLayout delivery_time_popup = (LinearLayout) view
-//                .findViewById(R.id.delivery_time_popup);
-//        delivery_time_popup.startAnimation(AnimationUtils.loadAnimation(
-//                getApplicationContext(), R.anim.push_bottom_in));
-//
-//        if (mTimePickerPopup == null) {
-//            mTimePickerPopup = new PopupWindow(this);
-//            mTimePickerPopup.setWidth(LayoutParams.MATCH_PARENT);
-//            mTimePickerPopup.setHeight(LayoutParams.MATCH_PARENT);
-//            mTimePickerPopup.setBackgroundDrawable(new BitmapDrawable());
-//
-//            mTimePickerPopup.setFocusable(true);
-//            mTimePickerPopup.setOutsideTouchable(true);
-//        }
-//
-//        mTimePickerPopup.setContentView(view);
-//        mTimePickerPopup.showAtLocation(datePicker, Gravity.BOTTOM, 0, 0);
-//        mTimePickerPopup.update();
-//
-//    }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

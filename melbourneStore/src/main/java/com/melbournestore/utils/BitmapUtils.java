@@ -61,6 +61,16 @@ public class BitmapUtils {
         }
     }
 
+    public static File getMyBitMapFile(String name){
+        String directory = Environment.getExternalStorageDirectory().getPath();
+
+        String bitmap_path = directory + "/yabbyhouse";
+
+
+        File file = new File(bitmap_path + "/" + name + ".png");
+        return file;
+    }
+
     public static Bitmap getMyBitMap(String name) {
         String directory = Environment.getExternalStorageDirectory().getPath();
 

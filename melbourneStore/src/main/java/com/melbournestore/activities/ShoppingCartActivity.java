@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +23,6 @@ import com.google.gson.Gson;
 import com.melbournestore.adaptors.OrderListAdapter;
 import com.melbournestore.application.SysApplication;
 import com.melbournestore.db.SharedPreferenceUtils;
-import com.melbournestore.models.User;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.utils.MelbourneUtils;
 
@@ -116,13 +116,11 @@ public class ShoppingCartActivity extends Activity {
             public void onClick(View v) {
 
 
-                String users_string = SharedPreferenceUtils
-                        .getLoginUser(ShoppingCartActivity.this);
-                Gson gson = new Gson();
-                User[] users = gson.fromJson(users_string, User[].class);
-                int active_value = MelbourneUtils.getActiveUser(users);
+                String userNumber = SharedPreferenceUtils
+                        .getUserNumber(ShoppingCartActivity.this);
 
-                if (active_value >= 0) {
+                Log.d("USERNUMBER","userNumber: "+userNumber);
+                if (!userNumber.equals("")) {
 
                     if (totalPrice == 0) {
                         new AlertDialog.Builder(ShoppingCartActivity.this)
@@ -146,7 +144,7 @@ public class ShoppingCartActivity extends Activity {
                     }
                 } else {
                     Intent intent = new Intent(ShoppingCartActivity.this,
-                            LoginActivity.class);
+                            SignUpActivity.class);
                     // intent.putExtra("total_price", priceTotal);
 
                     startActivityForResult(intent, LOGIN_CODE);
@@ -166,9 +164,7 @@ public class ShoppingCartActivity extends Activity {
                 // Get the Address chosen
 
                 // Make sure the request was successful
-                if (resultCode == RESULT_OK) {
-                    SysApplication.setLoginStatus(true);
-                }
+
                 break;
 
         }

@@ -36,10 +36,16 @@ import com.melbournestore.models.Suburb;
 import com.melbournestore.models.user_iphone;
 import com.melbournestore.network.CouponManagerThread;
 import com.melbournestore.network.OrderManagerThread;
+import com.melbournestore.network.UploadImageManagerThread;
 import com.melbournestore.network.UserLoginManagerThread;
 import com.melbournestore.utils.BitmapUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -250,7 +256,7 @@ public class MyAccountActivity extends Activity {
                 // Make sure the request was successful
                 if (resultCode == RESULT_OK) {
 
-                    //TODO
+
 
                     mMyAccountListAdapterAddress.refresh(mUser);
                     mMyAccountListAddress.setAdapter(mMyAccountListAdapterAddress);
@@ -274,6 +280,14 @@ public class MyAccountActivity extends Activity {
                         Bitmap scaledBitmap = BitmapUtils.scaleDownBitmap(bitmap, 100, getBaseContext());
 
                         BitmapUtils.saveMyBitmap(mUser.getPhoneNumber(), scaledBitmap);
+
+
+
+                        MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
+                        File file = BitmapUtils.getMyBitMapFile(mUser.getPhoneNumber());
+                        multipartEntity.addBinaryBody("file", file, ContentType.create("image/png"), "head_icon.png");
+                        UploadImageManagerThread mUploadThread = new UploadImageManagerThread(mHandler, this, mUser.getPhoneNumber(), multipartEntity);
+                        mUploadThread.start();
 
 
                         mMyAccountListAdapter.refresh(mUser, mOrderNum, mCouponNum);
@@ -312,6 +326,14 @@ public class MyAccountActivity extends Activity {
                         e.printStackTrace();
                     }
 
+                    MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
+                    File file = BitmapUtils.getMyBitMapFile(mUser.getPhoneNumber());
+                    multipartEntity.addPart("file", new FileBody(file));
+                    multipartEntity.addTextBody("fileName", "head_icon.png");
+                    multipartEntity.addTextBody("mimeType", "image/png");
+                    //multipartEntity.addBinaryBody("file", file, ContentType.create("image/png"), "head_icon.png");
+                    UploadImageManagerThread mUploadThread = new UploadImageManagerThread(mHandler, this, mUser.getPhoneNumber(), multipartEntity);
+                    mUploadThread.start();
 
                     mMyAccountListAdapter.refresh(mUser, mOrderNum, mCouponNum);
                     mMyAccountList.setAdapter(mMyAccountListAdapter);

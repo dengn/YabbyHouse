@@ -18,7 +18,8 @@ import com.melbournestore.activities.ChooseAddressActivity;
 import com.melbournestore.activities.R;
 import com.melbournestore.activities.SubmitOrderActivity;
 import com.melbournestore.models.Order_user;
-import com.melbournestore.models.User;
+import com.melbournestore.models.user_iphone;
+import com.melbournestore.utils.MelbourneUtils;
 
 public class SubmitListAdapter extends BaseAdapter {
 
@@ -29,26 +30,24 @@ public class SubmitListAdapter extends BaseAdapter {
     final int TYPE_CHECKBOX = 2;
     Handler mHandler;
     Context mContext;
-    User mActiveUser;
+    user_iphone mUser;
     Order_user mCurrentOrder;
 
-    public SubmitListAdapter(Context context, Handler handler, User activeUser, Order_user currentOrder) {
+    public SubmitListAdapter(Context context, Handler handler, user_iphone user) {
         // TODO Auto-generated constructor stub
 
 
         mContext = context;
         mHandler = handler;
-        mActiveUser = activeUser;
-        mCurrentOrder = currentOrder;
+        mUser = user;
 
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(User activeUser, Order_user currentOrder) {
+    public void refresh(user_iphone user) {
 
-        mActiveUser = activeUser;
-        mCurrentOrder = currentOrder;
+        mUser = user;
         notifyDataSetChanged();
     }
 
@@ -102,7 +101,7 @@ public class SubmitListAdapter extends BaseAdapter {
                 holder_text.info = (TextView) convertView.findViewById(R.id.phone_info);
 
                 holder_text.title.setText("电话号码");
-                holder_text.info.setText(mActiveUser.getPhoneNumber());
+                holder_text.info.setText(mUser.getPhoneNumber());
 
                 convertView.setTag(holder_text);
 
@@ -118,7 +117,7 @@ public class SubmitListAdapter extends BaseAdapter {
 
                 String address = "";
 
-                //address = MelbourneUtils.getCompleteAddress(mActiveUser);
+                address = MelbourneUtils.getCompleteAddress(mUser);
 
                 holder_activity.title.setText("运送地址");
                 holder_activity.info.setHint("详细地址");
@@ -151,7 +150,6 @@ public class SubmitListAdapter extends BaseAdapter {
 
                 holder_checkbox.title.setText("运送时间");
                 holder_checkbox.info.setHint("范围20:00 - 24:00");
-                holder_checkbox.info.setText(mCurrentOrder.getDeliveryTime());
                 holder_checkbox.rightArrow.setImageResource(R.drawable.other_icon_rightarrow);
 
                 convertView.setTag(holder_checkbox);
