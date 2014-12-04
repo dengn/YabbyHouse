@@ -30,7 +30,12 @@ import com.melbournestore.adaptors.SubmitListCouponAdapter;
 import com.melbournestore.adaptors.SubmitListMemoAdapter;
 import com.melbournestore.application.SysApplication;
 import com.melbournestore.db.SharedPreferenceUtils;
+import com.melbournestore.models.OrderItem;
+import com.melbournestore.models.item_iphone;
+import com.melbournestore.models.user_coupon;
 import com.melbournestore.models.user_iphone;
+import com.melbournestore.network.CreateOrderThread;
+import com.melbournestore.utils.MelbourneUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -67,6 +72,9 @@ public class SubmitOrderActivity extends Activity {
 
     private String mDeliveryTime="";
     private String mRemark ="";
+
+    private OrderItem[] mOrderItems;
+    private user_coupon mUser_coupon;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -173,9 +181,21 @@ public class SubmitOrderActivity extends Activity {
 //                SharedPreferenceUtils.saveLoginUser(SubmitOrderActivity.this,
 //                        gson.toJson(users));
 
-                Intent intent = new Intent(SubmitOrderActivity.this,
-                        OrderSubmittedActivity.class);
-                startActivity(intent);
+                ArrayList<item_iphone> items = MelbourneUtils.getAllChosenItems(SubmitOrderActivity.this);
+                mOrderItems = new OrderItem[items.size()];
+                for(int i=0;i<items.size();i++){
+                    item_iphone eachItem = items.get(i);
+                    mOrderItems[i]=new OrderItem(0, eachItem.getId(), eachItem.getName(), eachItem.getDesc(), (int)Float.parseFloat(eachItem.getPrice()), String.valueOf(eachItem.getUnit()));
+                }
+                mUser_coupon = new user_coupon();
+                mUser_coupon.setId(-1);
+
+
+                CreateOrderThread mCreateOrderThread = new CreateOrderThread(mHandler, SubmitOrderActivity.this, mUser.getPhoneNumber(), mUnitNo, mStreet, mUser.getSuburb().getPostCode(), mUser.getSuburb().getId(), mDeliveryTime, mFee, mRemark, mUser.getPhoneNumber(), mOrderItems, mUser_coupon);
+                mCreateOrderThread.start();
+//                Intent intent = new Intent(SubmitOrderActivity.this,
+//                        OrderSubmittedActivity.class);
+//                startActivity(intent);
             }
 
         });
