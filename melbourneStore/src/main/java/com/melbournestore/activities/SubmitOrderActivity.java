@@ -76,6 +76,7 @@ public class SubmitOrderActivity extends Activity {
     private OrderItem[] mOrderItems;
     private user_coupon mUser_coupon;
 
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -121,14 +122,22 @@ public class SubmitOrderActivity extends Activity {
 
         getActionBar().setTitle("提交订单");
 
-        Intent intent = getIntent();
-        priceTotal = intent.getIntExtra("total_price", 0);
-
-
         String userString = SharedPreferenceUtils
                 .getLoginUser(SubmitOrderActivity.this);
         Gson gson = new Gson();
         mUser = gson.fromJson(userString, user_iphone.class);
+
+        mUnitNo = mUser.getUnitNo();
+        mStreet = mUser.getStreet();
+        mSuburb = mUser.getSuburb().getName();
+        mArea = MelbourneUtils.getAreaFromSuburb(mUser.getSuburb(), this).getName();
+        mFee = MelbourneUtils.getAreaFromSuburb(mUser.getSuburb(), this).getFee();
+
+        Intent intent = getIntent();
+        priceTotal = intent.getIntExtra("total_price", 0);
+
+
+
 
         mSubmitOrders = (Button) findViewById(R.id.submit_order);
         mSubmitOrders.getBackground().setAlpha(80);
