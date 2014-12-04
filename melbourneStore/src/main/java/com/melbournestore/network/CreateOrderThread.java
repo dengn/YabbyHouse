@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.melbournestore.models.OrderItem;
 import com.melbournestore.models.user_coupon;
 import com.melbournestore.utils.Constant;
@@ -19,7 +20,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -99,17 +102,21 @@ public class CreateOrderThread extends Thread{
     }
 
 
-
-
     @Override
     public void run() {
 
 
         String csrf = handleGet(Constant.URL_BASE + "create_order");
 
-        mCsrf = csrf;
+        Type type = new TypeToken<HashMap<String, String>>() {
+        }.getType();
+        HashMap<String, String> csrf_hash = gson.fromJson(csrf, type);
+
+        mCsrf = csrf_hash.get("csrf");
+        Log.d("CREATEORDERTHREAD", "mCsrf: " + mCsrf);
 
         List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+        pairs.add(new BasicNameValuePair("contact_number", mUserNumber));
         pairs.add(new BasicNameValuePair("csrf_token", mCsrf));
         pairs.add(new BasicNameValuePair("phone_number", mUserNumber));
         pairs.add(new BasicNameValuePair("unit_no", mUnitNo));
@@ -119,9 +126,16 @@ public class CreateOrderThread extends Thread{
         pairs.add(new BasicNameValuePair("delivery_time", mDeliveryTime));
         pairs.add(new BasicNameValuePair("delivery_fee", String.valueOf(mDeliveryFee)));
         pairs.add(new BasicNameValuePair("remark", mRemark));
-        pairs.add(new BasicNameValuePair("contact_number", mUserNumber));
-        pairs.add(new BasicNameValuePair("user_coupon_id", gson.toJson(mUserCoupon)));
-        pairs.add(new BasicNameValuePair("items", gson.toJson(mOrderItems)));
+        pairs.add(new BasicNameValuePair("user_coupon_id", "-1"));
+        //pairs.add(new BasicNameValuePair("items", gson.toJson(mOrderItems)));
+        for (int i = 0; i < mOrderItems.length; i++) {
+            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-item_id", String.valueOf(mOrderItems[i].getId())));
+            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-name", mOrderItems[i].getName()));
+            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-desc", mOrderItems[i].getDesc()));
+            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-price", String.valueOf(mOrderItems[i].getPrice())));
+            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-count", String.valueOf(mOrderItems[i].getCount())));
+        }
+
 //        for (int i = 0; i < mOrderItems.length; i++) {
 //
 //            pairs.add(new BasicNameValuePair("items[]",mOrderItems[i]));
