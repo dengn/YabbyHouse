@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.melbournestore.models.OrderItem;
+import com.melbournestore.models.item_iphone;
 import com.melbournestore.models.user_coupon;
 import com.melbournestore.utils.Constant;
 
@@ -42,13 +42,12 @@ public class CreateOrderThread extends Thread{
     int mDeliveryFee;
     String mRemark;
     String mContactNumber;
-    OrderItem[] mOrderItems;
+    ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
     String mCsrf;
     user_coupon mUserCoupon;
 
 
-
-    public CreateOrderThread(Handler handler, Context context, String userNumber, String unitNo, String street, String postCode, int suburbId, String deliveryTime, int deliveryFee, String remark, String contactNumber, OrderItem[] orderItems, user_coupon userCoupon) {
+    public CreateOrderThread(Handler handler, Context context, String userNumber, String unitNo, String street, String postCode, int suburbId, String deliveryTime, int deliveryFee, String remark, String contactNumber, ArrayList<item_iphone> items, user_coupon userCoupon) {
         mHandler = handler;
         mContext = context;
         mUserNumber = userNumber;
@@ -60,8 +59,9 @@ public class CreateOrderThread extends Thread{
         mDeliveryFee = deliveryFee;
         mRemark = remark;
         mContactNumber = contactNumber;
-        mOrderItems = orderItems;
         mUserCoupon = userCoupon;
+        mItems.clear();
+        mItems.addAll(items);
     }
 
     public static String handleGet(String strUrl) {
@@ -128,12 +128,15 @@ public class CreateOrderThread extends Thread{
         pairs.add(new BasicNameValuePair("remark", mRemark));
         pairs.add(new BasicNameValuePair("user_coupon_id", "-1"));
         //pairs.add(new BasicNameValuePair("items", gson.toJson(mOrderItems)));
-        for (int i = 0; i < mOrderItems.length; i++) {
-            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-item_id", String.valueOf(mOrderItems[i].getId())));
-            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-name", mOrderItems[i].getName()));
-            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-desc", mOrderItems[i].getDesc()));
-            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-price", String.valueOf(mOrderItems[i].getPrice())));
-            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-count", String.valueOf(mOrderItems[i].getCount())));
+        for (int i = 0; i < mItems.size(); i++) {
+
+            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-item_id", String.valueOf(mItems.get(i).getId())));
+            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-name", mItems.get(i).getName()));
+            Log.d("CREATEORDERTHREAD", "name: " + mItems.get(i).getName());
+            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-desc", mItems.get(i).getDesc()));
+            Log.d("CREATEORDERTHREAD", "desc: " + mItems.get(i).getDesc());
+            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-price", String.valueOf((int) Float.parseFloat(mItems.get(i).getPrice()))));
+            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-count", String.valueOf(mItems.get(i).getUnit())));
         }
 
 //        for (int i = 0; i < mOrderItems.length; i++) {

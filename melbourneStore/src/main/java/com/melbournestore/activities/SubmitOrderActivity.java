@@ -191,16 +191,16 @@ public class SubmitOrderActivity extends Activity {
 //                        gson.toJson(users));
 
                 ArrayList<item_iphone> items = MelbourneUtils.getAllChosenItems(SubmitOrderActivity.this);
-                mOrderItems = new OrderItem[items.size()];
-                for(int i=0;i<items.size();i++){
-                    item_iphone eachItem = items.get(i);
-                    mOrderItems[i]=new OrderItem(0, eachItem.getId(), eachItem.getName(), eachItem.getDesc(), (int)Float.parseFloat(eachItem.getPrice()), String.valueOf(eachItem.getUnit()));
-                }
+//                mOrderItems = new OrderItem[items.size()];
+//                for(int i=0;i<items.size();i++){
+//                    item_iphone eachItem = items.get(i);
+//                    mOrderItems[i]=new OrderItem(0, eachItem.getId(), eachItem.getName(), eachItem.getDesc(), (int)Float.parseFloat(eachItem.getPrice()), String.valueOf(eachItem.getUnit()));
+//                }
                 mUser_coupon = new user_coupon();
                 mUser_coupon.setId(-1);
 
 
-                CreateOrderThread mCreateOrderThread = new CreateOrderThread(mHandler, SubmitOrderActivity.this, mUser.getPhoneNumber(), mUnitNo, mStreet, mUser.getSuburb().getPostCode(), mUser.getSuburb().getId(), mDeliveryTime, mFee, mRemark, mUser.getPhoneNumber(), mOrderItems, mUser_coupon);
+                CreateOrderThread mCreateOrderThread = new CreateOrderThread(mHandler, SubmitOrderActivity.this, mUser.getPhoneNumber(), mUnitNo, mStreet, mUser.getSuburb().getPostCode(), mUser.getSuburb().getId(), mDeliveryTime, mFee, mRemark, mUser.getPhoneNumber(), items, mUser_coupon);
                 mCreateOrderThread.start();
 //                Intent intent = new Intent(SubmitOrderActivity.this,
 //                        OrderSubmittedActivity.class);
@@ -415,6 +415,7 @@ public class SubmitOrderActivity extends Activity {
 //        }
 
         ArrayList<String> time = new ArrayList<String>();
+            time.add("19点 - 20点");
         time.add("20点 - 21点");
         time.add("21点 - 22点");
         time.add("23点 - 24点");
