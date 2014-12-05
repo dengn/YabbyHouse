@@ -40,6 +40,8 @@ public class DishActivity extends Activity {
     private int mItemId;
     private String mItemName;
 
+    private boolean mLike = false;
+
     ProgressDialog progress;
 
     private number_price sumNumberPrice;
@@ -58,7 +60,7 @@ public class DishActivity extends Activity {
 
                     mItem = (item_iphone) msg.obj;
                     mItem = MelbourneUtils.updateItemUnits(DishActivity.this, mItem);
-                    mDishListAdapter.refresh(mItem);
+                    mDishListAdapter.refresh(mItem, mLike);
                     mDishList.setAdapter(mDishListAdapter);
                     progress.dismiss();
 
@@ -73,7 +75,7 @@ public class DishActivity extends Activity {
 //                    Plate plate1 = shops1[mShopId].getPlates()[mPlateId];
 
                     mItem = MelbourneUtils.updateItemUnits(DishActivity.this, mItem);
-                    mDishListAdapter.refresh(mItem);
+                    mDishListAdapter.refresh(mItem, mLike);
                     //mDishList.setAdapter(mDishListAdapter);
 
                     sumNumberPrice = MelbourneUtils.sum_item_number_price(DishActivity.this);
@@ -95,7 +97,7 @@ public class DishActivity extends Activity {
 //                    Plate plate2 = shops2[mShopId].getPlates()[mPlateId];
 
                     mItem = MelbourneUtils.updateItemUnits(DishActivity.this, mItem);
-                    mDishListAdapter.refresh(mItem);
+                    mDishListAdapter.refresh(mItem, mLike);
                     //mDishList.setAdapter(mDishListAdapter);
 
 
@@ -107,6 +109,14 @@ public class DishActivity extends Activity {
                     mDishTotalNum.setText(String.valueOf(mTotalNum));
                     mDishTotalPrice.setText("$" + String.valueOf(mTotalPrice));
 
+                    break;
+                case 3:
+                    mLike = false;
+                    mDishListAdapter.refresh(mItem, mLike);
+                    break;
+                case 4:
+                    mLike = true;
+                    mDishListAdapter.refresh(mItem, mLike);
                     break;
 
             }
@@ -157,7 +167,7 @@ public class DishActivity extends Activity {
                 .build();
 
 
-        mDishListAdapter = new DishListAdapter(this, mHandler, options, mItem);
+        mDishListAdapter = new DishListAdapter(this, mHandler, options, mItem, mLike);
         mDishList.setAdapter(mDishListAdapter);
 
         mDishConfirmChoice = (Button) findViewById(R.id.dish_confirm_choice);

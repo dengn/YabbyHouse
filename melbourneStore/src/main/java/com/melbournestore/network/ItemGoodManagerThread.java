@@ -2,6 +2,7 @@ package com.melbournestore.network;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -81,6 +82,18 @@ public class ItemGoodManagerThread extends Thread {
         String result = handlePost(Constant.URL_BASE + "item/" + String.valueOf(mItemId)+"/user/"+mNumber, pairs);
 
         Log.d("GOODTHREAD", result);
+
+        if(result.equals("{\"result\": 1}")){
+            Message msg = mHandler.obtainMessage();
+            msg.what = 3;
+            mHandler.sendMessage(msg);
+        }
+        else if(result.contains("item")){
+            Message msg = mHandler.obtainMessage();
+            msg.what = 4;
+            mHandler.sendMessage(msg);
+
+        }
 //        item_iphone mItem = getItem(result);
 //
 //        String localItemsString = SharedPreferenceUtils.getLocalItems(mContext, mItem.getShopId());

@@ -34,24 +34,25 @@ public class DishListAdapter extends BaseAdapter {
     private Context mContext;
     private Handler mHandler;
     private item_iphone mItem;
-    private boolean likeClicked = false;
+    private boolean mLike = false;
 
     private Gson gson = new Gson();
 
-    public DishListAdapter(Context context, Handler handler, DisplayImageOptions options, item_iphone item) {
+    public DishListAdapter(Context context, Handler handler, DisplayImageOptions options, item_iphone item, boolean like) {
 
         mContext = context;
         mHandler = handler;
         mItem = item;
+        mLike = like;
         mOptions = options;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(item_iphone item) {
+    public void refresh(item_iphone item, boolean like) {
 
         mItem = item;
-
+        mLike = like;
         notifyDataSetChanged();
     }
 
@@ -130,20 +131,23 @@ public class DishListAdapter extends BaseAdapter {
                         ItemGoodManagerThread itemThread = new ItemGoodManagerThread(mHandler, mContext, mItem.getId(), number);
                         itemThread.start();
 
-                        if (!likeClicked) {
+                        if (mLike) {
                             holder_dish.like
                                     .setImageResource(R.drawable.other_icon_liked);
+                            holder_dish.like_num.setText(String.valueOf(mItem.getGood())+1);
 
-
-                            likeClicked = true;
                         } else {
                             Toast.makeText(mContext, "亲，今天已经点过赞了。", Toast.LENGTH_SHORT)
                                     .show();
                         }
 
+
                     }
 
                 });
+
+
+
 
                 holder_dish.like_num.setText(String.valueOf(mItem.getGood()));
                 holder_dish.stock.setText("今日库存" + String.valueOf(mItem.getStock()) + "份");

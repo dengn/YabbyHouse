@@ -13,7 +13,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.melbournestore.activities.DishActivity;
@@ -119,6 +118,28 @@ public class PlateListAdapter extends BaseAdapter {
         }
 
 
+//        final Handler itemHandler = new Handler(){
+//            @Override
+//            public void handleMessage(Message msg) {
+//                switch (msg.what) {
+//
+//                    case 0:
+//
+//                        Toast.makeText(mContext, "亲，今天已经点过赞了。", Toast.LENGTH_SHORT)
+//                                .show();
+//                        break;
+//
+//                    case 1:
+//
+//                        holder.like_view
+//                                .setImageResource(R.drawable.other_icon_liked);
+//                        break;
+//
+//
+//                }
+//            }
+//        };
+
         rowView.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -145,16 +166,7 @@ public class PlateListAdapter extends BaseAdapter {
                 ItemGoodManagerThread itemThread = new ItemGoodManagerThread(mHandler, mContext, mItems.get(position).getId(), number);
                 itemThread.start();
 
-                if (!likeClicked) {
-                    holder.like_view
-                            .setImageResource(R.drawable.other_icon_liked);
 
-
-                    likeClicked = true;
-                } else {
-                    Toast.makeText(mContext, "亲，今天已经点过赞了。", Toast.LENGTH_SHORT)
-                            .show();
-                }
             }
 
         });
