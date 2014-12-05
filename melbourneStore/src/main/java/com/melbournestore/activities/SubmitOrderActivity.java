@@ -73,6 +73,8 @@ public class SubmitOrderActivity extends Activity {
     private String mDeliveryTime="";
     private String mRemark ="";
 
+    private String mContactNumber ="";
+
     private OrderItem[] mOrderItems;
     private user_coupon mUser_coupon;
 
@@ -95,10 +97,15 @@ public class SubmitOrderActivity extends Activity {
                     break;
                 case 2:
                     Bundle b2 = msg.getData();
-                    String memo = b2.getString("memo");
+                    mRemark = b2.getString("memo");
 
+                    break;
+                case 3:
 
+                    Bundle b3 = msg.getData();
+                    mContactNumber = b3.getString("contact_number");
 
+                    break;
             }
 
         }
@@ -200,7 +207,7 @@ public class SubmitOrderActivity extends Activity {
                 mUser_coupon.setId(-1);
 
 
-                CreateOrderThread mCreateOrderThread = new CreateOrderThread(mHandler, SubmitOrderActivity.this, mUser.getPhoneNumber(), mUnitNo, mStreet, mUser.getSuburb().getPostCode(), mUser.getSuburb().getId(), mDeliveryTime, mFee, mRemark, mUser.getPhoneNumber(), items, mUser_coupon);
+                CreateOrderThread mCreateOrderThread = new CreateOrderThread(mHandler, SubmitOrderActivity.this, mUser.getPhoneNumber(), mUnitNo, mStreet, mUser.getSuburb().getPostCode(), mUser.getSuburb().getId(), mDeliveryTime, mFee, mRemark, mContactNumber, items, mUser_coupon);
                 mCreateOrderThread.start();
 //                Intent intent = new Intent(SubmitOrderActivity.this,
 //                        OrderSubmittedActivity.class);
@@ -216,7 +223,7 @@ public class SubmitOrderActivity extends Activity {
         mSubmitCouponList = (ListView) findViewById(R.id.submit_coupon_list);
 
 
-        mSubmitListAdapter = new SubmitListAdapter(this, mHandler, mUser, mUnitNo, mStreet, mSuburb, mDeliveryTime);
+        mSubmitListAdapter = new SubmitListAdapter(this, mHandler, mUser, mContactNumber, mUnitNo, mStreet, mSuburb, mDeliveryTime);
         mSubmitList.setAdapter(mSubmitListAdapter);
 
         mSubmitListMemoAdapter = new SubmitListMemoAdapter(this, mHandler, mRemark);
@@ -247,7 +254,7 @@ public class SubmitOrderActivity extends Activity {
                 mFee = data.getIntExtra("fee", 0);
 
 
-                mSubmitListAdapter.refresh(mUnitNo, mStreet, mSuburb, mDeliveryTime);
+                mSubmitListAdapter.refresh(mContactNumber, mUnitNo, mStreet, mSuburb, mDeliveryTime);
                 mSubmitList.setAdapter(mSubmitListAdapter);
 
                 mSubmitListCouponAdapter.refresh(mArea, mFee, mUser);
@@ -389,7 +396,7 @@ public class SubmitOrderActivity extends Activity {
                 delivery_time+=" "+getPossibleDeliveryHours()[hours.getCurrentItem()];
                 mDeliveryTime = delivery_time;
 
-                mSubmitListAdapter.refresh(mUnitNo, mStreet, mSuburb, mDeliveryTime);
+                mSubmitListAdapter.refresh(mContactNumber, mUnitNo, mStreet, mSuburb, mDeliveryTime);
                 mSubmitList.setAdapter(mSubmitListAdapter);
                 mTimePickerPopup.dismiss();
             }
@@ -415,10 +422,10 @@ public class SubmitOrderActivity extends Activity {
 //        }
 
         ArrayList<String> time = new ArrayList<String>();
-            time.add("19点 - 20点");
-        time.add("20点 - 21点");
-        time.add("21点 - 22点");
-        time.add("23点 - 24点");
+        time.add("19点-20点");
+        time.add("20点-21点");
+        time.add("21点-22点");
+        time.add("23点-24点");
 //        for (int i = start_time; i < 24; i++) {
 //            for (int j = 0; j < 4; j++) {
 //                if (j == 0) {

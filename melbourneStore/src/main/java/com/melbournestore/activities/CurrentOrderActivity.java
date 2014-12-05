@@ -2,6 +2,7 @@ package com.melbournestore.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -33,6 +34,9 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
 
     private ViewPager pager_splash_ad;
     private ADPagerAdapter adapter;
+
+    ProgressDialog progress;
+
     private int flaggingWidth;
     private int size = 0;
     private int lastX = 0;

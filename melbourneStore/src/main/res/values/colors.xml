@@ -23,6 +23,8 @@
     <item name="lightgray" type="color">#A8A8A8</item>
     <item name="lightlightgray" type="color">#D8D8D8</item>
 
+    <color name="transparent">#00000000</color>
+
     <integer-array name="androidcolors">
         <item>@color/blue</item>
         <item>@color/purple</item>

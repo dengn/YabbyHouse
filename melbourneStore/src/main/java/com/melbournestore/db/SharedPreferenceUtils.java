@@ -112,6 +112,20 @@ public class SharedPreferenceUtils {
         return pref.edit().putString("areas", info).commit();
     }
 
+
+    // The SharedPrefrence file to store Csrf
+    public static String getCsrf(Context context){
+        SharedPreferences pref = context.getSharedPreferences("csrf", 0);
+        return pref.getString("csrf", "");
+    }
+
+    public static boolean saveCsrf(Context context, String info){
+        SharedPreferences pref = context.getSharedPreferences("csrf", 0);
+        return pref.edit().putString("csrf", info).commit();
+    }
+
+
+
     // The SharedPrefrence file to store Orders.
     public static String getCurrentOrder(Context context) {
         SharedPreferences pref = context.getSharedPreferences("current_order",
@@ -197,5 +211,8 @@ public class SharedPreferenceUtils {
         SharedPreferenceUtils.saveCurrentChoice(context, shopsJson);
 
     }
+
+
+
 
 }

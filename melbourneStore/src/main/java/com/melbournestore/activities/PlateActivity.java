@@ -18,6 +18,7 @@ package com.melbournestore.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -60,6 +61,8 @@ public class PlateActivity extends Activity {
     private int mShopId;
     private String mShopName;
 
+    ProgressDialog progress;
+
 
     private number_price sumNumberPrice;
 
@@ -79,6 +82,7 @@ public class PlateActivity extends Activity {
                     mItems = (ArrayList<item_iphone>) msg.obj;
                     mPlateListAdapter.refresh(mItems);
                     mPlatesList.setAdapter(mPlateListAdapter);
+                    progress.dismiss();
                     break;
                 // plus = 1
                 case 1:
@@ -93,6 +97,7 @@ public class PlateActivity extends Activity {
                     mPlateListAdapter.refresh(mItems);
                     //mPlatesList.setAdapter(mPlateListAdapter);
 
+
                     sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
 
                     totalPrice = sumNumberPrice.getPrice();
@@ -100,6 +105,7 @@ public class PlateActivity extends Activity {
 
                     mTotalPrice.setText("$" + String.valueOf(totalPrice));
                     mTotalNum.setText(String.valueOf(totalNum));
+
                     break;
                 // minus = 2
                 case 2:
@@ -158,6 +164,8 @@ public class PlateActivity extends Activity {
 
         mItemThread = new ItemManagerThread(mHandler, this, mShopId);
         mItemThread.start();
+        progress = new ProgressDialog(this ,R.style.dialog_loading);
+        progress.show();
 
 
         getActionBar().setTitle(mShopName);

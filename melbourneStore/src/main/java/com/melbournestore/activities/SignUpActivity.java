@@ -3,6 +3,7 @@ package com.melbournestore.activities;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +32,8 @@ public class SignUpActivity extends Activity {
     private EditText signInNumber;
     private EditText signInPassword;
 
+    ProgressDialog progress;
+
     private Button signInButton;
 
     private String mNumber;
@@ -46,11 +49,15 @@ public class SignUpActivity extends Activity {
             switch (msg.what) {
                 //login failed, password or phone number is wrong
                 case 0:
+                    if(progress != null) {
+                        progress.dismiss();
+                    }
+
                     showNotice("登录失败\n手机号码或密码错误");
                     break;
                 case 1:
                     //login success, return to the main activity
-
+                    progress.dismiss();
                     mUser = (String) msg.obj;
                     SharedPreferenceUtils.saveLoginUser(SignUpActivity.this, mUser);
                     SharedPreferenceUtils.saveUserNumber(SignUpActivity.this, mNumber);
@@ -64,6 +71,14 @@ public class SignUpActivity extends Activity {
                     returnIntent.putExtra("coupon_num", mCouponNum);
                     setResult(RESULT_OK, returnIntent);
                     finish();
+                    break;
+                case 2:
+                    if(progress != null) {
+                        progress.dismiss();
+                    }
+
+                    showNotice("登录失败\n手机号码或密码错误");
+                    break;
             }
         }
     };
@@ -123,7 +138,8 @@ public class SignUpActivity extends Activity {
                     Log.d("SIGNUP", "mNumber: " + mNumber + " mPassword: " + mPassword);
                     UserLoginManagerThread mUserLoginThread = new UserLoginManagerThread(mHandler, SignUpActivity.this, mNumber, mPassword);
                     mUserLoginThread.start();
-
+                    progress = new ProgressDialog(SignUpActivity.this ,R.style.dialog_loading);
+                    progress.show();
                 }
 
 //                else {
@@ -189,6 +205,14 @@ public class SignUpActivity extends Activity {
 
         });
 
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        if(progress != null) {
+            progress.dismiss();
+        }
     }
 
     private void showNotice(String text) {

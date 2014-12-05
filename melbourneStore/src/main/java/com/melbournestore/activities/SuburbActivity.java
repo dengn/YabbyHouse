@@ -3,6 +3,7 @@ package com.melbournestore.activities;
 import android.app.ActionBar;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +33,7 @@ public class SuburbActivity extends Activity implements
 
 
     private SearchView search_suburb;
+    ProgressDialog progress;
     //private AmazingListView suburbList;
     //private ArrayAdapter<String> suburb_chosen_adapter;
     //private String[] suburb_chosen_names;
@@ -52,9 +54,11 @@ public class SuburbActivity extends Activity implements
                     mAreas = (ArrayList<Area>) msg.obj;
                     suburbListAdapter.refresh(mAreas);
                     suburbList.setAdapter(suburbListAdapter);
+                    progress.dismiss();
                     break;
                 // get the suburb chosen
                 case 1:
+                    progress.dismiss();
                     Bundle b = msg.getData();
                     String suburbName = b.getString("name");
                     String suburbPostCode = b.getString("postcode");
@@ -88,7 +92,8 @@ public class SuburbActivity extends Activity implements
 
         mAreaThread = new AreaManagerThread(mHandler, SuburbActivity.this);
         mAreaThread.start();
-
+        progress = new ProgressDialog(this ,R.style.dialog_loading);
+        progress.show();
 
         suburbList = (ExpandableListView) findViewById(R.id.suburb_list);
 

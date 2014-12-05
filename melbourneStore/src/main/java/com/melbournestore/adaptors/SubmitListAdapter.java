@@ -6,11 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,17 +36,19 @@ public class SubmitListAdapter extends BaseAdapter {
     user_iphone mUser;
     Order_user mCurrentOrder;
 
+    String mContactNumber;
     String mUnit;
     String mStreet;
     String mSuburb;
     String mDeliveryTime;
 
-    public SubmitListAdapter(Context context, Handler handler, user_iphone user, String unit, String street, String suburb, String deliveryTime) {
+    public SubmitListAdapter(Context context, Handler handler, user_iphone user, String contact_number, String unit, String street, String suburb, String deliveryTime) {
         // TODO Auto-generated constructor stub
 
         mUser = user;
         mContext = context;
         mHandler = handler;
+        mContactNumber = contact_number;
         mUnit = unit;
         mStreet = street;
         mSuburb = suburb;
@@ -53,8 +58,9 @@ public class SubmitListAdapter extends BaseAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(String unit, String street, String suburb, String deliveryTime) {
+    public void refresh(String contact_number, String unit, String street, String suburb, String deliveryTime) {
 
+        mContactNumber = contact_number;
         mUnit = unit;
         mStreet = street;
         mSuburb = suburb;
@@ -109,10 +115,43 @@ public class SubmitListAdapter extends BaseAdapter {
                 convertView = inflater.inflate(R.layout.submit_list_item_phone, parent, false);
 
                 holder_text.title = (TextView) convertView.findViewById(R.id.phone_title);
-                holder_text.info = (TextView) convertView.findViewById(R.id.phone_info);
+                holder_text.phoneNumber = (EditText) convertView.findViewById(R.id.phone_info);
 
-                holder_text.title.setText("电话号码");
-                holder_text.info.setText(mUser.getPhoneNumber());
+                holder_text.phoneNumber.setHint("请输入送货电话");
+
+                holder_text.title.setText("送货电话");
+                if(mContactNumber.equals("")) {
+                    holder_text.phoneNumber.setText(mUser.getPhoneNumber());
+                }
+                else{
+                    holder_text.phoneNumber.setText(mContactNumber);
+                }
+
+                holder_text.phoneNumber.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+                        Message message = new Message();
+                        Bundle b = new Bundle();
+                        // send the position
+                        b.putString("contact_number", charSequence.toString());
+                        message.setData(b);
+
+                        // contact_number = 2
+                        message.what = 3;
+
+                        mHandler.sendMessage(message);
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                });
 
                 convertView.setTag(holder_text);
 
@@ -210,7 +249,7 @@ public class SubmitListAdapter extends BaseAdapter {
 
         private TextView title;
 
-        private TextView info;
+        private EditText phoneNumber;
     }
 
     class viewHolder_activity {

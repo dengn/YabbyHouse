@@ -2,6 +2,7 @@ package com.melbournestore.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -63,6 +64,9 @@ public class MyAccountActivity extends Activity {
     private ListView mMyAccountList;
     private ListView mMyAccountListAddress;
     private ListView mMyAccountListCoupon;
+
+    ProgressDialog progress;
+
     private MyAccountListAdapter mMyAccountListAdapter;
     private MyAccountListAddressAdapter mMyAccountListAdapterAddress;
     private MyAccountListCouponAdapter mMyAccountListAdapterCoupon;
@@ -94,6 +98,8 @@ public class MyAccountActivity extends Activity {
                     mMyAccountList.setAdapter(mMyAccountListAdapter);
                     mMyAccountListAdapterAddress.refresh(mUser);
                     mMyAccountListAddress.setAdapter(mMyAccountListAdapterAddress);
+
+                    progress.dismiss();
 
                     break;
 
@@ -163,6 +169,9 @@ public class MyAccountActivity extends Activity {
 
         mLoginThread = new UserLoginManagerThread(mHandler, this, mNumber, mPassword);
         mLoginThread.start();
+
+        progress = new ProgressDialog(this ,R.style.dialog_loading);
+        progress.show();
 
         mUser = gson.fromJson(users_string, user_iphone.class);
 

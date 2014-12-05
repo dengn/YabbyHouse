@@ -3,6 +3,7 @@ package com.melbournestore.activities;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,7 +30,7 @@ public class LoginActivity extends Activity {
     private CheckBox loginCheckbox;
     private TextView loginTextAgreement;
     private Button loginButton;
-
+    ProgressDialog progress;
     private String mPhoneNumber;
     private long mExitTime;
 
@@ -39,9 +40,11 @@ public class LoginActivity extends Activity {
             switch (msg.what) {
                 //login failed, password or phone number is wrong
                 case 0:
+                    progress.dismiss();
                     showNotice("验证码发送失败");
                     break;
                 case 1:
+                    progress.dismiss();
                     Intent intent = new Intent(LoginActivity.this, VerificationActivity.class);
                     intent.putExtra("number", loginNumber.getText().toString());
                     startActivity(intent);
@@ -133,6 +136,8 @@ public class LoginActivity extends Activity {
                     UserVerificationManagerThread mVerificationThread = new UserVerificationManagerThread(mHandler, LoginActivity.this, loginNumber.getText().toString());
                     mVerificationThread.start();
 
+                    progress = new ProgressDialog(LoginActivity.this ,R.style.dialog_loading);
+                    progress.show();
                 }
 
 //                else {

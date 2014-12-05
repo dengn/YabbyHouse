@@ -3,6 +3,7 @@ package com.melbournestore.fragments;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
@@ -40,6 +41,8 @@ public class PlateFragment extends Fragment {
 
     ListView category;
 
+    ProgressDialog progress;
+
     ExpandableListView plates;
     DisplayImageOptions options;
     ShopManagerThread mShopThread;
@@ -68,13 +71,15 @@ public class PlateFragment extends Fragment {
                         itemThread.start();
                     }
 
+
                     category_adapter.refresh(mShops);
                     category.setAdapter(category_adapter);
+                    progress.dismiss();
                     break;
                 case 1:
                     mSearchItems = (ArrayList<item_iphone>) msg.obj;
                     itemsSearchAdapter.refresh(mSearchItems);
-
+                    progress.dismiss();
 
                     break;
             }
@@ -107,8 +112,8 @@ public class PlateFragment extends Fragment {
 
         mShopThread = new ShopManagerThread(mHandler, mContext);
         mShopThread.start();
-
-
+        progress = new ProgressDialog(mContext ,R.style.dialog_loading);
+        progress.show();
 
 
         options = new DisplayImageOptions.Builder()

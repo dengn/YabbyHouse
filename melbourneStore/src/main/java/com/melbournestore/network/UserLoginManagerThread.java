@@ -157,21 +157,25 @@ public class UserLoginManagerThread extends Thread {
         pairs.add(new BasicNameValuePair("device_token", ""));
         //String result = handlePut(Constant.URL_BASE+"user/verification", pairs);
         String result = handlePost(Constant.URL_BASE + "user", pairs);
-        user_iphone user = getUser(result);
-
         Log.d("USERTHREAD", result);
-
-        if (result.equals("HTTP/1.1 404 NOT FOUND")) {
+        if (!result.contains("user")) {
+            Message message = mHandler.obtainMessage();
+            message.what = 2;
+            mHandler.sendMessage(message);
+        }
+        else if (result.equals("HTTP/1.1 404 NOT FOUND")) {
             Message message = mHandler.obtainMessage();
             message.what = 0;
             mHandler.sendMessage(message);
-        } else if(result.contains("user")){
+        }
+        else {
+            user_iphone user = getUser(result);
 
-            String order_result = handleGet(Constant.URL_BASE + "user/" + mNumber+"/orders");
+            String order_result = handleGet(Constant.URL_BASE + "user/" + mNumber + "/orders");
             Log.d("ORDERTHREAD", order_result);
             Order[] orders = getOrders(order_result);
 
-            String coupon_result = handleGet(Constant.URL_BASE + "user/" + mNumber+"/coupons");
+            String coupon_result = handleGet(Constant.URL_BASE + "user/" + mNumber + "/coupons");
             Log.d("COUPONTHREAD", coupon_result);
             user_coupon[] coupons = getCoupons(coupon_result);
 
@@ -183,6 +187,7 @@ public class UserLoginManagerThread extends Thread {
             message.arg2 = coupons.length;
             message.what = 1;
             mHandler.sendMessage(message);
+
 
         }
 //        item_iphone mItem = getItem(result);

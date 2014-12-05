@@ -2,6 +2,7 @@ package com.melbournestore.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class MyOrdersFragment extends Fragment {
 
 
     MyOrderListAdapter myOrderListAdapter;
+    ProgressDialog progress;
     private Order[] mOrders;
     private OrderManagerThread mOrderThread;
     private DeleteOrderManagerThread mDeleteOrderThread;
@@ -45,7 +47,7 @@ public class MyOrdersFragment extends Fragment {
                 case 0:
                     mOrders = (Order[]) msg.obj;
                     myOrderListAdapter.refresh(mOrders);
-
+                    progress.dismiss();
                     break;
 
                 case 1:
@@ -92,6 +94,8 @@ public class MyOrdersFragment extends Fragment {
 
         mOrderThread = new OrderManagerThread(mHandler, mContext, mContactNumber);
         mOrderThread.start();
+        progress = new ProgressDialog(mContext ,R.style.dialog_loading);
+        progress.show();
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.melbournestore.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,6 +25,7 @@ public class MyCouponActivity extends Activity {
     private long mExitTime;
 
     private ListView mCouponList;
+    ProgressDialog progress;
     private MyCouponListAdapter mCouponListAdapter;
 
     private user_coupon[] mCoupons;
@@ -36,6 +38,7 @@ public class MyCouponActivity extends Activity {
                     Log.d("COUPON", "mCoupons len: " + String.valueOf(mCoupons.length));
                     mCouponListAdapter.refresh(mCoupons);
                     mCouponList.setAdapter(mCouponListAdapter);
+                    progress.dismiss();
                     break;
 
 
@@ -74,6 +77,8 @@ public class MyCouponActivity extends Activity {
 
         mCouponThread = new CouponManagerThread(mHandler, this, mContactNumber);
         mCouponThread.start();
+        progress = new ProgressDialog(this ,R.style.dialog_loading);
+        progress.show();
 
     }
 

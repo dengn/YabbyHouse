@@ -2,6 +2,7 @@ package com.melbournestore.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -44,6 +45,8 @@ public class RecommandationFragment extends Fragment {
      */
     private ListView mRecommandationList;
 
+    ProgressDialog progress;
+
     /**
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
@@ -57,6 +60,7 @@ public class RecommandationFragment extends Fragment {
 
             mAd = (ArrayList<advertisements>) msg.obj;
             mRecommadationListAdapter.refresh(mAd);
+            progress.dismiss();
             //mRecommandationList.setAdapter(mRecommadationListAdapter);
 
 //            switch (msg.what) {
@@ -97,6 +101,8 @@ public class RecommandationFragment extends Fragment {
 
         mRecommandationThread = new RecommandationManagerThread(mHandler);
         mRecommandationThread.start();
+        progress = new ProgressDialog(mContext ,R.style.dialog_loading);
+        progress.show();
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);

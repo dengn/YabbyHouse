@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.models.user_coupon;
 import com.melbournestore.utils.Constant;
@@ -18,11 +18,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -66,12 +65,12 @@ public class CreateOrderThread extends Thread{
 
     public static String handleGet(String strUrl) {
         String result = null;
-        HttpGet request = new HttpGet(strUrl);//ÊµÀı»¯getÇëÇó
-        DefaultHttpClient client = new DefaultHttpClient();//ÊµÀı»¯¿Í»§¶Ë
+        HttpGet request = new HttpGet(strUrl);//å®ä¾‹åŒ–getè¯·æ±‚
+        DefaultHttpClient client = new DefaultHttpClient();//å®ä¾‹åŒ–å®¢æˆ·ç«¯
         try {
-            HttpResponse response = client.execute(request);//Ö´ĞĞ¸ÃÇëÇó,µÃµ½·şÎñÆ÷¶ËµÄÏìÓ¦ÄÚÈİ
+            HttpResponse response = client.execute(request);//æ‰§è¡Œè¯¥è¯·æ±‚,å¾—åˆ°æœåŠ¡å™¨ç«¯çš„å“åº”å†…å®¹
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                result = EntityUtils.toString(response.getEntity());//°ÑÏìÓ¦½á¹û×ª³ÉString
+                result = EntityUtils.toString(response.getEntity());//æŠŠå“åº”ç»“æœè½¬æˆString
             } else {
                 result = response.getStatusLine().toString();
             }
@@ -84,14 +83,14 @@ public class CreateOrderThread extends Thread{
 
     public static String handlePost(String strUrl, List<NameValuePair> params) {
         String result = null;
-        HttpPost request = new HttpPost(strUrl);//ÊµÀı»¯getÇëÇó
-        DefaultHttpClient client = new DefaultHttpClient();//ÊµÀı»¯¿Í»§¶Ë
+        HttpPost request = new HttpPost(strUrl);//å®ä¾‹åŒ–getè¯·æ±‚
+        DefaultHttpClient client = new DefaultHttpClient();//å®ä¾‹åŒ–å®¢æˆ·ç«¯
 
         try {
-            request.setEntity(new UrlEncodedFormEntity(params));
-            HttpResponse response = client.execute(request);//Ö´ĞĞ¸ÃÇëÇó,µÃµ½·şÎñÆ÷¶ËµÄÏìÓ¦ÄÚÈİ
+            request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+            HttpResponse response = client.execute(request);//æ‰§è¡Œè¯¥è¯·æ±‚,å¾—åˆ°æœåŠ¡å™¨ç«¯çš„å“åº”å†…å®¹
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                result = EntityUtils.toString(response.getEntity());//°ÑÏìÓ¦½á¹û×ª³ÉString
+                result = EntityUtils.toString(response.getEntity());//æŠŠå“åº”ç»“æœè½¬æˆString
             } else {
                 result = response.getStatusLine().toString();
             }
@@ -106,17 +105,19 @@ public class CreateOrderThread extends Thread{
     public void run() {
 
 
-        String csrf = handleGet(Constant.URL_BASE + "create_order");
+//        String csrf = handleGet(Constant.URL_BASE + "create_order");
+//
+//        Type type = new TypeToken<HashMap<String, String>>() {
+//        }.getType();
+//        HashMap<String, String> csrf_hash = gson.fromJson(csrf, type);
+//
+//        mCsrf = csrf_hash.get("csrf");
+//        Log.d("CREATEORDERTHREAD", "mCsrf: " + mCsrf);
 
-        Type type = new TypeToken<HashMap<String, String>>() {
-        }.getType();
-        HashMap<String, String> csrf_hash = gson.fromJson(csrf, type);
-
-        mCsrf = csrf_hash.get("csrf");
-        Log.d("CREATEORDERTHREAD", "mCsrf: " + mCsrf);
+        mCsrf = SharedPreferenceUtils.getCsrf(mContext);
 
         List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-        pairs.add(new BasicNameValuePair("contact_number", mUserNumber));
+        pairs.add(new BasicNameValuePair("contact_number", mContactNumber));
         pairs.add(new BasicNameValuePair("csrf_token", mCsrf));
         pairs.add(new BasicNameValuePair("phone_number", mUserNumber));
         pairs.add(new BasicNameValuePair("unit_no", mUnitNo));

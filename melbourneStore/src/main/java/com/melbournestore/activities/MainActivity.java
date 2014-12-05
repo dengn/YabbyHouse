@@ -54,6 +54,7 @@ import com.melbournestore.models.Suburb;
 import com.melbournestore.models.User;
 import com.melbournestore.models.user_iphone;
 import com.melbournestore.network.AreaManagerThread;
+import com.melbournestore.network.GetCsrfThread;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 /**
@@ -125,6 +126,11 @@ public class MainActivity extends Activity {
 
         SysApplication.getInstance().addActivity(this);
 
+//        if(MelbourneUtils.isOpenNetwork(this)){
+//            showNotice("网络连接不上,请连接WIFI或者打开3G。");
+//            SysApplication.getInstance().exit();
+//        }
+
         if (SharedPreferenceUtils.getFirstTimeLaunch(this)) {
             mUser = new user_iphone("", "", "", 0, "", new Suburb(0, "", "", ""));
             SharedPreferenceUtils.saveLoginUser(MainActivity.this, gson.toJson(mUser));
@@ -134,8 +140,13 @@ public class MainActivity extends Activity {
             mUser = gson.fromJson(mUserString, user_iphone.class);
         }
 
+
+
         AreaManagerThread mAreaThread = new AreaManagerThread(mHandler, this);
         mAreaThread.start();
+
+        GetCsrfThread mCsrfThread = new GetCsrfThread(mHandler, this);
+        mCsrfThread.start();
 
         plate_fragment = new PlateFragment();
         plate_fragment.onAttach(this);
@@ -303,6 +314,22 @@ public class MainActivity extends Activity {
             }
         }
     }// onActivityResult
+
+
+    private void showNotice(String text) {
+        new AlertDialog.Builder(MainActivity.this)
+                .setMessage(text)
+                .setPositiveButton("确定",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(
+                                    DialogInterface dialoginterface,
+                                    int i) {
+
+                            }
+                        }
+                ).show();
+    }
+
 
     private void selectItem(int position) {
 

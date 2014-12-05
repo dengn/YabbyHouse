@@ -2,6 +2,7 @@ package com.melbournestore.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,6 +40,8 @@ public class DishActivity extends Activity {
     private int mItemId;
     private String mItemName;
 
+    ProgressDialog progress;
+
     private number_price sumNumberPrice;
 
     private item_iphone mItem = new item_iphone();
@@ -57,6 +60,7 @@ public class DishActivity extends Activity {
                     mItem = MelbourneUtils.updateItemUnits(DishActivity.this, mItem);
                     mDishListAdapter.refresh(mItem);
                     mDishList.setAdapter(mDishListAdapter);
+                    progress.dismiss();
 
                     break;
                 case 1:
@@ -135,7 +139,8 @@ public class DishActivity extends Activity {
 
         mSingleItemThread = new SingleItemManagerThread(mHandler, this, mItemId);
         mSingleItemThread.start();
-
+        progress = new ProgressDialog(this ,R.style.dialog_loading);
+        progress.show();
 
 
 

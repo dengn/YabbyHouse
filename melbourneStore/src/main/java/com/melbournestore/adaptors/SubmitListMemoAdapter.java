@@ -36,8 +36,8 @@ public class SubmitListMemoAdapter extends BaseAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh() {
-
+    public void refresh(String memo) {
+        mMemo = memo;
         notifyDataSetChanged();
     }
 

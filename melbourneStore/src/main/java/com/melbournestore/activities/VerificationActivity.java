@@ -3,11 +3,13 @@ package com.melbournestore.activities;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +28,7 @@ public class VerificationActivity extends Activity {
     private TextView verificationNotice;
     private EditText verificationCode;
 
+    ProgressDialog progress;
     private EditText setPassword;
 
     private Button reSendButton;
@@ -40,7 +43,28 @@ public class VerificationActivity extends Activity {
 
     private long mExitTime;
 
-    private Handler mHandler = new Handler();
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                //login failed, password or phone number is wrong
+                case 0:
+                    progress.dismiss();
+                    showNotice("注册成功");
+                    Intent intent = new Intent(VerificationActivity.this, SignUpActivity.class);
+                    startActivity(intent);
+                    break;
+                case 1:
+                    progress.dismiss();
+                    //showNotice("验证成功, 注册失败, 请重试");
+                    break;
+                case 2:
+                    progress.dismiss();
+                    showNotice("验证失败");
+                    break;
+            }
+        }
+    };
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +103,8 @@ public class VerificationActivity extends Activity {
             public void onClick(View view) {
                 UserVerificationManagerThread mVerificationThread = new UserVerificationManagerThread(mHandler, VerificationActivity.this, mNumber);
                 mVerificationThread.start();
+                mc = new MyCount(60000, 1000);
+                mc.start();
             }
         });
 
@@ -103,6 +129,8 @@ public class VerificationActivity extends Activity {
                 } else {
                     UserSignUpManagerThread mSignUpThread = new UserSignUpManagerThread(mHandler, VerificationActivity.this, mNumber, mVerificationCode, mPassword);
                     mSignUpThread.start();
+                    progress = new ProgressDialog(VerificationActivity.this ,R.style.dialog_loading);
+                    progress.show();
                 }
             }
         });
