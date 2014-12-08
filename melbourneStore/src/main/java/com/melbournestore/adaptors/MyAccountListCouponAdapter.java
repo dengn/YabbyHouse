@@ -80,6 +80,7 @@ public class MyAccountListCouponAdapter extends BaseAdapter {
                 // TODO Auto-generated method stub
                 Intent intent = new Intent(mContext,
                         MyCouponActivity.class);
+                intent.putExtra("callSource", 0);
                 ((Activity) mContext).startActivity(intent);
             }
 

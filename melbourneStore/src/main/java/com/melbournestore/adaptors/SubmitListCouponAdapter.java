@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.melbournestore.activities.DeliveryNoticeActivity;
 import com.melbournestore.activities.MyCouponActivity;
 import com.melbournestore.activities.R;
+import com.melbournestore.activities.SubmitOrderActivity;
 import com.melbournestore.models.Area;
 import com.melbournestore.models.user_iphone;
 import com.melbournestore.utils.MelbourneUtils;
@@ -147,7 +148,8 @@ public class SubmitListCouponAdapter extends BaseAdapter {
                         // TODO Auto-generated method stub
                         Intent intent = new Intent(mContext,
                                 MyCouponActivity.class);
-                        ((Activity) mContext).startActivity(intent);
+                        intent.putExtra("callSource", 1);
+                        ((Activity) mContext).startActivityForResult(intent, SubmitOrderActivity.result_coupon);
                     }
 
                 });

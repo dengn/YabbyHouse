@@ -61,23 +61,19 @@ public class MyAccountActivity extends Activity {
 
     // public static final int IMAGE_REQUEST_CODE = 6;
     DisplayImageOptions options;
+    ProgressDialog progress;
     private Button mLogout;
     private ListView mMyAccountList;
     private ListView mMyAccountListAddress;
     private ListView mMyAccountListCoupon;
-
-
-
-    ProgressDialog progress;
-
     private MyAccountListAdapter mMyAccountListAdapter;
     private MyAccountListAddressAdapter mMyAccountListAdapterAddress;
     private MyAccountListCouponAdapter mMyAccountListAdapterCoupon;
     private user_iphone mUser;
 
-    private int mOrderNum=0;
+    private int mOrderNum = 0;
 
-    private int mCouponNum=0;
+    private int mCouponNum = 0;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -144,13 +140,13 @@ public class MyAccountActivity extends Activity {
             }
         }
     };
-    private String mNumber="";
-    private String mPassword="";
+    private String mNumber = "";
+    private String mPassword = "";
     private Gson gson = new Gson();
     private PopupWindow mpopupWindow;
     private OrderManagerThread mOrderThread;
     private CouponManagerThread mCouponThread;
-    private int callOrderCode =0;
+    private int callOrderCode = 0;
     private int callCouponCode = 0;
     private UserLoginManagerThread mLoginThread;
     private long mExitTime;
@@ -186,13 +182,10 @@ public class MyAccountActivity extends Activity {
         mLoginThread = new UserLoginManagerThread(mHandler, this, mNumber, mPassword);
         mLoginThread.start();
 
-        progress = new ProgressDialog(this ,R.style.dialog_loading);
+        progress = new ProgressDialog(this, R.style.dialog_loading);
         progress.show();
 
         mUser = gson.fromJson(users_string, user_iphone.class);
-
-
-
 
 
         options = new DisplayImageOptions.Builder()
@@ -237,7 +230,7 @@ public class MyAccountActivity extends Activity {
         mMyAccountListAdapter = new MyAccountListAdapter(this, mHandler, options, mUser, mOrderNum, mCouponNum);
         mMyAccountList.setAdapter(mMyAccountListAdapter);
 
-        mMyAccountListAdapterAddress = new MyAccountListAddressAdapter(this, mHandler,options, mUser);
+        mMyAccountListAdapterAddress = new MyAccountListAddressAdapter(this, mHandler, options, mUser);
         mMyAccountListAddress.setAdapter(mMyAccountListAdapterAddress);
 
         mMyAccountListAdapterCoupon = new MyAccountListCouponAdapter(this, mHandler);
@@ -329,10 +322,10 @@ public class MyAccountActivity extends Activity {
                         BitmapUtils.saveMyBitmap(mUser.getPhoneNumber(), scaledBitmap);
 
 
-
                         MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
                         File file = BitmapUtils.getMyBitMapFile(mUser.getPhoneNumber());
-                        String number=mUser.getPhoneNumber();
+                        Log.d("HEADICON", file.getAbsolutePath());
+                        String number = mUser.getPhoneNumber();
                         multipartEntity.addTextBody("number", number);
                         multipartEntity.addBinaryBody("file", file, ContentType.create("image/png"), "head_icon.png");
                         UploadImageManagerThread mUploadThread = new UploadImageManagerThread(mHandler, this, mUser.getPhoneNumber(), multipartEntity);
@@ -381,7 +374,7 @@ public class MyAccountActivity extends Activity {
                     MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
                     File file = BitmapUtils.getMyBitMapFile(mUser.getPhoneNumber());
                     Log.d("HEADICON", file.getAbsolutePath());
-                    String number=mUser.getPhoneNumber();
+                    String number = mUser.getPhoneNumber();
                     multipartEntity.addTextBody("number", number);
                     multipartEntity.addBinaryBody("file", file, ContentType.create("image/png"), "head_icon.png");
                     //multipartEntity.addBinaryBody("file", file, ContentType.create("image/png"), "head_icon.png");

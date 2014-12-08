@@ -7,41 +7,40 @@
     <LinearLayout
         android:layout_width="280dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="center_vertical|left"
+        android:gravity="left"
         android:layout_marginLeft="10dp"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/coupon_name"
+            android:id="@+id/usecoupon_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:text="APP登录有礼"
-            android:textColor="@color/white"
-            android:textSize="25sp" />
-
-        <TextView
-            android:id="@+id/coupon_validtime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="有效期截止"
             android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="40dp"
+        android:layout_width="60dp"
         android:layout_height="match_parent"
         android:layout_gravity="right|center_vertical"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
         android:gravity="right"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/coupon_tick"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/tick" />
+        <Button
+            android:id="@+id/not_use_coupon"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/button_style"
+            android:gravity="center"
+            android:text="不使用"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
     </LinearLayout>
 
 </LinearLayout>

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -25,9 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.melbournestore.adaptors.SubmitListAdapter;
 import com.melbournestore.adaptors.SubmitListCouponAdapter;
 import com.melbournestore.adaptors.SubmitListMemoAdapter;
+import com.melbournestore.adaptors.UseCouponAdapter;
 import com.melbournestore.application.SysApplication;
 import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.OrderItem;
@@ -37,6 +40,7 @@ import com.melbournestore.models.user_iphone;
 import com.melbournestore.network.CreateOrderThread;
 import com.melbournestore.utils.MelbourneUtils;
 
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,15 +55,18 @@ import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 public class SubmitOrderActivity extends Activity {
 
     public static final int result_code_address = 3;
+    public static final int result_coupon = 4;
     int priceTotal;
     private Button mSubmitOrders;
     private TextView mSubmitPrice;
     private ListView mSubmitList;
     private ListView mSubmitMemoList;
     private ListView mSubmitCouponList;
+    private ListView mUseCouponList;
     private SubmitListAdapter mSubmitListAdapter;
     private SubmitListMemoAdapter mSubmitListMemoAdapter;
     private SubmitListCouponAdapter mSubmitListCouponAdapter;
+    private UseCouponAdapter mUseCouponListAdapter;
     private PopupWindow mTimePickerPopup;
 
     private user_iphone mUser;
@@ -77,6 +84,10 @@ public class SubmitOrderActivity extends Activity {
 
     private OrderItem[] mOrderItems;
     private user_coupon mUser_coupon;
+
+    private Gson gson = new Gson();
+
+    private ArrayList<user_coupon> mCoupons = new ArrayList<user_coupon>();
 
 
     private Handler mHandler = new Handler() {
@@ -104,6 +115,23 @@ public class SubmitOrderActivity extends Activity {
 
                     Bundle b3 = msg.getData();
                     mContactNumber = b3.getString("contact_number");
+
+                    break;
+                case 4:
+
+
+                    String couponString = SharedPreferenceUtils.getUserCoupons(SubmitOrderActivity.this);
+
+                    Log.d("COUPON", "after: "+couponString);
+                    Type listType = new TypeToken<ArrayList<user_coupon>>() {
+                    }.getType();
+
+                    ArrayList<user_coupon> newCoupons = new ArrayList<user_coupon>();
+                    newCoupons = gson.fromJson(couponString, listType);
+                    mCoupons.clear();
+                    mCoupons.addAll(newCoupons);
+                    mUseCouponListAdapter.refresh(mCoupons);
+                    mUseCouponList.setAdapter(mUseCouponListAdapter);
 
                     break;
             }
@@ -225,6 +253,8 @@ public class SubmitOrderActivity extends Activity {
         mSubmitList = (ListView) findViewById(R.id.submit_list);
         mSubmitMemoList = (ListView) findViewById(R.id.submit_memo_list);
         mSubmitCouponList = (ListView) findViewById(R.id.submit_coupon_list);
+        mUseCouponList = (ListView) findViewById(R.id.use_coupon_list);
+
 
         if(mContactNumber.equals("")){
             mContactNumber = mUser.getPhoneNumber();
@@ -238,6 +268,9 @@ public class SubmitOrderActivity extends Activity {
 
         mSubmitListCouponAdapter = new SubmitListCouponAdapter(this, mHandler,  mArea, mFee, mUser);
         mSubmitCouponList.setAdapter(mSubmitListCouponAdapter);
+
+        mUseCouponListAdapter = new UseCouponAdapter(this, mHandler, mCoupons);
+        mUseCouponList.setAdapter(mUseCouponListAdapter);
 
         mSubmitOrders.setText("确认下单");
 
@@ -282,6 +315,21 @@ public class SubmitOrderActivity extends Activity {
 //
 //                mSubmitListAdapter.refresh(activeUser, currentOrder);
 //                mSubmitList.setAdapter(mSubmitListAdapter);
+            }
+        }else if(requestCode == result_coupon){
+            if (resultCode == RESULT_OK) {
+
+
+                String couponString = SharedPreferenceUtils.getUserCoupons(SubmitOrderActivity.this);
+                Type listType = new TypeToken<ArrayList<user_coupon>>() {
+                }.getType();
+
+                ArrayList<user_coupon> newCoupons = new ArrayList<user_coupon>();
+                newCoupons = gson.fromJson(couponString, listType);
+                mCoupons.clear();
+                mCoupons.addAll(newCoupons);
+                mUseCouponListAdapter.refresh(mCoupons);
+                mUseCouponList.setAdapter(mUseCouponListAdapter);
             }
         }
     }

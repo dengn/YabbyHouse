@@ -3,11 +3,14 @@ package com.melbournestore.activities;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -27,6 +30,8 @@ public class MyCouponActivity extends Activity {
     private ListView mCouponList;
     ProgressDialog progress;
     private MyCouponListAdapter mCouponListAdapter;
+
+    private int mCallSource = 0;
 
     private user_coupon[] mCoupons;
     private Handler mHandler = new Handler() {
@@ -66,8 +71,12 @@ public class MyCouponActivity extends Activity {
 
         getActionBar().setTitle("我的优惠券");
 
+        Intent intent = getIntent();
+
+        mCallSource = intent.getIntExtra("callSource", 0);
+
         mCouponList = (ListView) findViewById(R.id.coupon_list);
-        mCouponListAdapter = new MyCouponListAdapter(this, mHandler, mCoupons);
+        mCouponListAdapter = new MyCouponListAdapter(this, mHandler, mCoupons, mCallSource);
         mCouponList.setAdapter(mCouponListAdapter);
 
         String userString = SharedPreferenceUtils.getLoginUser(this);
@@ -83,12 +92,40 @@ public class MyCouponActivity extends Activity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.choose_address, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(mCallSource==0){
+            menu.findItem(R.id.finish).setVisible(false);
+        }
+        else {
+            menu.findItem(R.id.finish).setVisible(true);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
 
                 finish();
-                return true;
+                break;
+            case R.id.finish:
+
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("coupons", SharedPreferenceUtils.getUserCoupons(MyCouponActivity.this));
+                setResult(RESULT_OK, returnIntent);
+
+                finish();
+
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }

@@ -139,6 +139,19 @@ public class SharedPreferenceUtils {
         return pref.edit().putString("current_order", info).commit();
     }
 
+
+    // The SharedPrefrence file to store Coupons
+    public static String getUserCoupons(Context context){
+        SharedPreferences pref = context.getSharedPreferences("coupons", 0);
+        return pref.getString("coupons", "");
+    }
+
+    public static boolean saveUserCoupons(Context context, String info){
+        SharedPreferences pref = context.getSharedPreferences("coupons", 0);
+        return pref.edit().putString("coupons", info).commit();
+    }
+
+
     public static void SharedPreferenceClearCurrentChoice(Context context) {
         SharedPreferences current_choice = context.getSharedPreferences(
                 "current_choice", 0);
@@ -211,6 +224,7 @@ public class SharedPreferenceUtils {
         SharedPreferenceUtils.saveCurrentChoice(context, shopsJson);
 
     }
+
 
 
 
