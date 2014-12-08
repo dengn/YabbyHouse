@@ -1,5 +1,6 @@
 package com.melbournestore.adaptors;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -12,7 +13,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -31,28 +31,26 @@ public class DishListAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
     DisplayImageOptions mOptions;
+    ProgressDialog mProgress;
     private Context mContext;
     private Handler mHandler;
     private item_iphone mItem;
-    private boolean mLike = false;
-
     private Gson gson = new Gson();
 
-    public DishListAdapter(Context context, Handler handler, DisplayImageOptions options, item_iphone item, boolean like) {
+    public DishListAdapter(Context context, Handler handler, DisplayImageOptions options, item_iphone item, ProgressDialog progress) {
 
         mContext = context;
         mHandler = handler;
         mItem = item;
-        mLike = like;
+        mProgress = progress;
         mOptions = options;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(item_iphone item, boolean like) {
+    public void refresh(item_iphone item) {
 
         mItem = item;
-        mLike = like;
         notifyDataSetChanged();
     }
 
@@ -131,22 +129,22 @@ public class DishListAdapter extends BaseAdapter {
                         ItemGoodManagerThread itemThread = new ItemGoodManagerThread(mHandler, mContext, mItem.getId(), number);
                         itemThread.start();
 
-                        if (mLike) {
-                            holder_dish.like
-                                    .setImageResource(R.drawable.other_icon_liked);
-                            holder_dish.like_num.setText(String.valueOf(mItem.getGood())+1);
-
-                        } else {
-                            Toast.makeText(mContext, "亲，今天已经点过赞了。", Toast.LENGTH_SHORT)
-                                    .show();
-                        }
+                        mProgress.show();
 
 
                     }
 
                 });
 
-
+//                if (mLike) {
+//                    holder_dish.like
+//                            .setImageResource(R.drawable.other_icon_liked);
+//                    holder_dish.like_num.setText(String.valueOf(mItem.getGood())+1);
+//
+//                } else {
+//                    Toast.makeText(mContext, "亲，今天已经点过赞了。", Toast.LENGTH_SHORT)
+//                            .show();
+//                }
 
 
                 holder_dish.like_num.setText(String.valueOf(mItem.getGood()));

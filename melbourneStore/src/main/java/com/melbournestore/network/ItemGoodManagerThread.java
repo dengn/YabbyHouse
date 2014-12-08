@@ -6,6 +6,8 @@ import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.melbournestore.models.item_iphone;
 import com.melbournestore.utils.Constant;
 
 import org.apache.http.HttpResponse;
@@ -17,7 +19,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -74,6 +78,17 @@ public class ItemGoodManagerThread extends Thread {
         return result;
     }
 
+    public static item_iphone getItem(String jsonString) {
+        jsonString = jsonString.substring(0, jsonString.length() - 14) + "}";
+        Gson gson = new Gson();
+        Type listType = new TypeToken<HashMap<String, item_iphone>>() {
+        }.getType();
+        HashMap<String, item_iphone> mItem = gson.fromJson(jsonString, listType);
+        item_iphone item = mItem.get("item");
+
+
+        return item;
+    }
 
     @Override
     public void run() {
@@ -89,7 +104,9 @@ public class ItemGoodManagerThread extends Thread {
             mHandler.sendMessage(msg);
         }
         else if(result.contains("item")){
+
             Message msg = mHandler.obtainMessage();
+            msg.obj = getItem(result);
             msg.what = 4;
             mHandler.sendMessage(msg);
 

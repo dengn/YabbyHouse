@@ -2,7 +2,9 @@ package com.melbournestore.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +29,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 public class DishActivity extends Activity {
 
     DisplayImageOptions options;
+    ProgressDialog progress;
     private ListView mDishList;
     private DishListAdapter mDishListAdapter;
     private Button mDishConfirmChoice;
@@ -39,19 +42,15 @@ public class DishActivity extends Activity {
     private int mLikeNum;
     private int mItemId;
     private String mItemName;
-
-    private boolean mLike = false;
-
-    ProgressDialog progress;
-
     private number_price sumNumberPrice;
 
     private item_iphone mItem = new item_iphone();
+    private SingleItemManagerThread mSingleItemThread;
+    private int mTotalPrice;
+    private int mTotalNum;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-
-
 
 
             switch (msg.what) {
@@ -60,7 +59,7 @@ public class DishActivity extends Activity {
 
                     mItem = (item_iphone) msg.obj;
                     mItem = MelbourneUtils.updateItemUnits(DishActivity.this, mItem);
-                    mDishListAdapter.refresh(mItem, mLike);
+                    mDishListAdapter.refresh(mItem);
                     mDishList.setAdapter(mDishListAdapter);
                     progress.dismiss();
 
@@ -75,7 +74,7 @@ public class DishActivity extends Activity {
 //                    Plate plate1 = shops1[mShopId].getPlates()[mPlateId];
 
                     mItem = MelbourneUtils.updateItemUnits(DishActivity.this, mItem);
-                    mDishListAdapter.refresh(mItem, mLike);
+                    mDishListAdapter.refresh(mItem);
                     //mDishList.setAdapter(mDishListAdapter);
 
                     sumNumberPrice = MelbourneUtils.sum_item_number_price(DishActivity.this);
@@ -97,7 +96,7 @@ public class DishActivity extends Activity {
 //                    Plate plate2 = shops2[mShopId].getPlates()[mPlateId];
 
                     mItem = MelbourneUtils.updateItemUnits(DishActivity.this, mItem);
-                    mDishListAdapter.refresh(mItem, mLike);
+                    mDishListAdapter.refresh(mItem);
                     //mDishList.setAdapter(mDishListAdapter);
 
 
@@ -111,20 +110,22 @@ public class DishActivity extends Activity {
 
                     break;
                 case 3:
-                    mLike = false;
-                    mDishListAdapter.refresh(mItem, mLike);
+                    progress.dismiss();
+                    showNotice("亲，您今天已经点过赞了。");
+                    //mDishListAdapter.refresh(mItem);
                     break;
                 case 4:
-                    mLike = true;
-                    mDishListAdapter.refresh(mItem, mLike);
+
+                    mItem = (item_iphone) msg.obj;
+                    mItem = MelbourneUtils.updateItemUnits(DishActivity.this, mItem);
+                    mDishListAdapter.refresh(mItem);
+                    mDishList.setAdapter(mDishListAdapter);
+                    progress.dismiss();
                     break;
 
             }
         }
     };
-    private SingleItemManagerThread mSingleItemThread;
-    private int mTotalPrice;
-    private int mTotalNum;
     private long mExitTime;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -167,7 +168,7 @@ public class DishActivity extends Activity {
                 .build();
 
 
-        mDishListAdapter = new DishListAdapter(this, mHandler, options, mItem, mLike);
+        mDishListAdapter = new DishListAdapter(this, mHandler, options, mItem, progress);
         mDishList.setAdapter(mDishListAdapter);
 
         mDishConfirmChoice = (Button) findViewById(R.id.dish_confirm_choice);
@@ -198,6 +199,20 @@ public class DishActivity extends Activity {
 
     }
 
+
+    private void showNotice(String text) {
+        new AlertDialog.Builder(DishActivity.this)
+                .setMessage(text)
+                .setPositiveButton("确定",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(
+                                    DialogInterface dialoginterface,
+                                    int i) {
+
+                            }
+                        }
+                ).show();
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
