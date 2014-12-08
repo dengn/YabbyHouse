@@ -206,6 +206,10 @@ public class SubmitOrderActivity extends Activity {
                 mUser_coupon = new user_coupon();
                 mUser_coupon.setId(-1);
 
+                if(mContactNumber.equals("")){
+                    mContactNumber = mUser.getPhoneNumber();
+                }
+
 
                 CreateOrderThread mCreateOrderThread = new CreateOrderThread(mHandler, SubmitOrderActivity.this, mUser.getPhoneNumber(), mUnitNo, mStreet, mUser.getSuburb().getPostCode(), mUser.getSuburb().getId(), mDeliveryTime, mFee, mRemark, mContactNumber, items, mUser_coupon);
                 mCreateOrderThread.start();
@@ -222,6 +226,9 @@ public class SubmitOrderActivity extends Activity {
         mSubmitMemoList = (ListView) findViewById(R.id.submit_memo_list);
         mSubmitCouponList = (ListView) findViewById(R.id.submit_coupon_list);
 
+        if(mContactNumber.equals("")){
+            mContactNumber = mUser.getPhoneNumber();
+        }
 
         mSubmitListAdapter = new SubmitListAdapter(this, mHandler, mUser, mContactNumber, mUnitNo, mStreet, mSuburb, mDeliveryTime);
         mSubmitList.setAdapter(mSubmitListAdapter);
@@ -253,6 +260,9 @@ public class SubmitOrderActivity extends Activity {
                 mArea = data.getStringExtra("area");
                 mFee = data.getIntExtra("fee", 0);
 
+                if(mContactNumber.equals("")){
+                    mContactNumber = mUser.getPhoneNumber();
+                }
 
                 mSubmitListAdapter.refresh(mContactNumber, mUnitNo, mStreet, mSuburb, mDeliveryTime);
                 mSubmitList.setAdapter(mSubmitListAdapter);
@@ -395,6 +405,10 @@ public class SubmitOrderActivity extends Activity {
 
                 delivery_time+=" "+getPossibleDeliveryHours()[hours.getCurrentItem()];
                 mDeliveryTime = delivery_time;
+
+                if(mContactNumber.equals("")){
+                    mContactNumber = mUser.getPhoneNumber();
+                }
 
                 mSubmitListAdapter.refresh(mContactNumber, mUnitNo, mStreet, mSuburb, mDeliveryTime);
                 mSubmitList.setAdapter(mSubmitListAdapter);

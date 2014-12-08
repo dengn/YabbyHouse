@@ -2,7 +2,9 @@ package com.melbournestore.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -44,7 +46,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -64,6 +65,8 @@ public class MyAccountActivity extends Activity {
     private ListView mMyAccountList;
     private ListView mMyAccountListAddress;
     private ListView mMyAccountListCoupon;
+
+
 
     ProgressDialog progress;
 
@@ -102,6 +105,19 @@ public class MyAccountActivity extends Activity {
                     progress.dismiss();
 
                     break;
+                case 2:
+                    String mHeadIconImg = (String) msg.obj;
+                    mUser.setHead_icon(mHeadIconImg);
+                    mMyAccountListAdapter.refresh(mUser, mOrderNum, mCouponNum);
+                    mMyAccountList.setAdapter(mMyAccountListAdapter);
+                    progress.dismiss();
+                    break;
+                case 3:
+
+                    showNotice("上传失败");
+                    progress.dismiss();
+                    break;
+
 
 //                case 1:
 //                    //get Coupon
@@ -229,6 +245,20 @@ public class MyAccountActivity extends Activity {
 
     }
 
+    private void showNotice(String text) {
+        new AlertDialog.Builder(MyAccountActivity.this)
+                .setMessage(text)
+                .setPositiveButton("确定",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(
+                                    DialogInterface dialoginterface,
+                                    int i) {
+
+                            }
+                        }
+                ).show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -302,9 +332,14 @@ public class MyAccountActivity extends Activity {
 
                         MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
                         File file = BitmapUtils.getMyBitMapFile(mUser.getPhoneNumber());
+                        String number=mUser.getPhoneNumber();
+                        multipartEntity.addTextBody("number", number);
                         multipartEntity.addBinaryBody("file", file, ContentType.create("image/png"), "head_icon.png");
                         UploadImageManagerThread mUploadThread = new UploadImageManagerThread(mHandler, this, mUser.getPhoneNumber(), multipartEntity);
                         mUploadThread.start();
+
+
+                        progress.show();
 
 
                         mMyAccountListAdapter.refresh(mUser, mOrderNum, mCouponNum);
@@ -345,12 +380,17 @@ public class MyAccountActivity extends Activity {
 
                     MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
                     File file = BitmapUtils.getMyBitMapFile(mUser.getPhoneNumber());
-                    multipartEntity.addPart("file", new FileBody(file));
-                    multipartEntity.addTextBody("fileName", "head_icon.png");
-                    multipartEntity.addTextBody("mimeType", "image/png");
+                    Log.d("HEADICON", file.getAbsolutePath());
+                    String number=mUser.getPhoneNumber();
+                    multipartEntity.addTextBody("number", number);
+                    multipartEntity.addBinaryBody("file", file, ContentType.create("image/png"), "head_icon.png");
                     //multipartEntity.addBinaryBody("file", file, ContentType.create("image/png"), "head_icon.png");
                     UploadImageManagerThread mUploadThread = new UploadImageManagerThread(mHandler, this, mUser.getPhoneNumber(), multipartEntity);
                     mUploadThread.start();
+
+
+                    progress.show();
+
 
                     mMyAccountListAdapter.refresh(mUser, mOrderNum, mCouponNum);
                     mMyAccountList.setAdapter(mMyAccountListAdapter);

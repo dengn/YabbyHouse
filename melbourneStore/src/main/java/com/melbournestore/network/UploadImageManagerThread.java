@@ -2,9 +2,11 @@ package com.melbournestore.network;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.melbournestore.utils.Constant;
 
 import org.apache.http.HttpResponse;
@@ -19,7 +21,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -112,6 +116,22 @@ public class UploadImageManagerThread extends Thread{
 
 
         Log.d("UPLOADTHREAD", result);
+
+        if(result.contains("head_icon")){
+            HashMap<String, String> headIcon = new HashMap<String, String>();
+            Gson gson = new Gson();
+            Type listType = new TypeToken<HashMap<String, String>>() {
+            }.getType();
+            headIcon = gson.fromJson(result, listType);
+            Message msg = mHandler.obtainMessage();
+            msg.obj = headIcon.get("head_icon");
+            msg.what = 2;
+            mHandler.sendMessage(msg);
+        }else{
+            Message msg = mHandler.obtainMessage();
+            msg.what = 3;
+            mHandler.sendMessage(msg);
+        }
 
 
 
