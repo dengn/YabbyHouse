@@ -54,7 +54,6 @@ import com.melbournestore.models.Suburb;
 import com.melbournestore.models.User;
 import com.melbournestore.models.user_iphone;
 import com.melbournestore.network.AreaManagerThread;
-import com.melbournestore.network.GetCsrfThread;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 /**
@@ -145,8 +144,8 @@ public class MainActivity extends Activity {
         AreaManagerThread mAreaThread = new AreaManagerThread(mHandler, this);
         mAreaThread.start();
 
-        GetCsrfThread mCsrfThread = new GetCsrfThread(mHandler, this);
-        mCsrfThread.start();
+//        GetCsrfThread mCsrfThread = new GetCsrfThread(mHandler, this);
+//        mCsrfThread.start();
 
         plate_fragment = new PlateFragment();
         plate_fragment.onAttach(this);

@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.utils.Constant;
 
 import org.apache.http.HttpResponse;
@@ -67,7 +66,7 @@ public class GetCsrfThread extends Thread{
         HashMap<String, String> csrf_hash = gson.fromJson(csrf, type);
 
         String mCsrf = csrf_hash.get("csrf");
-        SharedPreferenceUtils.saveCsrf(mContext, mCsrf);
+        //SharedPreferenceUtils.saveCsrf(mContext, mCsrf);
         Log.d("CREATEORDERTHREAD", "mCsrf: " + mCsrf);
 
 

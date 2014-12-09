@@ -2,10 +2,11 @@ package com.melbournestore.network;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.melbournestore.db.SharedPreferenceUtils;
+import com.google.gson.reflect.TypeToken;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.models.user_coupon;
 import com.melbournestore.utils.Constant;
@@ -21,13 +22,15 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by dengn on 2014/12/3.
  */
-public class CreateOrderThread extends Thread{
+public class CreateOrderThread extends Thread {
 
     Handler mHandler;
     Context mContext;
@@ -105,58 +108,64 @@ public class CreateOrderThread extends Thread{
     public void run() {
 
 
-//        String csrf = handleGet(Constant.URL_BASE + "create_order");
-//
-//        Type type = new TypeToken<HashMap<String, String>>() {
-//        }.getType();
-//        HashMap<String, String> csrf_hash = gson.fromJson(csrf, type);
-//
-//        mCsrf = csrf_hash.get("csrf");
-//        Log.d("CREATEORDERTHREAD", "mCsrf: " + mCsrf);
+        String csrf = handleGet(Constant.URL_BASE + "create_order");
+        Log.d("CREATEORDERTHREAD", "csrf: " + csrf);
+        if (csrf.contains("csrf")) {
+            Type type = new TypeToken<HashMap<String, String>>() {
+            }.getType();
+            HashMap<String, String> csrf_hash = gson.fromJson(csrf, type);
 
-        mCsrf = SharedPreferenceUtils.getCsrf(mContext);
 
-        List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-        pairs.add(new BasicNameValuePair("contact_number", mContactNumber));
-        pairs.add(new BasicNameValuePair("csrf_token", mCsrf));
-        pairs.add(new BasicNameValuePair("phone_number", mUserNumber));
-        pairs.add(new BasicNameValuePair("unit_no", mUnitNo));
-        pairs.add(new BasicNameValuePair("street", mStreet));
-        pairs.add(new BasicNameValuePair("post_code", mPostCode));
-        pairs.add(new BasicNameValuePair("suburb_id", String.valueOf(mSuburbId)));
-        pairs.add(new BasicNameValuePair("delivery_time", mDeliveryTime));
-        pairs.add(new BasicNameValuePair("delivery_fee", String.valueOf(mDeliveryFee)));
-        pairs.add(new BasicNameValuePair("remark", mRemark));
-        pairs.add(new BasicNameValuePair("user_coupon_id", "-1"));
-        //pairs.add(new BasicNameValuePair("items", gson.toJson(mOrderItems)));
-        for (int i = 0; i < mItems.size(); i++) {
+            mCsrf = csrf_hash.get("csrf");
+            Log.d("CREATEORDERTHREAD", "mCsrf: " + mCsrf);
 
-            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-item_id", String.valueOf(mItems.get(i).getId())));
-            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-name", mItems.get(i).getName()));
-            Log.d("CREATEORDERTHREAD", "name: " + mItems.get(i).getName());
-            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-desc", mItems.get(i).getDesc()));
-            Log.d("CREATEORDERTHREAD", "desc: " + mItems.get(i).getDesc());
-            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-price", String.valueOf((int) Float.parseFloat(mItems.get(i).getPrice()))));
-            pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-count", String.valueOf(mItems.get(i).getUnit())));
+
+            List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+            pairs.add(new BasicNameValuePair("contact_number", mContactNumber));
+            pairs.add(new BasicNameValuePair("csrf_token", mCsrf));
+            pairs.add(new BasicNameValuePair("phone_number", mUserNumber));
+            pairs.add(new BasicNameValuePair("unit_no", mUnitNo));
+            pairs.add(new BasicNameValuePair("street", mStreet));
+            pairs.add(new BasicNameValuePair("post_code", mPostCode));
+            pairs.add(new BasicNameValuePair("suburb_id", String.valueOf(mSuburbId)));
+            pairs.add(new BasicNameValuePair("delivery_time", mDeliveryTime));
+            pairs.add(new BasicNameValuePair("delivery_fee", String.valueOf(mDeliveryFee)));
+            pairs.add(new BasicNameValuePair("remark", mRemark));
+            pairs.add(new BasicNameValuePair("user_coupon_id", "-1"));
+
+            for (int i = 0; i < mItems.size(); i++) {
+
+                pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-item_id", String.valueOf(mItems.get(i).getId())));
+                pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-name", mItems.get(i).getName()));
+                pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-desc", mItems.get(i).getDesc()));
+                pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-price", String.valueOf((int) Float.parseFloat(mItems.get(i).getPrice()))));
+                pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-count", String.valueOf(mItems.get(i).getUnit())));
+            }
+
+
+            String result = handlePost(Constant.URL_BASE + "create_order", pairs);
+
+            Log.d("CREATEORDERTHREAD", result);
+
+            if (result.equals("{\"result\": 0}")) {
+                //submit failed
+                Message message = mHandler.obtainMessage();
+                message.what = 6;
+                mHandler.sendMessage(message);
+            } else {
+                //submit successful
+                Message message = mHandler.obtainMessage();
+                message.what = 7;
+                mHandler.sendMessage(message);
+            }
+
+        } else {
+
+            //get csrf failed
+            Message message = mHandler.obtainMessage();
+            message.what = 5;
+            mHandler.sendMessage(message);
         }
-
-//        for (int i = 0; i < mOrderItems.length; i++) {
-//
-//            pairs.add(new BasicNameValuePair("items[]",mOrderItems[i]));
-//
-//        }
-
-
-        String result = handlePost(Constant.URL_BASE + "create_order", pairs);
-
-        Log.d("CREATEORDERTHREAD", result);
-
-
-
-//        Message message = mHandler.obtainMessage();
-//        message.obj = mOrders;
-//        message.what = 0;
-//        mHandler.sendMessage(message);
 
 
     }

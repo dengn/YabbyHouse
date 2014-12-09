@@ -2,7 +2,10 @@ package com.melbournestore.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -69,6 +72,8 @@ public class SubmitOrderActivity extends Activity {
     private UseCouponAdapter mUseCouponListAdapter;
     private PopupWindow mTimePickerPopup;
 
+    ProgressDialog progress;
+
     private user_iphone mUser;
 
     private String mUnitNo="";
@@ -134,12 +139,42 @@ public class SubmitOrderActivity extends Activity {
                     mUseCouponList.setAdapter(mUseCouponListAdapter);
 
                     break;
+
+                case 5:
+                    progress.dismiss();
+                    showNotice("get csrf failed");
+
+                    break;
+                case 6:
+                    progress.dismiss();
+                    showNotice("submit order failed");
+
+                    break;
+                case 7:
+                    progress.dismiss();
+                    showNotice("submit success");
+
+                    break;
             }
 
         }
 
     };
     private long mExitTime;
+
+    private void showNotice(String text) {
+        new AlertDialog.Builder(SubmitOrderActivity.this)
+                .setMessage(text)
+                .setPositiveButton("确定",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(
+                                    DialogInterface dialoginterface,
+                                    int i) {
+
+                            }
+                        }
+                ).show();
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,6 +191,8 @@ public class SubmitOrderActivity extends Activity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         getActionBar().setTitle("提交订单");
+
+        progress = new ProgressDialog(this ,R.style.dialog_loading);
 
         String userString = SharedPreferenceUtils
                 .getLoginUser(SubmitOrderActivity.this);
@@ -241,6 +278,9 @@ public class SubmitOrderActivity extends Activity {
 
                 CreateOrderThread mCreateOrderThread = new CreateOrderThread(mHandler, SubmitOrderActivity.this, mUser.getPhoneNumber(), mUnitNo, mStreet, mUser.getSuburb().getPostCode(), mUser.getSuburb().getId(), mDeliveryTime, mFee, mRemark, mContactNumber, items, mUser_coupon);
                 mCreateOrderThread.start();
+
+
+                progress.show();
 //                Intent intent = new Intent(SubmitOrderActivity.this,
 //                        OrderSubmittedActivity.class);
 //                startActivity(intent);
