@@ -15,7 +15,7 @@
 -->
 <resources>
 
-    <string name="app_name">Yabby House</string>
+    <string name="app_name">墨尔本送餐</string>
 
     <string-array name="planets_array">
         <item>Mercury</item>

@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,15 +26,15 @@ import com.melbournestore.network.CouponManagerThread;
 
 public class MyCouponActivity extends Activity {
 
-    private long mExitTime;
-
-    private ListView mCouponList;
     ProgressDialog progress;
+    private long mExitTime;
+    private ListView mCouponList;
     private MyCouponListAdapter mCouponListAdapter;
 
     private int mCallSource = 0;
 
     private user_coupon[] mCoupons;
+    private user_coupon mChosenCoupon;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -41,11 +42,17 @@ public class MyCouponActivity extends Activity {
                 case 0:
                     mCoupons = (user_coupon[]) msg.obj;
                     Log.d("COUPON", "mCoupons len: " + String.valueOf(mCoupons.length));
-                    mCouponListAdapter.refresh(mCoupons);
+                    if (mCoupons.length != 0) {
+                        mCouponList.setVisibility(View.VISIBLE);
+                    }
+                    mCouponListAdapter.refresh(mCoupons, mChosenCoupon);
                     mCouponList.setAdapter(mCouponListAdapter);
                     progress.dismiss();
                     break;
-
+                case 1:
+                    mChosenCoupon = (user_coupon) msg.obj;
+                    mCouponListAdapter.refresh(mCoupons, mChosenCoupon);
+                    break;
 
             }
 
@@ -75,9 +82,15 @@ public class MyCouponActivity extends Activity {
 
         mCallSource = intent.getIntExtra("callSource", 0);
 
+
+        String chosenCouponString = SharedPreferenceUtils.getUserCoupons(MyCouponActivity.this);
+        mChosenCoupon = gson.fromJson(chosenCouponString, user_coupon.class);
+
+
         mCouponList = (ListView) findViewById(R.id.coupon_list);
-        mCouponListAdapter = new MyCouponListAdapter(this, mHandler, mCoupons, mCallSource);
+        mCouponListAdapter = new MyCouponListAdapter(this, mHandler, mCoupons, mCallSource, mChosenCoupon);
         mCouponList.setAdapter(mCouponListAdapter);
+        mCouponList.setVisibility(View.INVISIBLE);
 
         String userString = SharedPreferenceUtils.getLoginUser(this);
         user_iphone user = gson.fromJson(userString, user_iphone.class);
@@ -86,7 +99,7 @@ public class MyCouponActivity extends Activity {
 
         mCouponThread = new CouponManagerThread(mHandler, this, mContactNumber);
         mCouponThread.start();
-        progress = new ProgressDialog(this ,R.style.dialog_loading);
+        progress = new ProgressDialog(this, R.style.dialog_loading);
         progress.show();
 
     }
@@ -100,10 +113,9 @@ public class MyCouponActivity extends Activity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(mCallSource==0){
+        if (mCallSource == 0) {
             menu.findItem(R.id.finish).setVisible(false);
-        }
-        else {
+        } else {
             menu.findItem(R.id.finish).setVisible(true);
         }
         return super.onPrepareOptionsMenu(menu);

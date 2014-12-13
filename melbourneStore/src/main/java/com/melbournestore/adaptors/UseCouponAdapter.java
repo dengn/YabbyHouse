@@ -3,7 +3,6 @@ package com.melbournestore.adaptors;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +11,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.melbournestore.activities.R;
 import com.melbournestore.db.SharedPreferenceUtils;
+import com.melbournestore.models.Coupon;
 import com.melbournestore.models.user_coupon;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 public class UseCouponAdapter extends BaseAdapter {
 
@@ -28,24 +24,22 @@ public class UseCouponAdapter extends BaseAdapter {
     final int TYPE_EMPTY = 1;
     Handler mHandler;
     Context mContext;
+    user_coupon mChosenCoupon;
     private Gson gson = new Gson();
-    ArrayList<user_coupon> mCoupons = new ArrayList<user_coupon>();
 
-    public UseCouponAdapter(Context context, Handler handler, ArrayList<user_coupon> coupons) {
+    public UseCouponAdapter(Context context, Handler handler, user_coupon chosenCoupon) {
         // TODO Auto-generated constructor stub
 
 
         mContext = context;
         mHandler = handler;
-        mCoupons.clear();
-        mCoupons.addAll(coupons);
+        mChosenCoupon = chosenCoupon;
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void refresh(ArrayList<user_coupon> coupons) {
-        mCoupons.clear();
-        mCoupons.addAll(coupons);
+    public void refresh(user_coupon chosenCoupon) {
+        mChosenCoupon = chosenCoupon;
         notifyDataSetChanged();
     }
 
@@ -53,7 +47,7 @@ public class UseCouponAdapter extends BaseAdapter {
     @Override
     public int getCount() {
 
-        return mCoupons.size();
+        return 1;
     }
 
     @Override
@@ -81,21 +75,28 @@ public class UseCouponAdapter extends BaseAdapter {
         holder.title = (TextView) convertView.findViewById(R.id.usecoupon_name);
         holder.notUse = (Button) convertView.findViewById(R.id.not_use_coupon);
 
-        holder.title.setText(mCoupons.get(position).getCoupon().getName());
+//        if(mChosenCoupon.getId()==-1){
+//            convertView.setVisibility(View.INVISIBLE);
+//        }
+//        else{
+//            convertView.setVisibility(View.VISIBLE);
+//        }
+        holder.title.setText(mChosenCoupon.getCoupon().getName());
         holder.notUse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String couponString = SharedPreferenceUtils.getUserCoupons(mContext);
-                Log.d("COUPON", "before: " + couponString);
-
-                Type listType = new TypeToken<ArrayList<user_coupon>>() {
-                }.getType();
-                ArrayList<user_coupon> coupons = new ArrayList<user_coupon>();
-                coupons = gson.fromJson(couponString, listType);
-                coupons.remove(position);
-                SharedPreferenceUtils.saveUserCoupons(mContext, gson.toJson(coupons));
-
-                //SharedPreferenceUtils.saveUserCoupons(mContext, "[]");
+//                String couponString = SharedPreferenceUtils.getUserCoupons(mContext);
+//                Log.d("COUPON", "before: " + couponString);
+//
+//                Type listType = new TypeToken<ArrayList<user_coupon>>() {
+//                }.getType();
+//                ArrayList<user_coupon> coupons = new ArrayList<user_coupon>();
+//                coupons = gson.fromJson(couponString, listType);
+//                coupons.remove(position);
+//                SharedPreferenceUtils.saveUserCoupons(mContext, gson.toJson(coupons));
+//
+//                //SharedPreferenceUtils.saveUserCoupons(mContext, "[]");
+                SharedPreferenceUtils.saveUserCoupons(mContext, gson.toJson(new user_coupon(-1, -1, -1, "", new Coupon(-1, "", "", "", -1, "", "", -1, -1))));
 
                 Message msg = mHandler.obtainMessage();
                 msg.what = 4;

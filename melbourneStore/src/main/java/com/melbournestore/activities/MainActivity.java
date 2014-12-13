@@ -47,11 +47,13 @@ import com.melbournestore.fragments.GoogleMapFragment;
 import com.melbournestore.fragments.MyOrdersFragment;
 import com.melbournestore.fragments.PlateFragment;
 import com.melbournestore.fragments.RecommandationFragment;
+import com.melbournestore.models.Coupon;
 import com.melbournestore.models.Order_user;
 import com.melbournestore.models.Plate;
 import com.melbournestore.models.Shop;
 import com.melbournestore.models.Suburb;
 import com.melbournestore.models.User;
+import com.melbournestore.models.user_coupon;
 import com.melbournestore.models.user_iphone;
 import com.melbournestore.network.AreaManagerThread;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -131,8 +133,15 @@ public class MainActivity extends Activity {
 //        }
 
         if (SharedPreferenceUtils.getFirstTimeLaunch(this)) {
+            //SharedPreferenceUtils.saveFirstTimeLaunch(MainActivity.this);
             mUser = new user_iphone("", "", "", 0, "", new Suburb(0, "", "", ""));
             SharedPreferenceUtils.saveLoginUser(MainActivity.this, gson.toJson(mUser));
+//            user_coupon coupon = new user_coupon();
+//            coupon.setId(0);
+            SharedPreferenceUtils.saveUserCoupons(MainActivity.this, gson.toJson(new user_coupon(-1, -1, -1, "", new Coupon(-1, "", "", "", -1, "", "", -1, -1))));
+            SharedPreferenceUtils.saveDeliveryTime(MainActivity.this, "");
+            SharedPreferenceUtils.saveRemark(MainActivity.this, "");
+            SharedPreferenceUtils.saveContactNumber(MainActivity.this, "");
         } else {
             String mUserString = SharedPreferenceUtils.getLoginUser(this);
             Log.d("LOGIN", mUserString);

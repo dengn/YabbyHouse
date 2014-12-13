@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -32,11 +33,9 @@ import java.util.List;
 
 public class CurrentOrderActivity extends Activity implements View.OnTouchListener {
 
+    ProgressDialog progress;
     private ViewPager pager_splash_ad;
     private ADPagerAdapter adapter;
-
-    ProgressDialog progress;
-
     private int flaggingWidth;
     private int size = 0;
     private int lastX = 0;
@@ -172,7 +171,7 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
     }
 
 
-    private View getCurrentOrderStatusFlow(Order mOrder){
+    private View getCurrentOrderStatusFlow(Order mOrder) {
         View view = LayoutInflater.from(this).inflate(
                 R.layout.current_order_process_layout, null);
 
@@ -190,26 +189,23 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         TextView currentOrder_status5_time = (TextView) view.findViewById(R.id.currentOrder_status5_time);
 
         currentOrder_status.setText(MelbourneUtils.getCurrentOrderStatusString(mOrder.getStatus()));
-        currentOrder_number.setText("订单号: "+String.valueOf(mOrder.getId()));
-        if(mOrder.getStatus()==0) {
+        currentOrder_number.setText("订单号: " + String.valueOf(mOrder.getId()));
+        if (mOrder.getStatus() == 0) {
             currentOrder_status1_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
-        }
-
-        else if(mOrder.getStatus()==1) {
+        } else if (mOrder.getStatus() == 1) {
             currentOrder_status1_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status2_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
             currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
-        }
-        else if(mOrder.getStatus()==2){
+        } else if (mOrder.getStatus() == 2) {
             currentOrder_status1_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status2_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status3_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
             currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
             currentOrder_status3_time.setText(mOrder.getDistributingTime().split(" ")[1]);
-        }else if(mOrder.getStatus()==3){
+        } else if (mOrder.getStatus() == 3) {
             currentOrder_status1_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status2_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status3_circle.setBackgroundResource(R.drawable.circle_white);
@@ -218,8 +214,7 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
             currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
             currentOrder_status3_time.setText(mOrder.getDistributingTime().split(" ")[1]);
             currentOrder_status4_time.setText(mOrder.getDeliveryingTime().split(" ")[1]);
-        }
-        else if(mOrder.getStatus()==4){
+        } else if (mOrder.getStatus() == 4) {
             currentOrder_status1_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status2_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status3_circle.setBackgroundResource(R.drawable.circle_white);
@@ -243,11 +238,13 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
 
         final LinearLayout submitted_items_list = (LinearLayout) order_detail.findViewById(R.id.submitted_items_list);
 
+        final LinearLayout others_list = (LinearLayout) order_detail.findViewById(R.id.others_list);
+
+
         final OrderItem[] items = mOrder.getItems();
 
 
         String currentShopName = "";
-
 
 
         for (int i = 0; i < items.length; i++) {
@@ -287,6 +284,59 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
 
         }
 
+        View item_view = LayoutInflater.from(this).inflate(R.layout.submitted_item, null);
+        TextView submitted_item_name = (TextView) item_view.findViewById(R.id.submitted_item_name);
+        TextView submitted_item_number = (TextView) item_view.findViewById(R.id.submitted_item_number);
+        TextView submitted_item_price = (TextView) item_view.findViewById(R.id.submitted_item_price);
+        submitted_item_name.setText("运送费");
+        submitted_item_number.setText("");
+        submitted_item_price.setText("$ " + String.valueOf(mOrder.getDeliveryFee()));
+        others_list.addView(item_view);
+
+
+        if (mOrder.getCoupon() != null) {
+            if (mOrder.getCoupon()[0].getId() != -1) {
+                Log.d("COUPON", mOrder.getCoupon()[0].getCoupon().getName());
+
+                submitted_item_name.setText("优惠券");
+                submitted_item_number.setText("");
+                submitted_item_price.setText("$ " + mOrder.getCoupon()[0].getCoupon().getDiscount());
+                others_list.addView(item_view);
+            }
+        }
+
+
+//        submitted_items_list.addView(whitebar_view);
+//
+//        TextView others_view = new TextView(CurrentOrderActivity.this);
+//        others_view.setTextColor(Color.WHITE);
+//        others_view.setTextSize(20);
+//        others_view.setTypeface(null, Typeface.BOLD);
+//        others_view.setText("其它");
+//        submitted_items_list.addView(others_view);
+//
+//        submitted_items_list.addView(whitebar_view);
+
+
+//        TextView delivery_fee_name = (TextView) item_view.findViewById(R.id.submitted_item_name);
+//        TextView delivery_fee_number = (TextView) item_view.findViewById(R.id.submitted_item_number);
+//        TextView delivery_fee_price = (TextView) item_view.findViewById(R.id.submitted_item_price);
+//        delivery_fee_name.setText("运送费");
+//        delivery_fee_number.setText("");
+//        delivery_fee_price.setText("$ " + String.valueOf(mOrder.getDeliveryFee()));
+//        submitted_items_list.addView(item_view);
+//
+//        if(mOrder.getCoupon().length!=0){
+//
+//            TextView coupon_name = (TextView) item_view.findViewById(R.id.submitted_item_name);
+//            TextView coupon_number = (TextView) item_view.findViewById(R.id.submitted_item_number);
+//            TextView coupon_price = (TextView) item_view.findViewById(R.id.submitted_item_price);
+//            coupon_name.setText("优惠券");
+//            coupon_number.setText("");
+//            coupon_price.setText("$ " + String.valueOf(mOrder.getCoupon()[0].getCoupon().getDiscount()));
+//            submitted_items_list.addView(item_view);
+//        }
+
 
         TextView submitted_totalprice, submitted_delivery_number, submitted_delivery_address, submitted_delivery_time, submitted_preference, submitted_ordernumber, submitted_ordertime;
 
@@ -299,7 +349,7 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         submitted_ordertime = (TextView) order_detail.findViewById(R.id.submitted_ordertime);
 
 
-        submitted_totalprice.setText("总计费用: $" + String.valueOf(MelbourneUtils.sum_price_items(items)+mOrder.getDeliveryFee()));
+        submitted_totalprice.setText("总计费用: $" + String.valueOf(MelbourneUtils.sum_price_items(items) + mOrder.getDeliveryFee()));
         submitted_delivery_number.setText("送货电话: " + mOrder.getPhoneNumber());
         submitted_delivery_address.setText("送货地址: " + MelbourneUtils.getCompleteAddress(mOrder));
         submitted_delivery_time.setText("送货时间: " + mOrder.getDeliveryTime());

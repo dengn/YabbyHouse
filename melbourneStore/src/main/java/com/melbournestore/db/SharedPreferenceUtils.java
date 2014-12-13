@@ -19,7 +19,7 @@ public class SharedPreferenceUtils {
         return isFirstIn;
     }
 
-    public static boolean saveFirstTimeLaunch(Context context){
+    public static boolean saveFirstTimeLaunch(Context context) {
         SharedPreferences pref = context.getSharedPreferences("yabbyhouse", 0);
         return pref.edit().putBoolean("isFirstIn", false).commit();
     }
@@ -27,15 +27,15 @@ public class SharedPreferenceUtils {
 
     // The SharedPrefrence file to store current local items
     public static String getLocalItems(Context context, int shopId) {
-        SharedPreferences pref = context.getSharedPreferences("local_items"+String.valueOf(shopId),
+        SharedPreferences pref = context.getSharedPreferences("local_items" + String.valueOf(shopId),
                 0);
-        return pref.getString("local_items"+String.valueOf(shopId), "");
+        return pref.getString("local_items" + String.valueOf(shopId), "");
     }
 
     public static boolean saveLocalItems(Context context, String info, int shopId) {
-        SharedPreferences pref = context.getSharedPreferences("local_items"+String.valueOf(shopId),
+        SharedPreferences pref = context.getSharedPreferences("local_items" + String.valueOf(shopId),
                 0);
-        return pref.edit().putString("local_items"+String.valueOf(shopId), info).commit();
+        return pref.edit().putString("local_items" + String.valueOf(shopId), info).commit();
     }
 
 
@@ -67,7 +67,6 @@ public class SharedPreferenceUtils {
     }
 
 
-
     // The SharedPrefrence file to store User login info
     public static String getLoginUser(Context context) {
         SharedPreferences pref = context.getSharedPreferences("user_login", 0);
@@ -80,50 +79,49 @@ public class SharedPreferenceUtils {
     }
 
     // The SharedPrefrence file to store User Password
-    public static String getUserPassword(Context context){
+    public static String getUserPassword(Context context) {
         SharedPreferences pref = context.getSharedPreferences("user_password", 0);
         return pref.getString("user_password", "");
     }
 
-    public static boolean saveUserPassword(Context context, String info){
+    public static boolean saveUserPassword(Context context, String info) {
         SharedPreferences pref = context.getSharedPreferences("user_password", 0);
         return pref.edit().putString("user_password", info).commit();
     }
 
     // The SharedPrefrence file to store User Phone Number
-    public static String getUserNumber(Context context){
+    public static String getUserNumber(Context context) {
         SharedPreferences pref = context.getSharedPreferences("user_number", 0);
         return pref.getString("user_number", "");
     }
 
-    public static boolean saveUserNumber(Context context, String info){
+    public static boolean saveUserNumber(Context context, String info) {
         SharedPreferences pref = context.getSharedPreferences("user_number", 0);
         return pref.edit().putString("user_number", info).commit();
     }
 
     // The SharedPrefrence file to store Areas
-    public static String getAreas(Context context){
+    public static String getAreas(Context context) {
         SharedPreferences pref = context.getSharedPreferences("areas", 0);
         return pref.getString("areas", "");
     }
 
-    public static boolean saveAreas(Context context, String info){
+    public static boolean saveAreas(Context context, String info) {
         SharedPreferences pref = context.getSharedPreferences("areas", 0);
         return pref.edit().putString("areas", info).commit();
     }
 
 
     // The SharedPrefrence file to store Csrf
-    public static String getCsrf(Context context){
+    public static String getCsrf(Context context) {
         SharedPreferences pref = context.getSharedPreferences("csrf", 0);
         return pref.getString("csrf", "");
     }
 
-    public static boolean saveCsrf(Context context, String info){
+    public static boolean saveCsrf(Context context, String info) {
         SharedPreferences pref = context.getSharedPreferences("csrf", 0);
         return pref.edit().putString("csrf", info).commit();
     }
-
 
 
     // The SharedPrefrence file to store Orders.
@@ -141,14 +139,48 @@ public class SharedPreferenceUtils {
 
 
     // The SharedPrefrence file to store Coupons
-    public static String getUserCoupons(Context context){
+    public static String getUserCoupons(Context context) {
         SharedPreferences pref = context.getSharedPreferences("coupons", 0);
         return pref.getString("coupons", "");
     }
 
-    public static boolean saveUserCoupons(Context context, String info){
+    public static boolean saveUserCoupons(Context context, String info) {
         SharedPreferences pref = context.getSharedPreferences("coupons", 0);
         return pref.edit().putString("coupons", info).commit();
+    }
+
+    // The SharedPrefrence file to store DeliveryTime
+    public static String getDeliveryTime(Context context) {
+        SharedPreferences pref = context.getSharedPreferences("deliveryTime", 0);
+        return pref.getString("deliveryTime", "");
+    }
+
+    public static boolean saveDeliveryTime(Context context, String info) {
+        SharedPreferences pref = context.getSharedPreferences("deliveryTime", 0);
+        return pref.edit().putString("deliveryTime", info).commit();
+    }
+
+
+    // The SharedPrefrence file to store Remark
+    public static String getRemark(Context context) {
+        SharedPreferences pref = context.getSharedPreferences("remark", 0);
+        return pref.getString("remark", "");
+    }
+
+    public static boolean saveRemark(Context context, String info) {
+        SharedPreferences pref = context.getSharedPreferences("remark", 0);
+        return pref.edit().putString("remark", info).commit();
+    }
+
+    // The SharedPrefrence file to store Contact Number
+    public static String getContactNumber(Context context) {
+        SharedPreferences pref = context.getSharedPreferences("contactNumber", 0);
+        return pref.getString("contactNumber", "");
+    }
+
+    public static boolean saveContactNumber(Context context, String info) {
+        SharedPreferences pref = context.getSharedPreferences("contactNumber", 0);
+        return pref.edit().putString("contactNumber", info).commit();
     }
 
 
@@ -224,9 +256,6 @@ public class SharedPreferenceUtils {
         SharedPreferenceUtils.saveCurrentChoice(context, shopsJson);
 
     }
-
-
-
 
 
 }

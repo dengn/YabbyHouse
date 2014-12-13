@@ -10,7 +10,7 @@ public class item_iphone {
     private int stock;
     private int unit;
     private int group_buy;
-    private int group_price;
+    private Float group_price;
     private String image;
     private int good;
     private int seq;
@@ -21,7 +21,7 @@ public class item_iphone {
 
     }
 
-    public item_iphone(int id, String name, String desc, String price, int category_id, int stock, int unit, int group_buy, int group_price, String image, int good, int seq, int shop_id, String update_time) {
+    public item_iphone(int id, String name, String desc, String price, int category_id, int stock, int unit, int group_buy, Float group_price, String image, int good, int seq, int shop_id, String update_time) {
         this.id = id;
         this.name = name;
         this.desc = desc;
@@ -103,11 +103,11 @@ public class item_iphone {
         this.group_buy = group_buy;
     }
 
-    public int getGroupPrice() {
+    public Float getGroupPrice() {
         return group_price;
     }
 
-    public void setGroupPrice(int group_price) {
+    public void setGroupPrice(Float group_price) {
         this.group_price = group_price;
     }
 

@@ -117,6 +117,14 @@ public class MyOrderListAdapter extends BaseAdapter {
 
         });
 
+
+        if (mOrders[position].getStatus() > 0) {
+            holder.delete.setEnabled(false);
+            holder.delete.setTextColor(R.color.gray);
+        } else {
+            holder.delete.setEnabled(true);
+            holder.delete.setTextColor(R.color.white);
+        }
         holder.delete.setOnClickListener(new OnClickListener() {
 
             @Override

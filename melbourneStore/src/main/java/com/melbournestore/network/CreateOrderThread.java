@@ -7,8 +7,8 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.melbournestore.models.Order;
 import com.melbournestore.models.item_iphone;
-import com.melbournestore.models.user_coupon;
 import com.melbournestore.utils.Constant;
 
 import org.apache.http.HttpResponse;
@@ -46,10 +46,10 @@ public class CreateOrderThread extends Thread {
     String mContactNumber;
     ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
     String mCsrf;
-    user_coupon mUserCoupon;
+    int mCouponId;
 
 
-    public CreateOrderThread(Handler handler, Context context, String userNumber, String unitNo, String street, String postCode, int suburbId, String deliveryTime, int deliveryFee, String remark, String contactNumber, ArrayList<item_iphone> items, user_coupon userCoupon) {
+    public CreateOrderThread(Handler handler, Context context, String userNumber, String unitNo, String street, String postCode, int suburbId, String deliveryTime, int deliveryFee, String remark, String contactNumber, ArrayList<item_iphone> items, int couponId) {
         mHandler = handler;
         mContext = context;
         mUserNumber = userNumber;
@@ -61,15 +61,15 @@ public class CreateOrderThread extends Thread {
         mDeliveryFee = deliveryFee;
         mRemark = remark;
         mContactNumber = contactNumber;
-        mUserCoupon = userCoupon;
+        mCouponId = couponId;
         mItems.clear();
         mItems.addAll(items);
     }
 
-    public static String handleGet(String strUrl) {
+    public static String handleGet(String strUrl, DefaultHttpClient client) {
         String result = null;
         HttpGet request = new HttpGet(strUrl);//实例化get请求
-        DefaultHttpClient client = new DefaultHttpClient();//实例化客户端
+        //DefaultHttpClient client = new DefaultHttpClient();//实例化客户端
         try {
             HttpResponse response = client.execute(request);//执行该请求,得到服务器端的响应内容
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
@@ -84,10 +84,10 @@ public class CreateOrderThread extends Thread {
     }
 
 
-    public static String handlePost(String strUrl, List<NameValuePair> params) {
+    public static String handlePost(String strUrl, List<NameValuePair> params, DefaultHttpClient client) {
         String result = null;
         HttpPost request = new HttpPost(strUrl);//实例化get请求
-        DefaultHttpClient client = new DefaultHttpClient();//实例化客户端
+        //DefaultHttpClient client = new DefaultHttpClient();//实例化客户端
 
         try {
             request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
@@ -103,12 +103,26 @@ public class CreateOrderThread extends Thread {
         return result;
     }
 
+    /**
+     * Transform JSON String to order
+     */
+    public static Order getOrder(String jsonString) {
+        Gson gson = new Gson();
+        Type listType = new TypeToken<HashMap<String, Order>>() {
+        }.getType();
+        HashMap<String, Order> mOrder = gson.fromJson(jsonString, listType);
+        Order order = mOrder.get("order");
+
+
+        return order;
+    }
+
 
     @Override
     public void run() {
 
-
-        String csrf = handleGet(Constant.URL_BASE + "create_order");
+        DefaultHttpClient client = new DefaultHttpClient();//实例化客户端
+        String csrf = handleGet(Constant.URL_BASE + "create_order", client);
         Log.d("CREATEORDERTHREAD", "csrf: " + csrf);
         if (csrf.contains("csrf")) {
             Type type = new TypeToken<HashMap<String, String>>() {
@@ -131,7 +145,7 @@ public class CreateOrderThread extends Thread {
             pairs.add(new BasicNameValuePair("delivery_time", mDeliveryTime));
             pairs.add(new BasicNameValuePair("delivery_fee", String.valueOf(mDeliveryFee)));
             pairs.add(new BasicNameValuePair("remark", mRemark));
-            pairs.add(new BasicNameValuePair("user_coupon_id", "-1"));
+            pairs.add(new BasicNameValuePair("user_coupon_id", String.valueOf(mCouponId)));
 
             for (int i = 0; i < mItems.size(); i++) {
 
@@ -143,7 +157,7 @@ public class CreateOrderThread extends Thread {
             }
 
 
-            String result = handlePost(Constant.URL_BASE + "create_order", pairs);
+            String result = handlePost(Constant.URL_BASE + "create_order", pairs, client);
 
             Log.d("CREATEORDERTHREAD", result);
 
@@ -154,7 +168,9 @@ public class CreateOrderThread extends Thread {
                 mHandler.sendMessage(message);
             } else {
                 //submit successful
+                Order order = getOrder(result);
                 Message message = mHandler.obtainMessage();
+                message.obj = order;
                 message.what = 7;
                 mHandler.sendMessage(message);
             }
