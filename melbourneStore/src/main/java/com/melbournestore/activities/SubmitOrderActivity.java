@@ -571,7 +571,7 @@ public class SubmitOrderActivity extends Activity {
 
             }
         } else {
-            time.add("");
+            time.add("时间太晚了亲");
             button.setEnabled(false);
         }
 //        for (int i = start_time; i < 24; i++) {
