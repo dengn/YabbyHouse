@@ -37,6 +37,11 @@ public class ArrayWheelAdapter<T> extends AbstractWheelTextAdapter {
         //setEmptyItemResource(TEXT_VIEW_ITEM_RESOURCE);
         this.items = items;
     }
+
+    public void refresh(T items[]) {
+        this.items = items;
+        notifyDataChangedEvent();
+    }
     
     @Override
     public CharSequence getItemText(int index) {

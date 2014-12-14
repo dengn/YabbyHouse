@@ -439,7 +439,7 @@ public class SubmitOrderActivity extends Activity {
     private void showDeliveryTimePicker() {
         View view = View.inflate(this, R.layout.delivery_time_popup, null);
 
-        Button deliveryTimeConfirm = (Button) view
+        final Button deliveryTimeConfirm = (Button) view
                 .findViewById(R.id.delivery_time_confirm);
 
         LinearLayout deliveryTimePicker = (LinearLayout) view.findViewById(R.id.delivery_time_picker);
@@ -458,30 +458,31 @@ public class SubmitOrderActivity extends Activity {
 //        mins.setViewAdapter(minAdapter);
 //        mins.setCyclic(true);
 
+
+        Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+
+        final WheelView day = (WheelView) view.findViewById(R.id.delivery_day);
+        day.setViewAdapter(new DayArrayAdapter(this, calendar));
+
+
         final WheelView hours = (WheelView) view.findViewById(R.id.delivery_hour);
         ArrayWheelAdapter<String> hourAdapter =
-                new ArrayWheelAdapter<String>(this, getPossibleDeliveryHours());
+                new ArrayWheelAdapter<String>(this, getPossibleDeliveryHours(deliveryTimeConfirm));
         hourAdapter.setItemResource(R.layout.wheel_text_item);
         hourAdapter.setItemTextResource(R.id.wheel_text);
         hours.setViewAdapter(hourAdapter);
 
 
-//        final WheelView mins = (WheelView) view.findViewById(R.id.delivery_mins);
-//        ArrayWheelAdapter<String> minAdapter =
-//                new ArrayWheelAdapter<String>(this, new String[] {"00", "15", "30", "45"});
-//        minAdapter.setItemResource(R.layout.wheel_text_item);
-//        minAdapter.setItemTextResource(R.id.wheel_text);
-//        mins.setViewAdapter(minAdapter);
-
+//        day.addChangingListener(new OnWheelChangedListener() {
+//            @Override
+//            public void onChanged(WheelView wheel, int oldValue, int newValue) {
+//
+//            }
+//        });
 
         // set current time
-        Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+
         hours.setCurrentItem(calendar.get(Calendar.HOUR));
-//        mins.setCurrentItem(calendar.get(Calendar.MINUTE));
-
-        final WheelView day = (WheelView) view.findViewById(R.id.delivery_day);
-        day.setViewAdapter(new DayArrayAdapter(this, calendar));
-
 
         LinearLayout delivery_time_popup = (LinearLayout) view
                 .findViewById(R.id.delivery_time_popup);
@@ -527,7 +528,7 @@ public class SubmitOrderActivity extends Activity {
                     delivery_time += formatter.format(date);
                 }
 
-                delivery_time += " " + getPossibleDeliveryHours()[hours.getCurrentItem()];
+                delivery_time += " " + getPossibleDeliveryHours(deliveryTimeConfirm)[hours.getCurrentItem()];
                 mDeliveryTime = delivery_time;
                 SharedPreferenceUtils.saveDeliveryTime(SubmitOrderActivity.this, mDeliveryTime);
 
@@ -546,22 +547,33 @@ public class SubmitOrderActivity extends Activity {
     }
 
 
-    private String[] getPossibleDeliveryHours() {
+    private String[] getPossibleDeliveryHours(Button button) {
         Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
-        int start_time = 20;
-//        if(hour<20){
-//            start_time = 20;
-//        }
-//        else{
-//            start_time =hour+1;
-//        }
+        int start_time = 19;
+        if (hour < 19) {
+            start_time = 19;
+        } else {
+            start_time = hour + 1;
+        }
+        //start_time = 24;
 
         ArrayList<String> time = new ArrayList<String>();
-        time.add("19点-20点");
-        time.add("20点-21点");
-        time.add("21点-22点");
-        time.add("23点-24点");
+//        time.add("19点-20点");
+//        time.add("20点-21点");
+//        time.add("21点-22点");
+//        time.add("23点-24点");
+        if (start_time <= 23) {
+            for (int i = start_time; i < 24; i++) {
+
+                time.add(String.valueOf(i) + "点-" + String.valueOf(i + 1) + "点");
+                button.setEnabled(true);
+
+            }
+        } else {
+            time.add("");
+            button.setEnabled(false);
+        }
 //        for (int i = start_time; i < 24; i++) {
 //            for (int j = 0; j < 4; j++) {
 //                if (j == 0) {
