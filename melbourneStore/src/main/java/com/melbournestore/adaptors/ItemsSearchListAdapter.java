@@ -72,9 +72,9 @@ public class ItemsSearchListAdapter extends BaseAdapter {
 
 
         View rowView;
-        rowView = inflater.inflate(R.layout.suburb_head_item, null);
+        rowView = inflater.inflate(R.layout.suburb_head_item2, null);
 
-        TextView text1 = (TextView)rowView.findViewById(R.id.suburb_head);
+        TextView text1 = (TextView) rowView.findViewById(R.id.suburb_head2);
         String eachText ="";
 
         String shopsString = SharedPreferenceUtils.getLocalShops(mContext);
