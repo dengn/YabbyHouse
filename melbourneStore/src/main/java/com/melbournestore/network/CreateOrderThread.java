@@ -152,7 +152,7 @@ public class CreateOrderThread extends Thread {
                 pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-item_id", String.valueOf(mItems.get(i).getId())));
                 pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-name", mItems.get(i).getName()));
                 pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-desc", mItems.get(i).getDesc()));
-                pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-price", String.valueOf((int) Float.parseFloat(mItems.get(i).getPrice()))));
+                pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-price", String.valueOf(Float.parseFloat(mItems.get(i).getPrice()))));
                 pairs.add(new BasicNameValuePair("items-" + String.valueOf(i) + "-count", String.valueOf(mItems.get(i).getUnit())));
             }
 

@@ -52,6 +52,7 @@ public class PlateActivity extends Activity {
     private static final String TAG = "Melbourne";
     DisplayImageOptions options;
     Gson gson = new Gson();
+    ProgressDialog progress;
     private ListView mPlatesList;
     private PlateListAdapter mPlateListAdapter;
     private ItemManagerThread mItemThread;
@@ -60,13 +61,9 @@ public class PlateActivity extends Activity {
     private TextView mTotalNum;
     private int mShopId;
     private String mShopName;
-
-    ProgressDialog progress;
-
-
     private number_price sumNumberPrice;
 
-    private int totalPrice = 0;
+    private float totalPrice = 0;
     private int totalNum = 0;
     private ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
     private Handler mHandler = new Handler() {
@@ -164,12 +161,11 @@ public class PlateActivity extends Activity {
 
         mItemThread = new ItemManagerThread(mHandler, this, mShopId);
         mItemThread.start();
-        progress = new ProgressDialog(this ,R.style.dialog_loading);
+        progress = new ProgressDialog(this, R.style.dialog_loading);
         progress.show();
 
 
         getActionBar().setTitle(mShopName);
-
 
 
         sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
@@ -274,8 +270,6 @@ public class PlateActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

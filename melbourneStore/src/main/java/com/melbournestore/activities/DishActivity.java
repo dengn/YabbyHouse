@@ -46,7 +46,7 @@ public class DishActivity extends Activity {
 
     private item_iphone mItem = new item_iphone();
     private SingleItemManagerThread mSingleItemThread;
-    private int mTotalPrice;
+    private float mTotalPrice;
     private int mTotalNum;
     private Handler mHandler = new Handler() {
         @Override

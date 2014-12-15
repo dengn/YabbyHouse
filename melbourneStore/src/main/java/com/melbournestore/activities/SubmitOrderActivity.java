@@ -58,7 +58,7 @@ public class SubmitOrderActivity extends Activity {
 
     public static final int result_code_address = 3;
     public static final int result_coupon = 4;
-    int priceTotal;
+    float priceTotal;
     ProgressDialog progress;
     private Button mSubmitOrders;
     private TextView mSubmitPrice;
@@ -222,7 +222,7 @@ public class SubmitOrderActivity extends Activity {
         mFee = MelbourneUtils.getAreaFromSuburb(mUser.getSuburb(), this).getFee();
 
         Intent intent = getIntent();
-        priceTotal = intent.getIntExtra("total_price", 0);
+        priceTotal = intent.getFloatExtra("total_price", 0);
 
 
         mContactNumber = SharedPreferenceUtils.getContactNumber(this);

@@ -173,12 +173,12 @@ public class OrderSubmittedActivity extends Activity {
         submitted_ordertime = (TextView) order_detail.findViewById(R.id.submitted_ordertime);
 
 
-        int totalPrice = 0;
+        float totalPrice = 0;
         if (mOrder.getCoupon() != null) {
             if (mOrder.getCoupon()[0].getId() != -1) {
-                totalPrice = MelbourneUtils.sum_price_items(items) + mOrder.getDeliveryFee() - (int) Float.parseFloat(mOrder.getCoupon()[0].getCoupon().getDiscount());
+                totalPrice = MelbourneUtils.sum_price_items(items) + (float) mOrder.getDeliveryFee() - Float.parseFloat(mOrder.getCoupon()[0].getCoupon().getDiscount());
             } else {
-                totalPrice = MelbourneUtils.sum_price_items(items) + mOrder.getDeliveryFee();
+                totalPrice = MelbourneUtils.sum_price_items(items) + (float) mOrder.getDeliveryFee();
             }
         } else {
             totalPrice = MelbourneUtils.sum_price_items(items) + mOrder.getDeliveryFee();

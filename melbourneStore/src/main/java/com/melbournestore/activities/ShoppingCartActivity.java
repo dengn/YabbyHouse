@@ -44,7 +44,7 @@ public class ShoppingCartActivity extends Activity {
 
     private Gson gson = new Gson();
 
-    private int totalPrice;
+    private float totalPrice;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -119,7 +119,7 @@ public class ShoppingCartActivity extends Activity {
                 String userNumber = SharedPreferenceUtils
                         .getUserNumber(ShoppingCartActivity.this);
 
-                Log.d("USERNUMBER","userNumber: "+userNumber);
+                Log.d("USERNUMBER", "userNumber: " + userNumber);
                 if (!userNumber.equals("")) {
 
                     if (totalPrice == 0) {
