@@ -63,6 +63,26 @@
         <item name="android:background">@null</item>
     </style>
 
+    <style name="textShadow2">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:shadowColor">#ff000000</item>
+        <item name="android:shadowDx">5</item>
+        <item name="android:shadowDy">5</item>
+        <item name="android:shadowRadius">3</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <style name="textShadow3">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:shadowColor">#ff000000</item>
+        <item name="android:shadowDx">5</item>
+        <item name="android:shadowDy">5</item>
+        <item name="android:shadowRadius">3</item>
+        <item name="android:background">@null</item>
+    </style>
+
     <style name="FullscreenTheme" parent="android:Theme.NoTitleBar">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@null</item>
@@ -91,15 +111,15 @@
     </style>
 
     <style name="CustomAlertDialogStyle">
-    <item name="android:bottomBright">@color/transparent</item>
-    <item name="android:bottomDark">@color/transparent</item>
-    <item name="android:bottomMedium">@color/transparent</item>
-    <item name="android:centerBright">@color/transparent</item>
-    <item name="android:centerDark">@color/transparent</item>
-    <item name="android:centerMedium">@color/transparent</item>
-    <item name="android:fullBright">@color/transparent</item>
-    <item name="android:fullDark">@color/transparent</item>
-    <item name="android:topBright">@color/transparent</item>
-    <item name="android:topDark">@color/transparent</item>
+        <item name="android:bottomBright">@color/transparent</item>
+        <item name="android:bottomDark">@color/transparent</item>
+        <item name="android:bottomMedium">@color/transparent</item>
+        <item name="android:centerBright">@color/transparent</item>
+        <item name="android:centerDark">@color/transparent</item>
+        <item name="android:centerMedium">@color/transparent</item>
+        <item name="android:fullBright">@color/transparent</item>
+        <item name="android:fullDark">@color/transparent</item>
+        <item name="android:topBright">@color/transparent</item>
+        <item name="android:topDark">@color/transparent</item>
     </style>
 </resources>

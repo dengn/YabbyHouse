@@ -64,7 +64,7 @@ public class ChooseAddressSuburbListAdapter extends BaseAdapter {
         viewHolder_textView holder_textview = null;
 
         holder_textview = new viewHolder_textView();
-        convertView = inflater.inflate(R.layout.submit_list_item_phone, parent,
+        convertView = inflater.inflate(R.layout.choose_address_area, parent,
                 false);
 
         holder_textview.title = (TextView) convertView
