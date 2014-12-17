@@ -90,7 +90,7 @@ public class MelbourneUtils {
         ArrayList<Shop_iPhone> shops = gson.fromJson(shopsString, type);
 
         int item_numbers = 0;
-        int item_prices = 0;
+        float item_prices = 0;
         for (int i = 0; i < shops.size(); i++) {
             String itemsString = SharedPreferenceUtils.getLocalItems(context, shops.get(i).getId());
             type = new TypeToken<ArrayList<item_iphone>>() {
@@ -99,7 +99,7 @@ public class MelbourneUtils {
             for (int j = 0; j < items.size(); j++) {
 
                 item_numbers += items.get(j).getUnit();
-                item_prices += items.get(j).getUnit() * (int) Float.parseFloat(items.get(j).getPrice());
+                item_prices += items.get(j).getUnit() * Float.parseFloat(items.get(j).getPrice());
             }
         }
         number_price sumNumberPrice = new number_price(item_numbers, item_prices);
@@ -188,10 +188,10 @@ public class MelbourneUtils {
         return price_all;
     }
 
-    public static final int sum_price_items(OrderItem[] orders) {
-        int price_all = 0;
+    public static final float sum_price_items(OrderItem[] orders) {
+        float price_all = 0;
         for (int i = 0; i < orders.length; i++) {
-            price_all += orders[i].getPrice() * (int) Float.parseFloat(orders[i].getCount());
+            price_all += orders[i].getPrice() * Float.parseFloat(orders[i].getCount());
         }
         return price_all;
     }
@@ -412,15 +412,18 @@ public class MelbourneUtils {
         String names = "";
         if (items.length == 1) {
             names = items[0].getName();
+
         } else if (items.length > 1) {
             for (int i = 0; i < items.length - 1; i++) {
                 names += items[i].getName() + "、";
             }
-            names += items[items.length - 1];
+            names += items[items.length - 1].getName();
         }
-        if (names.length() > 10) {
-            names = names.substring(0, 10) + "...";
+        Log.d("ITEMNAME", names);
+        if (names.length() > 15) {
+            names = names.substring(0, 15) + "...";
         }
+        Log.d("ITEMNAME", names);
         return names;
     }
 

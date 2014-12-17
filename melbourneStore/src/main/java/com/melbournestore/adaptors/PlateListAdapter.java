@@ -58,7 +58,7 @@ public class PlateListAdapter extends BaseAdapter {
     @Override
     public int getCount() {
 
-        return mItems.size();
+        return mItems.size() + 1;
     }
 
     @Override
@@ -76,46 +76,52 @@ public class PlateListAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
+        if (position == mItems.size()) {
+            View view;
+            view = inflater.inflate(R.layout.empty, null);
+            view.setVisibility(View.INVISIBLE);
+            return view;
+        } else {
 
-        final Holder holder = new Holder();
-        View rowView;
-        rowView = inflater.inflate(R.layout.plate_list_item, null);
-        holder.names_view = (TextView) rowView.findViewById(R.id.plate_name);
-        holder.prices_view = (TextView) rowView.findViewById(R.id.plate_price);
+            final Holder holder = new Holder();
+            View rowView;
+            rowView = inflater.inflate(R.layout.plate_list_item, null);
+            holder.names_view = (TextView) rowView.findViewById(R.id.plate_name);
+            holder.prices_view = (TextView) rowView.findViewById(R.id.plate_price);
 
-        holder.imgs_view = (ImageView) rowView.findViewById(R.id.plate_img);
-        holder.num_view = (TextView) rowView.findViewById(R.id.plate_number);
+            holder.imgs_view = (ImageView) rowView.findViewById(R.id.plate_img);
+            holder.num_view = (TextView) rowView.findViewById(R.id.plate_number);
 
-        holder.like_number_view = (TextView) rowView
-                .findViewById(R.id.plate_like_number_stock);
-        holder.like_view = (ImageView) rowView
-                .findViewById(R.id.plate_like_heart);
+            holder.like_number_view = (TextView) rowView
+                    .findViewById(R.id.plate_like_number_stock);
+            holder.like_view = (ImageView) rowView
+                    .findViewById(R.id.plate_like_heart);
 
-        holder.like_view.setImageResource(R.drawable.other_icon_like);
+            holder.like_view.setImageResource(R.drawable.other_icon_like);
 
-        holder.like_number_view.setText(String.valueOf(mItems.get(position).getGood())
-                + "         今日库存" + mItems.get(position).getStock() + "份");
+            holder.like_number_view.setText(String.valueOf(mItems.get(position).getGood())
+                    + "         今日库存" + mItems.get(position).getStock() + "份");
 
-        holder.plus = (Button) rowView.findViewById(R.id.plate_plus);
-        holder.minus = (Button) rowView.findViewById(R.id.plate_minus);
+            holder.plus = (Button) rowView.findViewById(R.id.plate_plus);
+            holder.minus = (Button) rowView.findViewById(R.id.plate_minus);
 
 //        setComponentsStatus(holder.plus, holder.minus, holder.num_view,
 //                position);
 
-        holder.names_view.setText(mItems.get(position).getName());
-        holder.prices_view
-                .setText("$" + String.valueOf(mItems.get(position).getPrice()));
+            holder.names_view.setText(mItems.get(position).getName());
+            holder.prices_view
+                    .setText("$" + String.valueOf(mItems.get(position).getPrice()));
 
 
-        ImageLoader.getInstance().displayImage(Constant.URL_BASE_PHOTO + mItems.get(position).getImage(), holder.imgs_view, mOptions);
+            ImageLoader.getInstance().displayImage(Constant.URL_BASE_PHOTO + mItems.get(position).getImage(), holder.imgs_view, mOptions);
 
 
-        if (mItems.get(position).getUnit() <= 0) {
-            holder.num_view.setVisibility(View.INVISIBLE);
-        } else {
-            holder.num_view.setVisibility(View.VISIBLE);
-            holder.num_view.setText(String.valueOf(mItems.get(position).getUnit()));
-        }
+            if (mItems.get(position).getUnit() <= 0) {
+                holder.num_view.setVisibility(View.INVISIBLE);
+            } else {
+                holder.num_view.setVisibility(View.VISIBLE);
+                holder.num_view.setText(String.valueOf(mItems.get(position).getUnit()));
+            }
 
 
 //        final Handler itemHandler = new Handler(){
@@ -140,97 +146,97 @@ public class PlateListAdapter extends BaseAdapter {
 //            }
 //        };
 
-        rowView.setOnClickListener(new View.OnClickListener() {
+            rowView.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-
-
-
-                Intent intent = new Intent(mContext, DishActivity.class);
-                intent.putExtra("item_id", mItems.get(position).getId());
-                intent.putExtra("item_name", mItems.get(position).getName());
-
-                ((Activity) mContext).startActivity(intent);
-
-            }
-
-        });
-
-        holder.like_number_view.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                String number = SharedPreferenceUtils.getUserNumber(mContext);
-                ItemGoodManagerThread itemThread = new ItemGoodManagerThread(mHandler, mContext, mItems.get(position).getId(), number);
-                itemThread.start();
+                @Override
+                public void onClick(View v) {
 
 
-            }
+                    Intent intent = new Intent(mContext, DishActivity.class);
+                    intent.putExtra("item_id", mItems.get(position).getId());
+                    intent.putExtra("item_name", mItems.get(position).getName());
 
-        });
+                    ((Activity) mContext).startActivity(intent);
 
-        holder.plus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Message message = new Message();
-                Bundle b = new Bundle();
-                // send the position
-                b.putInt("position", position);
-                message.setData(b);
-
-                // plus = 1
-                message.what = 1;
-
-                if (mItems.get(position).getUnit() < mItems.get(position).getStock()) {
-                    int mShopId1 = mItems.get(position).getShopId();
-                    mItems.get(position).setUnit(mItems.get(position).getUnit() + 1);
-                    SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(mItems), mShopId1);
                 }
 
-                holder.num_view.setText(String.valueOf(mItems.get(position).getUnit()));
+            });
 
-                setComponentsStatus(holder.plus, holder.minus, holder.num_view,
-                        position);
+            holder.like_number_view.setOnClickListener(new View.OnClickListener() {
 
-                mHandler.sendMessage(message);
+                @Override
+                public void onClick(View v) {
 
-            }
-        });
-
-        holder.minus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Message message = new Message();
-                Bundle b = new Bundle();
-                // send the position
-                b.putInt("position", position);
-                message.setData(b);
-
-                // minus = 2
-                message.what = 2;
+                    String number = SharedPreferenceUtils.getUserNumber(mContext);
+                    ItemGoodManagerThread itemThread = new ItemGoodManagerThread(mHandler, mContext, mItems.get(position).getId(), number);
+                    itemThread.start();
 
 
-                if (mItems.get(position).getUnit() > 0) {
-                    int mShopId2 = mItems.get(position).getShopId();
-                    mItems.get(position).setUnit(mItems.get(position).getUnit() - 1);
-                    SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(mItems), mShopId2);
                 }
 
-                holder.num_view.setText(String.valueOf(mItems.get(position).getUnit()));
+            });
 
-                setComponentsStatus(holder.plus, holder.minus, holder.num_view,
-                        position);
+            holder.plus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                mHandler.sendMessage(message);
+                    Message message = new Message();
+                    Bundle b = new Bundle();
+                    // send the position
+                    b.putInt("position", position);
+                    message.setData(b);
 
-            }
-        });
+                    // plus = 1
+                    message.what = 1;
 
-        return rowView;
+                    if (mItems.get(position).getUnit() < mItems.get(position).getStock()) {
+                        int mShopId1 = mItems.get(position).getShopId();
+                        mItems.get(position).setUnit(mItems.get(position).getUnit() + 1);
+                        SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(mItems), mShopId1);
+                    }
+
+                    holder.num_view.setText(String.valueOf(mItems.get(position).getUnit()));
+
+                    setComponentsStatus(holder.plus, holder.minus, holder.num_view,
+                            position);
+
+                    mHandler.sendMessage(message);
+
+                }
+            });
+
+            holder.minus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Message message = new Message();
+                    Bundle b = new Bundle();
+                    // send the position
+                    b.putInt("position", position);
+                    message.setData(b);
+
+                    // minus = 2
+                    message.what = 2;
+
+
+                    if (mItems.get(position).getUnit() > 0) {
+                        int mShopId2 = mItems.get(position).getShopId();
+                        mItems.get(position).setUnit(mItems.get(position).getUnit() - 1);
+                        SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(mItems), mShopId2);
+                    }
+
+                    holder.num_view.setText(String.valueOf(mItems.get(position).getUnit()));
+
+                    setComponentsStatus(holder.plus, holder.minus, holder.num_view,
+                            position);
+
+                    mHandler.sendMessage(message);
+
+                }
+            });
+
+            return rowView;
+        }
     }
 
     private void setComponentsStatus(Button plusButton, Button minusButton,

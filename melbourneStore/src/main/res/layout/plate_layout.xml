@@ -8,8 +8,10 @@
         android:id="@+id/plates_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/lightgray"
-        android:dividerHeight="1dip" />
+        android:divider="@null"
+        android:dividerHeight="0dp" />
+    <!--android:divider="@color/lightgray"-->
+    <!--android:dividerHeight="1dp"/>-->
 
 
     <RelativeLayout

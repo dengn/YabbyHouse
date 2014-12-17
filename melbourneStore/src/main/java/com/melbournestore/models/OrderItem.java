@@ -6,14 +6,14 @@ public class OrderItem {
     private int item_id;
     private String name;
     private String desc;
-    private int price;
+    private float price;
     private String count;
 
     public OrderItem() {
 
     }
 
-    public OrderItem(int id, int item_id, String name, String desc, int price, String count) {
+    public OrderItem(int id, int item_id, String name, String desc, float price, String count) {
         this.id = id;
         this.item_id = item_id;
         this.name = name;
@@ -54,11 +54,11 @@ public class OrderItem {
         this.desc = desc;
     }
 
-    public int getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 

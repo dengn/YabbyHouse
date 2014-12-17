@@ -21,6 +21,6 @@
         android:gravity="center"
         android:scaleType="fitXY"
         android:textColor="@color/white"
-        android:textSize="25sp" />
+        android:textSize="20sp" />
 
 </FrameLayout>

@@ -144,7 +144,7 @@ public class PlateFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //plates.setVisibility(View.VISIBLE);
-                searchList.setVisibility(View.VISIBLE);
+
                 expandAll();
             }
         });
@@ -169,7 +169,7 @@ public class PlateFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //plates.setVisibility(View.VISIBLE);
-
+                searchList.setVisibility(View.VISIBLE);
                 platesFilter_adapter.filterData(query);
                 expandAll();
 

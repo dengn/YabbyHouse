@@ -79,10 +79,10 @@ public class PlateSearchListAdapter extends BaseExpandableListAdapter {
         Shop shop = (Shop) getGroup(groupPosition);
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.suburb_head_item, null);
+            convertView = layoutInflater.inflate(R.layout.suburb_head_item2, null);
         }
 
-        TextView heading = (TextView) convertView.findViewById(R.id.suburb_head);
+        TextView heading = (TextView) convertView.findViewById(R.id.suburb_head2);
         heading.setText(shop.getName().trim());
 
         return convertView;

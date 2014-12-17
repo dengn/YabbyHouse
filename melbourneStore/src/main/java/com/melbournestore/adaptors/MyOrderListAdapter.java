@@ -87,7 +87,7 @@ public class MyOrderListAdapter extends BaseAdapter {
 
         holder.time_view.setText(mOrders[position].getDeliveryTime());
         holder.names_view.setText(MelbourneUtils.getAllItemsNames(mOrders[position].getItems()));
-        holder.price_view.setText("$" + String.valueOf(MelbourneUtils.sum_price_items(mOrders[position].getItems()) + mOrders[position].getDeliveryFee()));
+        holder.price_view.setText("$" + String.valueOf(MelbourneUtils.sum_price_items(mOrders[position].getItems()) + (float) mOrders[position].getDeliveryFee()));
 
 //        Log.d("ORDER", MelbourneUtils.getStatusString(mOrders[position].getStatus()));
         holder.status_view.setText(MelbourneUtils.getStatusString(mOrders[position].getStatus()));
@@ -120,10 +120,10 @@ public class MyOrderListAdapter extends BaseAdapter {
 
         if (mOrders[position].getStatus() > 0) {
             holder.delete.setEnabled(false);
-            holder.delete.setTextColor(R.color.gray);
+            holder.delete.setTextColor(mContext.getResources().getColor(R.color.gray));
         } else {
             holder.delete.setEnabled(true);
-            holder.delete.setTextColor(R.color.white);
+            holder.delete.setTextColor(mContext.getResources().getColor(R.color.white));
         }
         holder.delete.setOnClickListener(new OnClickListener() {
 

@@ -6,28 +6,30 @@ package com.melbournestore.models;
 public class number_price {
 
     int number;
-    int price;
+    float price;
 
-    public number_price(){
+    public number_price() {
 
     }
 
-    public number_price(int number, int price){
+    public number_price(int number, float price) {
         this.number = number;
         this.price = price;
     }
 
-    public int getNumber(){
+    public int getNumber() {
         return number;
     }
 
-    public int getPrice(){
+    public float getPrice() {
         return price;
     }
-    public void setNumber(){
+
+    public void setNumber() {
         this.number = number;
     }
-    public void setPrice(){
+
+    public void setPrice() {
         this.price = price;
     }
 }
