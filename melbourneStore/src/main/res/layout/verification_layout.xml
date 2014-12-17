@@ -40,17 +40,17 @@
 
         <Button
             android:id="@+id/resend"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/verification_code"
             android:layout_alignRight="@+id/verification_code"
             android:layout_alignTop="@+id/verification_code"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/button_style"
+            android:background="@drawable/btn_resend"
             android:gravity="center"
             android:text="重新发送"
             android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:textSize="20sp" />
 
     </RelativeLayout>
 

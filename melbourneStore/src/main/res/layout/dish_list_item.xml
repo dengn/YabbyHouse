@@ -11,7 +11,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
@@ -36,8 +36,8 @@
 
                 <ImageView
                     android:id="@+id/dish_like"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:layout_alignParentBottom="true"
                     android:layout_gravity="center" />
 
@@ -49,47 +49,49 @@
                     android:layout_marginLeft="5dp"
                     android:text="TextView"
                     android:textColor="@color/lightgray"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/dish_stock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="15dp"
                     android:text="TextView"
                     android:textColor="@color/lightgray"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
         </LinearLayout>
 
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center_vertical|center"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="8dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/dish_plus"
-                android:layout_width="50dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="50dp"
-                android:background="#80000000"
+                android:layout_width="60dp"
+                android:layout_height="37dp"
+
+                android:background="@drawable/btn_plus"
                 android:gravity="center"
-                android:text="+"
 
                 android:textColor="@color/white"
                 android:textSize="30sp" />
 
             <Button
                 android:id="@+id/dish_minus"
-                android:layout_width="50dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:background="#80000000"
+                android:layout_width="60dp"
+                android:layout_height="37dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/btn_minus"
+
                 android:gravity="center"
-                android:text="-"
                 android:textColor="@color/white"
                 android:textSize="30sp" />
         </LinearLayout>

@@ -66,10 +66,10 @@
     <style name="textShadow2">
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#FFFFFF</item>
-        <item name="android:shadowColor">#ff000000</item>
-        <item name="android:shadowDx">5</item>
-        <item name="android:shadowDy">5</item>
-        <item name="android:shadowRadius">3</item>
+        <item name="android:shadowColor">#30000000</item>
+        <item name="android:shadowDx">3</item>
+        <item name="android:shadowDy">3</item>
+        <item name="android:shadowRadius">5</item>
         <item name="android:background">@null</item>
     </style>
 

@@ -2,6 +2,7 @@ package com.melbournestore.adaptors;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.melbournestore.activities.R;
+import com.melbournestore.activities.SignUpActivity;
 import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.network.ItemGoodManagerThread;
@@ -118,7 +120,7 @@ public class DishListAdapter extends BaseAdapter {
                         .findViewById(R.id.dish_minus);
 
                 holder_dish.price.setText("$" + String.valueOf(mItem.getPrice()));
-                holder_dish.like.setImageResource(R.drawable.other_icon_like);
+                holder_dish.like.setImageResource(R.drawable.other_icon_praise);
 
                 holder_dish.like.setOnClickListener(new View.OnClickListener() {
 
@@ -126,11 +128,16 @@ public class DishListAdapter extends BaseAdapter {
                     public void onClick(View v) {
 
                         String number = SharedPreferenceUtils.getUserNumber(mContext);
-                        ItemGoodManagerThread itemThread = new ItemGoodManagerThread(mHandler, mContext, mItem.getId(), number);
-                        itemThread.start();
 
-                        mProgress.show();
+                        if (number.equals("")) {
+                            Intent intent = new Intent(mContext, SignUpActivity.class);
+                            mContext.startActivity(intent);
+                        } else {
+                            ItemGoodManagerThread itemThread = new ItemGoodManagerThread(mHandler, mContext, mItem.getId(), number);
+                            itemThread.start();
 
+                            mProgress.show();
+                        }
 
                     }
 
@@ -161,17 +168,16 @@ public class DishListAdapter extends BaseAdapter {
                         message.what = 1;
 
 
-
                         if (mItem.getUnit() < mItem.getStock()) {
                             int mShopId1 = mItem.getShopId();
                             String shopItemsString1 = SharedPreferenceUtils.getLocalItems(mContext, mShopId1);
 
-                            Log.d("DISH", "plus: "+shopItemsString1);
+                            Log.d("DISH", "plus: " + shopItemsString1);
                             Type type1 = new TypeToken<ArrayList<item_iphone>>() {
                             }.getType();
                             ArrayList<item_iphone> shopItems1 = gson.fromJson(shopItemsString1, type1);
-                            for(int i=0;i<shopItems1.size();i++){
-                                if(shopItems1.get(i).getId()==mItem.getId()){
+                            for (int i = 0; i < shopItems1.size(); i++) {
+                                if (shopItems1.get(i).getId() == mItem.getId()) {
                                     shopItems1.get(i).setUnit(mItem.getUnit() + 1);
                                     break;
                                 }
@@ -200,12 +206,12 @@ public class DishListAdapter extends BaseAdapter {
                         if (mItem.getUnit() > 0) {
                             int mShopId2 = mItem.getShopId();
                             String shopItemsString2 = SharedPreferenceUtils.getLocalItems(mContext, mShopId2);
-                            Log.d("DISH", "minus: "+shopItemsString2);
+                            Log.d("DISH", "minus: " + shopItemsString2);
                             Type type2 = new TypeToken<ArrayList<item_iphone>>() {
                             }.getType();
                             ArrayList<item_iphone> shopItems2 = gson.fromJson(shopItemsString2, type2);
-                            for(int i=0;i<shopItems2.size();i++){
-                                if(shopItems2.get(i).getId()==mItem.getId()){
+                            for (int i = 0; i < shopItems2.size(); i++) {
+                                if (shopItems2.get(i).getId() == mItem.getId()) {
                                     shopItems2.get(i).setUnit(mItem.getUnit() - 1);
                                     break;
                                 }
@@ -231,10 +237,9 @@ public class DishListAdapter extends BaseAdapter {
                 holder_text.dishDesc = (TextView) convertView
                         .findViewById(R.id.dish_desc);
 
-                if(mItem.getDesc()==null||mItem.getDesc().equals("")){
+                if (mItem.getDesc() == null || mItem.getDesc().equals("")) {
                     convertView.setVisibility(View.INVISIBLE);
-                }
-                else {
+                } else {
                     convertView.setVisibility(View.VISIBLE);
                     holder_text.dishDesc.setText(mItem.getDesc());
                 }

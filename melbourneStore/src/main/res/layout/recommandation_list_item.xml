@@ -23,17 +23,20 @@
 
         <Button
             android:id="@+id/ad_desc"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignRight="@id/ad_image"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/new_button_style"
+            android:drawablePadding="2dp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
             android:drawableLeft="@drawable/call_icon_small"
             android:gravity="left|center_vertical"
             android:text="1234"
             style="@style/textShadow"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
 
         <LinearLayout

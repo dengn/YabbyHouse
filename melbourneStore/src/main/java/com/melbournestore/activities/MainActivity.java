@@ -56,6 +56,7 @@ import com.melbournestore.models.User;
 import com.melbournestore.models.user_coupon;
 import com.melbournestore.models.user_iphone;
 import com.melbournestore.network.AreaManagerThread;
+import com.melbournestore.utils.FontManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 /**
@@ -123,7 +124,12 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_main);
+
+        FontManager.getContentView(this);
 
         SysApplication.getInstance().addActivity(this);
 

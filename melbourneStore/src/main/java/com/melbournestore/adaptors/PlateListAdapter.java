@@ -97,7 +97,8 @@ public class PlateListAdapter extends BaseAdapter {
             holder.like_view = (ImageView) rowView
                     .findViewById(R.id.plate_like_heart);
 
-            holder.like_view.setImageResource(R.drawable.other_icon_like);
+            holder.like_view.setImageResource(R.drawable.other_icon_praise);
+
 
             holder.like_number_view.setText(String.valueOf(mItems.get(position).getGood())
                     + "         今日库存" + mItems.get(position).getStock() + "份");

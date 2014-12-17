@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.melbournestore.utils.FontManager;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -61,6 +62,7 @@ public class SysApplication extends Application {
     public void onCreate() {
         super.onCreate();
         initImageLoader(getApplicationContext());
+        FontManager.overrideFont(getApplicationContext(), "SERIF", "fonts/yahei.ttf"); // font from assets: "assets/fonts/Roboto-Regular.ttf
     }
 
     // add Activity

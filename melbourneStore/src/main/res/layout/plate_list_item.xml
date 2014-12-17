@@ -110,30 +110,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="15dp"
             android:gravity="center"
             android:orientation="vertical">
 
             <Button
                 android:id="@+id/plate_plus"
-                android:layout_width="45dp"
-                android:layout_height="30dp"
+                android:layout_width="50dp"
+                android:layout_height="31dp"
                 android:layout_gravity="right|center_vertical"
-                android:background="#80000000"
+                android:background="@drawable/btn_plus"
                 android:gravity="center"
-                android:text="+"
+
                 android:textColor="@color/white"
                 android:textSize="20sp" />
 
             <Button
                 android:id="@+id/plate_minus"
-                android:layout_width="45dp"
-                android:layout_height="30dp"
+                android:layout_width="50dp"
+                android:layout_height="31dp"
                 android:layout_gravity="right|center_vertical"
                 android:layout_marginTop="10dp"
-                android:background="#80000000"
+                android:background="@drawable/btn_minus"
                 android:gravity="center"
-                android:text="-"
+
                 android:textColor="@color/white"
                 android:textSize="20sp" />
         </LinearLayout>

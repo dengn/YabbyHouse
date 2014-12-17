@@ -46,7 +46,7 @@
         android:layout_alignParentLeft="true"
         android:width="200dp"
         android:background="#50000000"
-        android:drawableLeft="@drawable/password_icon"
+        android:drawableLeft="@drawable/other_icon_password"
         android:drawablePadding="10dp"
         android:inputType="textPassword"
         android:maxLength="10"
