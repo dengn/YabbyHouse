@@ -11,7 +11,7 @@
         android:orientation="horizontal">
 
         <FrameLayout
-            android:layout_width="120dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
@@ -21,7 +21,7 @@
 
             <ImageView
                 android:id="@+id/plate_img"
-                android:layout_width="120dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
@@ -44,6 +44,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:orientation="vertical">
 
             <TextView
@@ -64,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="3dp"
                 android:shadowColor="@color/black"
                 android:text="TextView"
                 android:textColor="@color/white"
@@ -75,7 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="3dp"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -83,17 +85,19 @@
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:alpha="0.5" />
 
                 <TextView
                     android:id="@+id/plate_like_number_stock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="2dp"
+                    android:layout_marginLeft="3dp"
+                    android:alpha="0.5"
                     android:text="TextView"
-                    android:textColor="@color/lightgray"
-                    android:textSize="13sp" />
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
             </LinearLayout>
         </LinearLayout>
         <!--

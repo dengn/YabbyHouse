@@ -5,20 +5,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="#80000000"
-        android:gravity="center"
-        android:text="温馨提示：已确认的订单将无法删除"
-        android:textColor="@color/gray"
-        android:textSize="15sp" />
+        android:layout_height="45dp"
+        android:background="#60000000"
+        android:gravity="left">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="温馨提示：已确认的订单将无法删除"
+            android:textColor="@color/gray"
+            android:textSize="15sp" />
+    </LinearLayout>
 
     <com.melbournestore.utils.SwipeListView
         android:id="@+id/my_orders"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#30000000"
+        android:divider="@color/lightgray"
+        android:dividerHeight="1dip"
         swipe:swipeBackView="@+id/back"
         swipe:swipeCloseAllItemsWhenMoveList="true"
         swipe:swipeDrawableChecked="@drawable/choice_selected"

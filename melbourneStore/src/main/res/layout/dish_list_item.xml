@@ -7,14 +7,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="#40000000"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="15dp"
             android:orientation="vertical">
 
             <TextView
@@ -36,10 +35,11 @@
 
                 <ImageView
                     android:id="@+id/dish_like"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:alpha="0.5" />
 
                 <TextView
                     android:id="@+id/dish_like_number"
@@ -47,8 +47,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
+                    android:alpha="0.5"
                     android:text="TextView"
-                    android:textColor="@color/lightgray"
+                    android:textColor="@color/white"
                     android:textSize="18sp" />
 
                 <TextView
@@ -56,9 +57,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="35dp"
+                    android:alpha="0.5"
                     android:text="TextView"
-                    android:textColor="@color/lightgray"
+                    android:textColor="@color/white"
                     android:textSize="18sp" />
             </LinearLayout>
         </LinearLayout>
@@ -68,9 +70,9 @@
             android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center"
-            android:gravity="center"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="8dp"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <Button

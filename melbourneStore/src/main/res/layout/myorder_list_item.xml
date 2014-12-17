@@ -7,14 +7,13 @@
     <RelativeLayout
         android:id="@+id/item_left"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FFFFFF">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/front"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:background="@drawable/sidebar_bg_2"
+            android:layout_height="80dp"
+            android:background="#20000000"
             android:orientation="horizontal"
             android:tag="front">
 
@@ -30,10 +29,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="5dp"
                     android:text="TextView"
-                    android:textColor="@color/gray"
-                    android:textSize="13sp" />
+                    android:textColor="@color/lightgray"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/myorder_names"
@@ -42,17 +41,17 @@
                     android:layout_gravity="left"
                     android:text="TextView"
                     android:textColor="@color/white"
-                    android:textSize="15sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/myorder_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
-                    android:layout_marginBottom="3dp"
+                    android:layout_marginBottom="5dp"
                     android:text="TextView"
                     android:textColor="@color/white"
-                    android:textSize="15sp" />
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -68,7 +67,7 @@
                     android:gravity="right"
                     android:text="TextView"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

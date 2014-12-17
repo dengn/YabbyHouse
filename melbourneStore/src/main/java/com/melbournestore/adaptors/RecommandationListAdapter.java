@@ -49,7 +49,7 @@ public class RecommandationListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mAd.size();
+        return mAd.size() + 1;
     }
 
     @Override
@@ -64,32 +64,49 @@ public class RecommandationListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        Holder holder = new Holder();
-        View rowView;
-        rowView = inflater.inflate(R.layout.recommandation_list_item, null);
-        holder.ad_img = (ImageView) rowView.findViewById(R.id.ad_image);
+
+        if (position == 0) {
+            Holder holder = new Holder();
+            View rowView;
+            rowView = inflater.inflate(R.layout.recommandation_list_item, null);
+            holder.ad_img = (ImageView) rowView.findViewById(R.id.ad_image);
+            holder.ad_img.setImageResource(R.drawable.aboutus);
+            holder.ad_name = (TextView) rowView.findViewById(R.id.ad_name);
+            holder.ad_name.setVisibility(View.INVISIBLE);
+            holder.ad_address = (TextView) rowView.findViewById(R.id.ad_address);
+            holder.ad_address.setVisibility(View.INVISIBLE);
+            holder.ad_icon = (ImageView) rowView.findViewById(R.id.ad_icon_location);
+            holder.ad_icon.setVisibility(View.INVISIBLE);
+            holder.ad_desc = (Button) rowView.findViewById(R.id.ad_desc);
+            holder.ad_desc.setText("加盟热线");
+            return rowView;
+        } else {
+            Holder holder = new Holder();
+            View rowView;
+            rowView = inflater.inflate(R.layout.recommandation_list_item, null);
+            holder.ad_img = (ImageView) rowView.findViewById(R.id.ad_image);
 
 
-        ImageLoader.getInstance().displayImage(Constant.URL_BASE_PHOTO + mAd.get(position).getPic(), holder.ad_img, mOptions);
+            ImageLoader.getInstance().displayImage(Constant.URL_BASE_PHOTO + mAd.get(position - 1).getPic(), holder.ad_img, mOptions);
 
 
+            holder.ad_name = (TextView) rowView.findViewById(R.id.ad_name);
+            holder.ad_name.setText(mAd.get(position).getName());
 
-        holder.ad_name = (TextView) rowView.findViewById(R.id.ad_name);
-        holder.ad_name.setText(mAd.get(position).getName());
+            holder.ad_address = (TextView) rowView.findViewById(R.id.ad_address);
+            holder.ad_address.setText(mAd.get(position).getAddress());
 
-        holder.ad_address = (TextView) rowView.findViewById(R.id.ad_address);
-        holder.ad_address.setText(mAd.get(position).getAddress());
-
-        holder.ad_desc = (Button) rowView.findViewById(R.id.ad_desc);
-        holder.ad_desc.setText(mAd.get(position).getDesc());
+            holder.ad_desc = (Button) rowView.findViewById(R.id.ad_desc);
+            holder.ad_desc.setText(mAd.get(position).getDesc());
 
 
-        return rowView;
+            return rowView;
+        }
     }
 
     public class Holder {
         ImageView ad_img;
-
+        ImageView ad_icon;
         TextView ad_name;
         TextView ad_address;
 
