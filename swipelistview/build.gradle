@@ -5,14 +5,14 @@ android {
     buildToolsVersion "21.0.2"
 
     defaultConfig {
-        applicationId "com.fortysevendeg.swipelistview"
+
         minSdkVersion 7
         targetSdkVersion 20
     }
 
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
