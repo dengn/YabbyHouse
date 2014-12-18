@@ -6,27 +6,32 @@
     android:orientation="vertical">
 
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/sidebar_bg"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:background="#60000000"
-            android:gravity="center"
-            android:text="温馨提示：目前只支持现金支付"
-            android:textColor="@color/gray"
-            android:textSize="18sp" />
+            android:layout_height="35dp"
+            android:background="#60000000">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginLeft="15dp"
+                android:text="温馨提示：目前只支持现金支付"
+                android:textColor="@color/gray"
+                android:textSize="18sp" />
+        </LinearLayout>
 
         <ListView
             android:id="@+id/submit_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="35dp"
             android:divider="@color/lightgray"
             android:dividerHeight="1dip" />
 

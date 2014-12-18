@@ -31,8 +31,8 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/about_phone"
-            android:paddingRight="12dp"
             android:gravity="center_vertical|right"
+            android:paddingRight="15dp"
             android:text="联系电话"
             android:textColor="@color/white"
             android:textSize="16sp" />

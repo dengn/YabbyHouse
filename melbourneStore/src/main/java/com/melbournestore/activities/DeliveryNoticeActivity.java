@@ -38,8 +38,8 @@ public class DeliveryNoticeActivity extends Activity {
         notice_info1 = (TextView) findViewById(R.id.delivery_notice_info1);
         notice_info2 = (TextView) findViewById(R.id.delivery_notice_info2);
 
-        notice_info1.setText("派送时间段为20:00 - 次日03:00\n派送区域一共分为5个区域：市区、北区、西区、东南区、东北区");
-        notice_info2.setText("派送费用根据区域定价不同：敬请谅解\n市区：派送费$5\n北区：派送费$7\n西区：派送费$7\n东南区：派送费$9\n东北区：派送费$9");
+        notice_info1.setText("派送区域一共分为5个区域：City、北区、西区、东南区、东北区");
+        notice_info2.setText("派送费用根据区域定价不同：敬请谅解\nCity：派送费$5\n北区：派送费$8\n西区：派送费$10\n东南区：派送费$5\n东北区：派送费$5");
     }
 
     @Override

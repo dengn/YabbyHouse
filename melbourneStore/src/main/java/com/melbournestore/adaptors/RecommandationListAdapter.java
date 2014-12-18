@@ -91,13 +91,13 @@ public class RecommandationListAdapter extends BaseAdapter {
 
 
             holder.ad_name = (TextView) rowView.findViewById(R.id.ad_name);
-            holder.ad_name.setText(mAd.get(position).getName());
+            holder.ad_name.setText(mAd.get(position - 1).getName());
 
             holder.ad_address = (TextView) rowView.findViewById(R.id.ad_address);
-            holder.ad_address.setText(mAd.get(position).getAddress());
+            holder.ad_address.setText(mAd.get(position - 1).getAddress());
 
             holder.ad_desc = (Button) rowView.findViewById(R.id.ad_desc);
-            holder.ad_desc.setText(mAd.get(position).getDesc());
+            holder.ad_desc.setText(mAd.get(position - 1).getDesc());
 
 
             return rowView;
