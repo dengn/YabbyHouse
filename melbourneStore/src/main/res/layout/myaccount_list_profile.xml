@@ -3,13 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <com.melbournestore.utils.CircleImageView
-        android:id="@+id/myaccount_profile_image"
+    <LinearLayout
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="13dp" />
+        android:gravity="center"
+        android:layout_marginTop="13dp"
+        android:background="@drawable/profile_userphoto_bg">
+
+    <com.melbournestore.utils.CircleImageView
+        android:id="@+id/myaccount_profile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/myaccount_profile_number"

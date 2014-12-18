@@ -25,19 +25,34 @@
         <Button
             android:id="@+id/ad_desc"
             style="@style/textShadow"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_width="124dp"
+            android:layout_height="37dp"
             android:layout_alignRight="@id/ad_image"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/new_button_style"
-            android:drawableLeft="@drawable/call_icon_small"
-            android:drawablePadding="2dp"
-            android:gravity="left|center_vertical"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
-            android:text="1234"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/about_phone"
+            android:paddingRight="12dp"
+            android:gravity="center_vertical|right"
+            android:text="联系电话"
+            android:textColor="@color/white"
             android:textSize="16sp" />
+
+        <!--<Button-->
+            <!--android:id="@+id/ad_desc"-->
+            <!--style="@style/textShadow"-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignRight="@id/ad_image"-->
+            <!--android:layout_marginRight="10dp"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:background="@drawable/new_button_style"-->
+            <!--android:drawableLeft="@drawable/call_icon_small"-->
+            <!--android:drawablePadding="2dp"-->
+            <!--android:gravity="left|center_vertical"-->
+            <!--android:paddingLeft="2dp"-->
+            <!--android:paddingRight="2dp"-->
+            <!--android:text="1234"-->
+            <!--android:textSize="16sp" />-->
 
 
         <LinearLayout
