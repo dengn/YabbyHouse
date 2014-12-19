@@ -24,10 +24,10 @@ import java.util.Comparator;
 public class CategoryListAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
-    Context mContext;
-    ArrayList<Shop_iPhone> mShops = new ArrayList<Shop_iPhone>();
+    private Context mContext;
+    private ArrayList<Shop_iPhone> mShops = new ArrayList<Shop_iPhone>();
 
-    DisplayImageOptions mOptions;
+    private DisplayImageOptions mOptions;
 
     public CategoryListAdapter(Context context, DisplayImageOptions options, ArrayList<Shop_iPhone> Shops) {
 
@@ -83,8 +83,6 @@ public class CategoryListAdapter extends BaseAdapter {
         holder.img = (ImageView) rowView.findViewById(R.id.plates_image);
 
 
-//        Bitmap bm = BitmapUtils.readBitMap(mContext, imageId[position]);
-//        holder.img.setImageBitmap(bm);
         ImageLoader.getInstance().displayImage(Constant.URL_BASE_PHOTO + mShops.get(position).getImage(), holder.img, mOptions);
 
         holder.shopText = (TextView) rowView.findViewById(R.id.shop_name);

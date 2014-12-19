@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,8 +31,8 @@ import java.util.ArrayList;
 public class DishListAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
-    DisplayImageOptions mOptions;
-    ProgressDialog mProgress;
+    private DisplayImageOptions mOptions;
+    private ProgressDialog mProgress;
     private Context mContext;
     private Handler mHandler;
     private item_iphone mItem;
@@ -102,7 +101,7 @@ public class DishListAdapter extends BaseAdapter {
 
                 break;
             case 1:
-                //holder_dish = new viewHolder_dish();
+
                 convertView = inflater.inflate(R.layout.dish_list_item, parent,
                         false);
 
@@ -143,15 +142,7 @@ public class DishListAdapter extends BaseAdapter {
 
                 });
 
-//                if (mLike) {
-//                    holder_dish.like
-//                            .setImageResource(R.drawable.other_icon_liked);
-//                    holder_dish.like_num.setText(String.valueOf(mItem.getGood())+1);
-//
-//                } else {
-//                    Toast.makeText(mContext, "亲，今天已经点过赞了。", Toast.LENGTH_SHORT)
-//                            .show();
-//                }
+
 
 
                 holder_dish.like_num.setText(String.valueOf(mItem.getGood()));
@@ -171,8 +162,6 @@ public class DishListAdapter extends BaseAdapter {
                         if (mItem.getUnit() < mItem.getStock()) {
                             int mShopId1 = mItem.getShopId();
                             String shopItemsString1 = SharedPreferenceUtils.getLocalItems(mContext, mShopId1);
-
-                            Log.d("DISH", "plus: " + shopItemsString1);
                             Type type1 = new TypeToken<ArrayList<item_iphone>>() {
                             }.getType();
                             ArrayList<item_iphone> shopItems1 = gson.fromJson(shopItemsString1, type1);
@@ -206,7 +195,7 @@ public class DishListAdapter extends BaseAdapter {
                         if (mItem.getUnit() > 0) {
                             int mShopId2 = mItem.getShopId();
                             String shopItemsString2 = SharedPreferenceUtils.getLocalItems(mContext, mShopId2);
-                            Log.d("DISH", "minus: " + shopItemsString2);
+
                             Type type2 = new TypeToken<ArrayList<item_iphone>>() {
                             }.getType();
                             ArrayList<item_iphone> shopItems2 = gson.fromJson(shopItemsString2, type2);
@@ -247,12 +236,6 @@ public class DishListAdapter extends BaseAdapter {
 
                 convertView.setTag(holder_text);
 
-//                if(mItem.getDesc().equals("")){
-//                    convertView.setVisibility(View.INVISIBLE);
-//                }
-//                else{
-//                    convertView.setVisibility(View.VISIBLE);
-//                }
                 break;
 
         }

@@ -26,9 +26,11 @@ import java.util.HashMap;
  */
 public class ItemManagerThread extends Thread {
 
-    Handler mHandler;
-    Context mContext;
-    int mShopId;
+
+    private static final boolean DEBUG = false;
+    private Handler mHandler;
+    private Context mContext;
+    private int mShopId;
 
     public ItemManagerThread(Handler handler, Context context, int shopId) {
         mHandler = handler;
@@ -81,8 +83,8 @@ public class ItemManagerThread extends Thread {
 
         String result = handleGet(Constant.URL_BASE + "shop/" + mShopId + "/items");
 
-
-        Log.d("ITEMTHREAD", result);
+        if (DEBUG)
+            Log.d("ITEMTHREAD", result);
         ArrayList<item_iphone> mItems = getItems(result);
 
 
@@ -91,13 +93,13 @@ public class ItemManagerThread extends Thread {
         Type type = new TypeToken<ArrayList<item_iphone>>() {
         }.getType();
         ArrayList<item_iphone> localItems = gson.fromJson(localItemsString, type);
-
-        Log.d("ITEMS", "mItems len: " + String.valueOf(mItems.size()));
+        if (DEBUG)
+            Log.d("ITEMS", "mItems len: " + String.valueOf(mItems.size()));
 
         localItems = refreshLocalItems(localItems, mItems);
         SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(localItems), mShopId);
-
-        Log.d("ITEMS", "localItems len: " + String.valueOf(localItems.size()));
+        if (DEBUG)
+            Log.d("ITEMS", "localItems len: " + String.valueOf(localItems.size()));
 
         Message message = mHandler.obtainMessage();
         message.obj = localItems;
@@ -144,7 +146,6 @@ public class ItemManagerThread extends Thread {
                     }
                 }
 
-                //Log.d("ITEMS", "returnedItems len: " + String.valueOf(returnedItems));
 
                 return returnedItems;
             } else {

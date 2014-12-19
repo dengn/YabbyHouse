@@ -107,22 +107,7 @@ public class MyCouponListAdapter extends BaseAdapter {
                     message.what = 1;
                     mHandler.sendMessage(message);
                 }
-//                else if(!CouponSelected){
-//                    CouponSelected = true;
-//                    holder.coupon_tick.setVisibility(View.VISIBLE);
-//                    mUserCoupons.add(mCoupons[position]);
-//
-//                    SharedPreferenceUtils.saveUserCoupons(mContext, gson.toJson(mUserCoupons));
-//
-//                }
-//                else{
-//                    CouponSelected = false;
-//                    holder.coupon_tick.setVisibility(View.INVISIBLE);
-//                    if(mUserCoupons.contains(mCoupons[position])){
-//                        mUserCoupons.remove(mCoupons[position]);
-//                        SharedPreferenceUtils.saveUserCoupons(mContext, gson.toJson(mUserCoupons));
-//                    }
-//                }
+
             }
         });
 

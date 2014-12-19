@@ -2,15 +2,12 @@ package com.melbournestore.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Environment;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class BitmapUtils {
 
@@ -71,47 +68,6 @@ public class BitmapUtils {
         return file;
     }
 
-    public static Bitmap getMyBitMap(String name) {
-        String directory = Environment.getExternalStorageDirectory().getPath();
 
-        String bitmap_path = directory + "/yabbyhouse";
-
-
-        File file = new File(bitmap_path + "/" + name + ".png");
-        if (!file.exists()) {
-            return null;
-        } else {
-            FileInputStream fis;
-            try {
-                fis = new FileInputStream(bitmap_path + "/" + name + ".png");
-                Bitmap bitmap = BitmapFactory.decodeStream(fis);
-                return bitmap;
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-
-    }
-
-    public static String getBitMapPath() {
-        String directory = Environment.getExternalStorageDirectory().getPath();
-
-        String bitmap_path = directory + "/yabbyhouse/";
-
-        return bitmap_path;
-    }
-
-    public static final Bitmap readBitMap(Context context, int resId) {
-        BitmapFactory.Options opt = new BitmapFactory.Options();
-        opt.inPreferredConfig = Bitmap.Config.RGB_565;
-        opt.inPurgeable = true;
-        opt.inInputShareable = true;
-
-        InputStream is = context.getResources().openRawResource(resId);
-        return BitmapFactory.decodeStream(is, null, opt);
-    }
 
 }

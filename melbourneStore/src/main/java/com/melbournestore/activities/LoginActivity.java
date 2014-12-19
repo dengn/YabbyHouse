@@ -25,13 +25,12 @@ import com.melbournestore.network.UserVerificationManagerThread;
 
 public class LoginActivity extends Activity {
 
+    private ProgressDialog progress;
     private TextView loginText;
     private EditText loginNumber;
     private CheckBox loginCheckbox;
     private TextView loginTextAgreement;
     private Button loginButton;
-    ProgressDialog progress;
-    private String mPhoneNumber;
     private long mExitTime;
 
     private Handler mHandler = new Handler() {
@@ -87,7 +86,6 @@ public class LoginActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 Intent intent = new Intent(LoginActivity.this,
                         DeliveryAgreementActivity.class);
                 startActivity(intent);
@@ -136,66 +134,11 @@ public class LoginActivity extends Activity {
                     UserVerificationManagerThread mVerificationThread = new UserVerificationManagerThread(mHandler, LoginActivity.this, loginNumber.getText().toString());
                     mVerificationThread.start();
 
-                    progress = new ProgressDialog(LoginActivity.this ,R.style.dialog_loading);
+                    progress = new ProgressDialog(LoginActivity.this, R.style.dialog_loading);
                     progress.show();
                 }
 
-//                else {
-//
-//                    mPhoneNumber = loginNumber.getText().toString();
-//
-//                    String users_string = SharedPreferenceUtils
-//                            .getLoginUser(LoginActivity.this);
-//                    Gson gson = new Gson();
-//                    User[] users = gson.fromJson(users_string, User[].class);
-//
-//                    if (users.length > 0) {
-//                        boolean user_found = false;
-//                        for (int i = 0; i < users.length; i++) {
-//                            if (users[i].getPhoneNumber().equals(mPhoneNumber)) {
-//                                users[i].setActive(true);
-//                                user_found = true;
-//                                break;
-//                            }
-//                        }
-//                        if (!user_found) {
-//                            ArrayList<User> user_array = new ArrayList<User>(
-//                                    Arrays.asList(users));
-//                            User user = new User();
-//                            user.setActive(true);
-//                            user.setPhoneNumber(mPhoneNumber);
-//                            user.setUnitNo("");
-//                            user.setStreet("");
-//                            user.setSuburb("");
-//                            user_array.add(user);
-//                            users = user_array.toArray(new User[0]);
-//                        }
-//
-//                        SharedPreferenceUtils.saveLoginUser(LoginActivity.this,
-//                                gson.toJson(users));
-//
-//                    } else {
-//                        users = new User[1];
-//                        User user = new User();
-//                        user.setActive(true);
-//                        user.setPhoneNumber(mPhoneNumber);
-//                        user.setUnitNo("");
-//                        user.setStreet("");
-//                        user.setSuburb("");
-//
-//                        users[0] = user;
-//                        SharedPreferenceUtils.saveLoginUser(LoginActivity.this,
-//                                gson.toJson(users));
-//                    }
-//
-//
-//                    Intent returnIntent = new Intent();
-//                    returnIntent.putExtra("number", loginNumber.getText()
-//                            .toString());
-//                    setResult(RESULT_OK, returnIntent);
-//                    finish();
-//
-//                }
+
             }
 
         });
@@ -215,6 +158,7 @@ public class LoginActivity extends Activity {
                         }
                 ).show();
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -225,9 +169,6 @@ public class LoginActivity extends Activity {
                 // activity and
                 // use NavUtils in the Support Package to ensure proper handling of
                 // Up.
-                // Intent upIntent = NavUtils.getParentActivityIntent(this);
-                // upIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                // startActivity(upIntent);
                 finish();
                 return true;
         }

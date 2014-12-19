@@ -16,7 +16,6 @@ import java.util.List;
 
 public class SysApplication extends Application {
     private static SysApplication instance;
-    private static boolean isLoggedIn = false;
     private List<Activity> mList = new LinkedList<Activity>();
 
 
@@ -30,14 +29,6 @@ public class SysApplication extends Application {
         return instance;
     }
 
-    public static boolean getLoginStatus() {
-        return isLoggedIn;
-    }
-
-    public static void setLoginStatus(boolean status) {
-        isLoggedIn = status;
-
-    }
 
     /**
      * 初始化图片加载类配置信息*
@@ -62,7 +53,7 @@ public class SysApplication extends Application {
     public void onCreate() {
         super.onCreate();
         initImageLoader(getApplicationContext());
-        FontManager.overrideFont(getApplicationContext(), "SERIF", "fonts/yahei.ttf"); // font from assets: "assets/fonts/Roboto-Regular.ttf
+        FontManager.overrideFont(getApplicationContext(), "SERIF", "fonts/yahei.ttf"); // font from assets
     }
 
     // add Activity

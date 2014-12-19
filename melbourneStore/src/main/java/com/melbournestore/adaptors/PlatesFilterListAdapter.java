@@ -18,7 +18,7 @@ public class PlatesFilterListAdapter extends ArrayAdapter<String> {
 
 
     public PlatesFilterListAdapter(Context context, int layoutResourceId, String[] plates) {
-        // TODO Auto-generated constructor stub
+
         super(context, layoutResourceId, plates);
         mContext = context;
         mLayoutResourceId = layoutResourceId;
@@ -30,7 +30,7 @@ public class PlatesFilterListAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
+
         Holder holder = new Holder();
         View rowView;
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();

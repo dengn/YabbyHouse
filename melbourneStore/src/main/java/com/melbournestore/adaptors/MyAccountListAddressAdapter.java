@@ -98,11 +98,11 @@ public class MyAccountListAddressAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
+
                 Intent intent = new Intent(mContext,
                         ChooseAddressActivity.class);
                 ((Activity) mContext).startActivityForResult(intent,
-                        MyAccountActivity.choose_address_code);
+                        MyAccountActivity.CHOOSE_ADDRESS_CODE);
             }
 
         });

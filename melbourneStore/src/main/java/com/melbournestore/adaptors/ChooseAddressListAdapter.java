@@ -94,19 +94,6 @@ public class ChooseAddressListAdapter extends BaseAdapter {
 
                 holder_edittext.text.setHint("275");
 
-//                holder_edittext.text.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//                    @Override
-//                    public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-//                        addr_unit = textView.getText().toString();
-//                        Message message = new Message();
-//                        Bundle b = new Bundle();
-//                        Log.d("ADDRESS", "addr_unit input: "+addr_unit);
-//                        // send the position
-//                        b.putString("unit", addr_unit);
-//                        message.setData(b);
-//                        return false;
-//                    }
-//                });
 
                 holder_edittext.text.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -134,27 +121,6 @@ public class ChooseAddressListAdapter extends BaseAdapter {
                     }
                 });
 
-//                holder_edittext.text.setOnFocusChangeListener(new OnFocusChangeListener() {
-//                    public void onFocusChange(View v, boolean hasFocus) {
-//                        if (!hasFocus) {
-//                            final int position = v.getId();
-//                            final EditText Caption = (EditText) v;
-//                            addr_unit = Caption.getText().toString();
-//
-//                            Message message = new Message();
-//                            Bundle b = new Bundle();
-//                            Log.d("ADDRESS", "addr_unit input: "+addr_unit);
-//                            // send the position
-//                            b.putString("unit", addr_unit);
-//                            message.setData(b);
-//
-//                            // unit = 1
-//                            message.what = 1;
-//
-//                            mHandler.sendMessage(message);
-//                        }
-//                    }
-//                });
 
                 convertView.setTag(holder_edittext);
                 break;
@@ -197,29 +163,7 @@ public class ChooseAddressListAdapter extends BaseAdapter {
                     }
                 });
 
-//                holder_edittext.text.setOnFocusChangeListener(new OnFocusChangeListener() {
-//                    public void onFocusChange(View v, boolean hasFocus) {
-//
-//                        if (!hasFocus) {
-//                            final int position = v.getId();
-//                            final EditText Caption = (EditText) v;
-//                            addr_street = Caption.getText().toString();
-//
-//                            Message message = new Message();
-//                            Bundle b = new Bundle();
-//
-//                            Log.d("ADDRESS", "addr_street input: "+addr_street);
-//                            // send the position
-//                            b.putString("street", addr_street);
-//                            message.setData(b);
-//
-//                            // street = 2
-//                            message.what = 2;
-//
-//                            mHandler.sendMessage(message);
-//                        }
-//                    }
-//                });
+
 
                 convertView.setTag(holder_edittext);
 

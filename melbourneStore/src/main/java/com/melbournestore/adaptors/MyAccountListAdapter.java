@@ -23,7 +23,7 @@ public class MyAccountListAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
     private Context mContext;
     private Handler mHandler;
-    DisplayImageOptions mOptions;
+    private DisplayImageOptions mOptions;
     private user_iphone mUser;
     private int mOrderNum;
     private int mCouponNum;
@@ -86,13 +86,6 @@ public class MyAccountListAdapter extends BaseAdapter {
                 holder_profile.number = (TextView) convertView
                         .findViewById(R.id.myaccount_profile_number);
 
-//                // set images
-//                if (BitmapUtils.getMyBitMap(mUser.getPhoneNumber()) == null) {
-//                    holder_profile.profile
-//                            .setImageResource(R.drawable.profile_userphoto);
-//                } else {
-//                    holder_profile.profile.setImageBitmap(BitmapUtils.getMyBitMap(mActiveUser.getPhoneNumber()));
-//                }
 
                 if (mUser.getPhoneNumber().equals("")) {
                     holder_profile.number.setText("未登录");
@@ -109,7 +102,6 @@ public class MyAccountListAdapter extends BaseAdapter {
                 }
 
 
-//                holder_profile.number.setText(mUser.getPhoneNumber());
 
                 holder_profile.profile.setOnClickListener(new OnClickListener() {
 
@@ -141,11 +133,7 @@ public class MyAccountListAdapter extends BaseAdapter {
                         .findViewById(R.id.myaccount_coupon);
 
                 holder_like.like.setText(String.valueOf(mUser.getGood_count())+"\n喜欢");
-//                if (mActiveUser.getOrders() == null) {
-//                    holder_like.order.setText("0\n订单");
-//                } else {
-//                    holder_like.order.setText(String.valueOf(mActiveUser.getOrders().length) + "\n订单");
-//                }
+
 
                 holder_like.order.setText(String.valueOf(mOrderNum)+"\n订单");
 

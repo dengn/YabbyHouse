@@ -48,11 +48,7 @@ import com.melbournestore.fragments.MyOrdersFragment;
 import com.melbournestore.fragments.PlateFragment;
 import com.melbournestore.fragments.RecommandationFragment;
 import com.melbournestore.models.Coupon;
-import com.melbournestore.models.Order_user;
-import com.melbournestore.models.Plate;
-import com.melbournestore.models.Shop;
 import com.melbournestore.models.Suburb;
-import com.melbournestore.models.User;
 import com.melbournestore.models.user_coupon;
 import com.melbournestore.models.user_iphone;
 import com.melbournestore.network.AreaManagerThread;
@@ -101,21 +97,29 @@ public class MainActivity extends Activity {
     private static final int LOGIN_CODE = 1;
 
     private static final int MY_ACCOUNT_CODE = 7;
-    Fragment plate_fragment;
-    Fragment myorders_fragment;
-    Fragment googlemap_fragment;
-    Fragment recommandation_fragment;
-    DisplayImageOptions options;
-    //= new user_iphone("","","",0,"",new Suburb(0, "", "", ""));
-    Gson gson = new Gson();
+
+    private Fragment plate_fragment;
+    private Fragment myorders_fragment;
+    private Fragment googlemap_fragment;
+    private Fragment recommandation_fragment;
+
+    private DisplayImageOptions options;
+
+    private Gson gson = new Gson();
+
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private DrawerListAdapter mDrawerListAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
+
+
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private String[] mMenuTitles;
-    private Handler mHandler = new Handler(){};
+    private Handler mHandler = new Handler() {
+    };
+
+
     private long mExitTime;
     private int mOrderNum;
     private int mCouponNum;
@@ -126,41 +130,34 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
 
-
         setContentView(R.layout.activity_main);
 
         FontManager.getContentView(this);
 
         SysApplication.getInstance().addActivity(this);
 
-//        if(MelbourneUtils.isOpenNetwork(this)){
-//            showNotice("网络连接不上,请连接WIFI或者打开3G。");
-//            SysApplication.getInstance().exit();
-//        }
 
+        //First launch of application, init shared preference data
         if (SharedPreferenceUtils.getFirstTimeLaunch(this)) {
-            //SharedPreferenceUtils.saveFirstTimeLaunch(MainActivity.this);
+
             mUser = new user_iphone("", "", "", 0, "", new Suburb(0, "", "", ""));
             SharedPreferenceUtils.saveLoginUser(MainActivity.this, gson.toJson(mUser));
-//            user_coupon coupon = new user_coupon();
-//            coupon.setId(0);
             SharedPreferenceUtils.saveUserCoupons(MainActivity.this, gson.toJson(new user_coupon(-1, -1, -1, "", new Coupon(-1, "", "", "", -1, "", "", -1, -1))));
             SharedPreferenceUtils.saveDeliveryTime(MainActivity.this, "");
             SharedPreferenceUtils.saveRemark(MainActivity.this, "");
             SharedPreferenceUtils.saveContactNumber(MainActivity.this, "");
         } else {
             String mUserString = SharedPreferenceUtils.getLoginUser(this);
-            Log.d("LOGIN", mUserString);
+            if(DEBUG)
+                Log.d("LOGIN", mUserString);
             mUser = gson.fromJson(mUserString, user_iphone.class);
         }
 
 
-
+        //Get List of Area
         AreaManagerThread mAreaThread = new AreaManagerThread(mHandler, this);
         mAreaThread.start();
 
-//        GetCsrfThread mCsrfThread = new GetCsrfThread(mHandler, this);
-//        mCsrfThread.start();
 
         plate_fragment = new PlateFragment();
         plate_fragment.onAttach(this);
@@ -168,7 +165,6 @@ public class MainActivity extends Activity {
         myorders_fragment.onAttach(this);
         googlemap_fragment = new GoogleMapFragment();
         googlemap_fragment.onAttach(this);
-
         recommandation_fragment = new RecommandationFragment();
         recommandation_fragment.onAttach(this);
 
@@ -182,10 +178,6 @@ public class MainActivity extends Activity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
                 GravityCompat.START);
 
-        // set up the drawer's list view with items and click listener
-        // mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-        // R.layout.drawer_list_item, mMenuTitles));
-        // mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         options = new DisplayImageOptions.Builder()
                 .showStubImage(R.drawable.loading_ads)    //在ImageView加载过程中显示图片
@@ -276,6 +268,7 @@ public class MainActivity extends Activity {
         }
         switch (item.getItemId()) {
             case R.id.web_search:
+                //Allow fragment to click on menu item
                 return true;
 
             case R.id.search_plate:
@@ -302,7 +295,9 @@ public class MainActivity extends Activity {
                 String users_string = data.getStringExtra("user");
                 mOrderNum = data.getIntExtra("order_num", 0);
                 mCouponNum = data.getIntExtra("coupon_num", 0);
-                Log.d("LOGIN", "Main Activity: " + users_string);
+
+                if(DEBUG)
+                    Log.d("LOGIN", "Main Activity: " + users_string);
 
                 mUser = gson.fromJson(users_string, user_iphone.class);
 
@@ -319,7 +314,6 @@ public class MainActivity extends Activity {
             if (resultCode == RESULT_OK) {
                 // get the profile photo
 
-
                 mDrawerListAdapter.refresh(mUser);
                 mDrawerList.setAdapter(mDrawerListAdapter);
                 mDrawerLayout.openDrawer(mDrawerList);
@@ -327,7 +321,7 @@ public class MainActivity extends Activity {
                 selectItem(1);
             }
         }
-    }// onActivityResult
+    }
 
 
     private void showNotice(String text) {
@@ -351,15 +345,15 @@ public class MainActivity extends Activity {
         // update the main content by replacing fragments
         switch (position) {
             case 0:
-                // mDrawerList.setItemChecked(position, true);
-                // setTitle(mMenuTitles[position]);
 
 
                 // Not logged in yet
                 if (mUser.getPhoneNumber().equals("")) {
                     Intent intent = new Intent(this, SignUpActivity.class);
                     startActivityForResult(intent, LOGIN_CODE);
-                } else {
+                }
+                //Already logged in
+                else {
                     Intent intent = new Intent(this, MyAccountActivity.class);
                     intent.putExtra("user", gson.toJson(mUser));
                     intent.putExtra("order_num", mOrderNum);
@@ -372,19 +366,19 @@ public class MainActivity extends Activity {
 
             case 1:
 
-                // Fragment plate_fragment = new PlateFragment(this);
+
 
                 fragmentManager.beginTransaction()
                         .replace(R.id.content_frame, plate_fragment).commit();
 
-                // update selected myorder_list_item and title, then close the drawer
+
                 mDrawerList.setItemChecked(position, true);
                 setTitle(mMenuTitles[position - 1]);
                 mDrawerLayout.closeDrawer(mDrawerList);
                 break;
             case 2:
 
-                // Fragment myorders_fragment = new MyOrdersFragment();
+
                 if (mUser.getPhoneNumber().equals("")) {
                     Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
                     startActivity(intent);
@@ -392,7 +386,7 @@ public class MainActivity extends Activity {
                     fragmentManager.beginTransaction()
                             .replace(R.id.content_frame, myorders_fragment).commit();
 
-                    // update selected myorder_list_item and title, then close the drawer
+
                     mDrawerList.setItemChecked(position, true);
                     setTitle(mMenuTitles[position - 1]);
                     mDrawerLayout.closeDrawer(mDrawerList);
@@ -400,7 +394,7 @@ public class MainActivity extends Activity {
                 break;
             case 3:
 
-                // Fragment googlemap_fragment = new GoogleMapFragment(this);
+
                 fragmentManager.beginTransaction()
                         .replace(R.id.content_frame, googlemap_fragment).commit();
 
@@ -419,9 +413,7 @@ public class MainActivity extends Activity {
                         });
                 AlertDialog alert = builder.create();
                 alert.show();
-//                mDrawerList.setItemChecked(position, true);
-//                setTitle(mMenuTitles[position - 1]);
-//                mDrawerLayout.closeDrawer(mDrawerList);
+
                 break;
             case 5:
                 fragmentManager.beginTransaction()
@@ -459,67 +451,7 @@ public class MainActivity extends Activity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private void setUpCurrentChoice() {
-        Shop[] shops = new Shop[DataResourceUtils.shopItems.length];
 
-        for (int i = 0; i < shops.length; i++) {
-
-            Shop shop = new Shop();
-
-            Plate[] plates = new Plate[DataResourceUtils.plateNames[i].length];
-
-            for (int j = 0; j < plates.length; j++) {
-                Plate plate = new Plate();
-
-                plate.setName(DataResourceUtils.plateNames[i][j]);
-                plate.setPrice(DataResourceUtils.platePrices[i][j]);
-                plate.setNumber(0);
-                plate.setStockMax(DataResourceUtils.plateStockMax[i][j]);
-                plate.setLikeNum(DataResourceUtils.plateLikeNumbers[i][j]);
-                plate.setImageId(DataResourceUtils.plateImages[i][j]);
-                plate.setShopId(i);
-                plate.setPlateId(j);
-
-                plates[j] = plate;
-            }
-            shop.setPlates(plates);
-            shops[i] = shop;
-        }
-
-        Gson gson = new Gson();
-        String shopsJson = gson.toJson(shops);
-
-        SharedPreferenceUtils.saveCurrentChoice(this, shopsJson);
-
-    }
-
-    private void setUpCurrentOrder() {
-
-        Gson gson = new Gson();
-        Order_user order = new Order_user();
-
-        order.setDeliveryTime("");
-        order.setRemark("");
-
-        SharedPreferenceUtils.saveCurrentOrder(this, gson.toJson(order));
-
-    }
-
-    private void setUpLoginUser() {
-
-        String users_string = SharedPreferenceUtils
-                .getLoginUser(MainActivity.this);
-        Gson gson = new Gson();
-        User[] users = gson.fromJson(users_string, User[].class);
-
-        if (users == null) {
-            users = new User[0];
-        }
-
-        SharedPreferenceUtils.saveLoginUser(MainActivity.this,
-                gson.toJson(users));
-
-    }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

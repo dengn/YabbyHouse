@@ -29,7 +29,6 @@ android {
 
 dependencies {
     compile project(':swipelistview')
-    compile project(':amazinglistview')
     compile project(':wheel')
     compile files('libs/nineoldandroids-2.4.0.jar')
     compile files('libs/httpcore-4.3.3.jar')

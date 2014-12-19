@@ -26,11 +26,13 @@ import java.util.HashMap;
  */
 public class AreaManagerThread extends Thread {
 
-    Handler mHandler;
+    private static final boolean DEBUG = false;
 
-    Context mContext;
+    private Handler mHandler;
 
-    Gson gson = new Gson();
+    private Context mContext;
+
+    private Gson gson = new Gson();
 
     public AreaManagerThread(Handler handler, Context context) {
         mHandler = handler;
@@ -78,10 +80,10 @@ public class AreaManagerThread extends Thread {
 
     @Override
     public void run() {
-        String result = handleGet(Constant.URL_BASE+"areas");
+        String result = handleGet(Constant.URL_BASE + "areas");
 
-
-        Log.d("THREAD", result);
+        if (DEBUG)
+            Log.d("THREAD", result);
         ArrayList<Area> mAreas = getAreas(result);
         SharedPreferenceUtils.saveAreas(mContext, gson.toJson(mAreas));
 

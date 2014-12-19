@@ -20,13 +20,16 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 
 /**
- * Created by OLEDCOMM on 01/12/2014.
+ * Created by dengn on 01/12/2014.
  */
 public class CouponManagerThread extends Thread {
-    Handler mHandler;
-    Context mContext;
-    Gson gson = new Gson();
-    String mUserNumber;
+
+    private static final boolean DEBUG = false;
+
+    private Handler mHandler;
+    private Context mContext;
+    private Gson gson = new Gson();
+    private String mUserNumber;
 
 
     public CouponManagerThread(Handler handler, Context context, String userNumber) {
@@ -73,30 +76,15 @@ public class CouponManagerThread extends Thread {
 
         String result = handleGet(Constant.URL_BASE + "user/" + mUserNumber + "/coupons");
 
-        Log.d("COUPONTHREAD", result);
+        if (DEBUG)
+            Log.d("COUPONTHREAD", result);
         user_coupon[] mCoupons = getCoupons(result);
 
         Message message = mHandler.obtainMessage();
         message.obj = mCoupons;
         message.what = 0;
         mHandler.sendMessage(message);
-//        switch(mCallCode){
-//            case 0:
-//                //called from MyAccountActivity page
-//                Message message = mHandler.obtainMessage();
-//                message.obj = mCoupons.length;
-//                Log.d("ACCOUNT", "mCoupons.length: "+String.valueOf(mCoupons.length));
-//                message.what = 1;
-//                mHandler.sendMessage(message);
-//                break;
-//            case 1:
-//                //called by the other
-//                message = mHandler.obtainMessage();
-//                message.obj = mCoupons;
-//                message.what = 2;
-//                mHandler.sendMessage(message);
-//                break;
-//        }
+
 
     }
 

@@ -50,17 +50,24 @@ import java.util.ArrayList;
 public class PlateActivity extends Activity {
 
     private static final String TAG = "Melbourne";
-    DisplayImageOptions options;
-    Gson gson = new Gson();
-    ProgressDialog progress;
+
+
+    private DisplayImageOptions options;
+    private Gson gson = new Gson();
+
+
+    private ProgressDialog progress;
     private ListView mPlatesList;
     private PlateListAdapter mPlateListAdapter;
-    private ItemManagerThread mItemThread;
     private Button mConfirmChoice;
     private TextView mTotalPrice;
     private TextView mTotalNum;
+
+    private ItemManagerThread mItemThread;
+
     private int mShopId;
     private String mShopName;
+
     private number_price sumNumberPrice;
 
     private float totalPrice = 0;
@@ -72,7 +79,7 @@ public class PlateActivity extends Activity {
 
 
             Bundle b = msg.getData();
-            int position = b.getInt("position");
+
             switch (msg.what) {
 
                 case 0:
@@ -92,7 +99,6 @@ public class PlateActivity extends Activity {
                     mItems.addAll(items1);
 
                     mPlateListAdapter.refresh(mItems);
-                    //mPlatesList.setAdapter(mPlateListAdapter);
 
 
                     sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
@@ -120,7 +126,7 @@ public class PlateActivity extends Activity {
 
 
                         mPlateListAdapter.refresh(mItems);
-                        //mPlatesList.setAdapter(mPlateListAdapter);
+
 
                         sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
 
@@ -222,9 +228,6 @@ public class PlateActivity extends Activity {
         totalPrice = sumNumberPrice.getPrice();
         totalNum = sumNumberPrice.getNumber();
 
-//        Intent intent = getIntent();
-//        mShopId = intent.getIntExtra("shopId", 0);
-
         String itemsString = SharedPreferenceUtils.getLocalItems(PlateActivity.this, mShopId);
         Type type = new TypeToken<ArrayList<item_iphone>>() {
         }.getType();
@@ -240,17 +243,7 @@ public class PlateActivity extends Activity {
         mTotalPrice.setText("$" + String.valueOf(totalPrice));
     }
 
-    // /* The click listner for ListView in the navigation drawer */
-    // private class PlateItemClickListener implements
-    // ListView.OnItemClickListener {
-    // @Override
-    // public void onItemClick(AdapterView<?> parent, View view, int position,
-    // long id) {
-    // //selectItem(position);
-    // Log.d(TAG, String.valueOf(position)+" plat myorder_list_item clicked");
-    // }
-    // }
-    //
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

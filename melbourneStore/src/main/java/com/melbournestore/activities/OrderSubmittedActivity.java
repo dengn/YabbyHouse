@@ -67,9 +67,6 @@ public class OrderSubmittedActivity extends Activity {
 
 
         for (int i = 0; i < items.length; i++) {
-            //order_info += DataResourceUtils.shopItems[plates[i].getShopId()] + "\n";
-            //order_info += plates[i].getName() + " " + String.valueOf(plates[i].getNumber()) + "份  $" + String.valueOf(plates[i].getNumber() * plates[i].getPrice()) + "\n";
-
 
             if (!currentShopName.equals(MelbourneUtils.getShopNameFromItemId(items[i].getItemId(), OrderSubmittedActivity.this))) {
 
@@ -103,42 +100,6 @@ public class OrderSubmittedActivity extends Activity {
 
         }
 
-//        for (int i = 0; i < items.length; i++) {
-//            //order_info += DataResourceUtils.shopItems[plates[i].getShopId()] + "\n";
-//            //order_info += plates[i].getName() + " " + String.valueOf(plates[i].getNumber()) + "份  $" + String.valueOf(plates[i].getNumber() * plates[i].getPrice()) + "\n";
-//
-//
-//            if (!currentShopName.equals(MelbourneUtils.getShopNameFromItemId(items[i].getItemId(), OrderSubmittedActivity.this))) {
-//
-//                currentShopName = MelbourneUtils.getShopNameFromItemId(items[i].getItemId(), OrderSubmittedActivity.this);
-//
-//                TextView shop_view = new TextView(OrderSubmittedActivity.this);
-//                shop_view.setTextColor(Color.WHITE);
-//                shop_view.setTextSize(20);
-//                shop_view.setTypeface(null, Typeface.BOLD);
-//                shop_view.setText(currentShopName);
-//                submitted_items_list.addView(shop_view);
-//
-//
-//                View whitebar_view = LayoutInflater.from(OrderSubmittedActivity.this).inflate(R.layout.textview_whitebar, null);
-//                submitted_items_list.addView(whitebar_view);
-//
-//            }
-//
-//
-//            //add view for each plate myorder_list_item
-//
-//            View item_view = LayoutInflater.from(this).inflate(R.layout.submitted_item, null);
-//            TextView submitted_item_name = (TextView) item_view.findViewById(R.id.submitted_item_name);
-//            TextView submitted_item_number = (TextView) item_view.findViewById(R.id.submitted_item_number);
-//            TextView submitted_item_price = (TextView) item_view.findViewById(R.id.submitted_item_price);
-//            submitted_item_name.setText(items[i].getName());
-//            submitted_item_number.setText(String.valueOf((int) Float.parseFloat(items[i].getCount())) + "份");
-//            submitted_item_price.setText("$ " + String.valueOf((int) Float.parseFloat(items[i].getCount()) * items[i].getPrice()));
-//            submitted_items_list.addView(item_view);
-//
-//
-//        }
 
 
         View item_view = LayoutInflater.from(this).inflate(R.layout.submitted_item, null);

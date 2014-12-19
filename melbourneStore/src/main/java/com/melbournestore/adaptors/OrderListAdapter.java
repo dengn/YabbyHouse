@@ -24,10 +24,10 @@ import java.util.ArrayList;
 public class OrderListAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
-    Handler mHandler;
-    Context mContext;
-    Gson gson = new Gson();
-    ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
+    private Handler mHandler;
+    private Context mContext;
+    private Gson gson = new Gson();
+    private ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
 
     public OrderListAdapter(Context context, Handler handler, ArrayList<item_iphone> items) {
         mContext = context;

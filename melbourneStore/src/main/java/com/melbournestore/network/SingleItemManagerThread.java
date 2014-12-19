@@ -27,10 +27,12 @@ import java.util.HashMap;
  */
 public class SingleItemManagerThread extends Thread {
 
-    Handler mHandler;
-    Context mContext;
-    Gson gson = new Gson();
-    int mItemId;
+    private static final boolean DEBUG = false;
+
+    private Handler mHandler;
+    private Context mContext;
+    private Gson gson = new Gson();
+    private int mItemId;
 
     public SingleItemManagerThread(Handler handler, Context context, int itemId) {
         mHandler = handler;
@@ -75,15 +77,17 @@ public class SingleItemManagerThread extends Thread {
 
         String result = handleGet(Constant.URL_BASE + "item/" + mItemId);
 
+        if(DEBUG)
         Log.d("ITEMTHREAD", result);
         item_iphone mItem = getItem(result);
 
         String localItemsString = SharedPreferenceUtils.getLocalItems(mContext, mItem.getShopId());
-        Type type = new TypeToken<ArrayList<item_iphone>>() {}.getType();
+        Type type = new TypeToken<ArrayList<item_iphone>>() {
+        }.getType();
         ArrayList<item_iphone> localItems = gson.fromJson(localItemsString, type);
         ArrayList<Integer> localItemIds = MelbourneUtils.getLocalItemsId(localItems);
 
-        if(!localItemIds.contains(mItem.getId())){
+        if (!localItemIds.contains(mItem.getId())) {
             ArrayList<item_iphone> newItems = new ArrayList<item_iphone>();
             newItems.clear();
             newItems.addAll(localItems);

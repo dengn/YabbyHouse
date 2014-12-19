@@ -2,7 +2,6 @@ package com.melbournestore.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -33,7 +32,7 @@ import java.util.List;
 
 public class CurrentOrderActivity extends Activity implements View.OnTouchListener {
 
-    ProgressDialog progress;
+
     private ViewPager pager_splash_ad;
     private ADPagerAdapter adapter;
     private int flaggingWidth;
@@ -43,11 +42,12 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
     private CirclePageIndicator indicator;
     private boolean locker = true;
 
+    private static final boolean DEBUG = false;
+
     private Order mOrder;
 
     private Gson gson = new Gson();
 
-    private TextView current_order_info;
     private long mExitTime;
 
 
@@ -73,18 +73,14 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         getActionBar().setTitle("订单详情");
 
 
+        //Init UI
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         flaggingWidth = dm.widthPixels / 2;
 
-        List<String> splash_ad = (List<String>) getIntent()
-                .getSerializableExtra("splash_ad");
         pager_splash_ad = (ViewPager) findViewById(R.id.currentOrder_pager);
 
         List<View> views = new ArrayList<View>();
-
-
-        // TODO
 
         View view = getCurrentOrderStatusFlow(mOrder);
         views.add(view);
@@ -95,6 +91,7 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
 
         adapter = new ADPagerAdapter(this, views);
         pager_splash_ad.setAdapter(adapter);
+
         indicator = (CirclePageIndicator) findViewById(R.id.page_indicator);
         indicator.setmListener(new MypageChangeListener());
         indicator.setViewPager(pager_splash_ad);
@@ -108,7 +105,6 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
                 }
             }, 1000);
         } else {
-//			pager_splash_ad.setOnPageChangeListener(new MypageChangeListener());
             pager_splash_ad.setOnTouchListener(this);
         }
 
@@ -171,6 +167,7 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
     }
 
 
+    //Fill the status into circles flow
     private View getCurrentOrderStatusFlow(Order mOrder) {
         View view = LayoutInflater.from(this).inflate(
                 R.layout.current_order_process_layout, null);
@@ -231,6 +228,7 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         return view;
     }
 
+    //Fill the status into detailed view
     private View getCurrentOrderStatusView(Order mOrder) {
 
         View order_detail = LayoutInflater.from(this).inflate(R.layout.order_submitted_layout, null);
@@ -248,12 +246,10 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
 
 
         for (int i = 0; i < items.length; i++) {
-            //order_info += DataResourceUtils.shopItems[plates[i].getShopId()] + "\n";
-            //order_info += plates[i].getName() + " " + String.valueOf(plates[i].getNumber()) + "份  $" + String.valueOf(plates[i].getNumber() * plates[i].getPrice()) + "\n";
 
 
             if (!currentShopName.equals(MelbourneUtils.getShopNameFromItemId(items[i].getItemId(), CurrentOrderActivity.this))) {
-
+                //make group of shops
                 currentShopName = MelbourneUtils.getShopNameFromItemId(items[i].getItemId(), CurrentOrderActivity.this);
 
                 TextView shop_view = new TextView(CurrentOrderActivity.this);
@@ -270,7 +266,7 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
             }
 
 
-            //add view for each plate myorder_list_item
+            //add view for each item
 
             View item_view = LayoutInflater.from(this).inflate(R.layout.submitted_item, null);
             TextView submitted_item_name = (TextView) item_view.findViewById(R.id.submitted_item_name);
@@ -284,6 +280,7 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
 
         }
 
+        //add view for delivery fee
         View item_view = LayoutInflater.from(this).inflate(R.layout.submitted_item, null);
         TextView submitted_item_name = (TextView) item_view.findViewById(R.id.submitted_item_name);
         TextView submitted_item_number = (TextView) item_view.findViewById(R.id.submitted_item_number);
@@ -294,9 +291,11 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         others_list.addView(item_view);
 
 
+        //add view for coupon
         if (mOrder.getCoupon() != null) {
             if (mOrder.getCoupon()[0].getId() != -1) {
-                Log.d("COUPON", mOrder.getCoupon()[0].getCoupon().getName());
+                if(DEBUG)
+                    Log.d("COUPON", mOrder.getCoupon()[0].getCoupon().getName());
 
                 submitted_item_name.setText("优惠券");
                 submitted_item_number.setText("");
@@ -306,37 +305,8 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         }
 
 
-//        submitted_items_list.addView(whitebar_view);
-//
-//        TextView others_view = new TextView(CurrentOrderActivity.this);
-//        others_view.setTextColor(Color.WHITE);
-//        others_view.setTextSize(20);
-//        others_view.setTypeface(null, Typeface.BOLD);
-//        others_view.setText("其它");
-//        submitted_items_list.addView(others_view);
-//
-//        submitted_items_list.addView(whitebar_view);
 
-
-//        TextView delivery_fee_name = (TextView) item_view.findViewById(R.id.submitted_item_name);
-//        TextView delivery_fee_number = (TextView) item_view.findViewById(R.id.submitted_item_number);
-//        TextView delivery_fee_price = (TextView) item_view.findViewById(R.id.submitted_item_price);
-//        delivery_fee_name.setText("运送费");
-//        delivery_fee_number.setText("");
-//        delivery_fee_price.setText("$ " + String.valueOf(mOrder.getDeliveryFee()));
-//        submitted_items_list.addView(item_view);
-//
-//        if(mOrder.getCoupon().length!=0){
-//
-//            TextView coupon_name = (TextView) item_view.findViewById(R.id.submitted_item_name);
-//            TextView coupon_number = (TextView) item_view.findViewById(R.id.submitted_item_number);
-//            TextView coupon_price = (TextView) item_view.findViewById(R.id.submitted_item_price);
-//            coupon_name.setText("优惠券");
-//            coupon_number.setText("");
-//            coupon_price.setText("$ " + String.valueOf(mOrder.getCoupon()[0].getCoupon().getDiscount()));
-//            submitted_items_list.addView(item_view);
-//        }
-
+        //Fill the other details
 
         TextView submitted_totalprice, submitted_delivery_number, submitted_delivery_address, submitted_delivery_time, submitted_preference, submitted_ordernumber, submitted_ordertime;
 
@@ -372,7 +342,7 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
 
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {
-            // TODO Auto-generated method stub
+
 
         }
 

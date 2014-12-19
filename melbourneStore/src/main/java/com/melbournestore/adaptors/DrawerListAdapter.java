@@ -3,7 +3,6 @@ package com.melbournestore.adaptors;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +22,10 @@ public class DrawerListAdapter extends BaseAdapter {
 
 
     private static LayoutInflater inflater = null;
-    Handler mHandler;
-    Context mContext;
-    user_iphone mUser;
-    DisplayImageOptions mOptions;
+    private Handler mHandler;
+    private Context mContext;
+    private user_iphone mUser;
+    private DisplayImageOptions mOptions;
 
     public DrawerListAdapter(Context context, Handler handler, DisplayImageOptions options, user_iphone user) {
 
@@ -42,8 +41,6 @@ public class DrawerListAdapter extends BaseAdapter {
     public void refresh(user_iphone user) {
 
         mUser = user;
-        Log.d("DRAWER", "user phone number: "+mUser.getPhoneNumber());
-        Log.d("DRAWER", "user head icon: "+mUser.getHead_icon());
         notifyDataSetChanged();
     }
 

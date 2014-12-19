@@ -32,8 +32,8 @@ public class SuburbActivity extends Activity implements
         SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
 
-    private SearchView search_suburb;
     ProgressDialog progress;
+    private SearchView search_suburb;
     //private AmazingListView suburbList;
     //private ArrayAdapter<String> suburb_chosen_adapter;
     //private String[] suburb_chosen_names;
@@ -92,11 +92,10 @@ public class SuburbActivity extends Activity implements
 
         mAreaThread = new AreaManagerThread(mHandler, SuburbActivity.this);
         mAreaThread.start();
-        progress = new ProgressDialog(this ,R.style.dialog_loading);
+        progress = new ProgressDialog(this, R.style.dialog_loading);
         progress.show();
 
         suburbList = (ExpandableListView) findViewById(R.id.suburb_list);
-
 
 
         suburbListAdapter = new SuburbListAdapter(this, mHandler, mAreas);
@@ -153,7 +152,8 @@ public class SuburbActivity extends Activity implements
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.plate_menu, menu);
 
-        search_suburb = (SearchView) menu.findItem(R.id.search_plate).getActionView();;
+        search_suburb = (SearchView) menu.findItem(R.id.search_plate).getActionView();
+        ;
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
@@ -245,7 +245,6 @@ public class SuburbActivity extends Activity implements
         }
         return super.onKeyDown(keyCode, event);
     }
-
 
 
 }

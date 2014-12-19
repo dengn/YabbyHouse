@@ -22,7 +22,7 @@ public class MyAccountListCouponAdapter extends BaseAdapter {
     private Handler mHandler;
 
     public MyAccountListCouponAdapter(Context context, Handler handler) {
-        // TODO Auto-generated constructor stub
+
 
         mContext = context;
         mHandler = handler;
@@ -38,25 +38,25 @@ public class MyAccountListCouponAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
+
         return 1;
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
+
 
         viewHolder_coupon holder_coupon = null;
 

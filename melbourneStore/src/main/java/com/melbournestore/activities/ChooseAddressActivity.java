@@ -26,12 +26,10 @@ import com.melbournestore.models.user_iphone;
 import com.melbournestore.network.AddressManagerThread;
 import com.melbournestore.utils.MelbourneUtils;
 
-import java.util.ArrayList;
-
 public class ChooseAddressActivity extends Activity {
 
     public static final int result_code_suburb = 2;
-
+    private static final boolean DEBUG = false;
     private ListView chooseAddr_list;
 
     private ListView chooseAddrSuburb_list;
@@ -53,12 +51,14 @@ public class ChooseAddressActivity extends Activity {
                 // unit = 1
                 case 1:
                     addr_unit = b.getString("unit");
-                    Log.d("ADDRESS", "addr_unit: " + addr_unit);
+                    if (DEBUG)
+                        Log.d("ADDRESS", "addr_unit: " + addr_unit);
                     // street = 2
                     break;
                 case 2:
                     addr_street = b.getString("street");
-                    Log.d("ADDRESS", "addr_street: " + addr_street);
+                    if (DEBUG)
+                        Log.d("ADDRESS", "addr_street: " + addr_street);
                     break;
 
             }
@@ -69,10 +69,10 @@ public class ChooseAddressActivity extends Activity {
     private String suburbPostCode = "";
     private String areaName = "";
     private int areaFee = 0;
-    private long mExitTime;
     private user_iphone mUser;
-    private ArrayList<Area> mAreas;
     private Gson gson = new Gson();
+    private long mExitTime;
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,29 +91,23 @@ public class ChooseAddressActivity extends Activity {
         getActionBar().setTitle("送货地址");
 
 
+        //Get registered user info
         String mUserString = SharedPreferenceUtils.getLoginUser(this);
         mUser = gson.fromJson(mUserString, user_iphone.class);
+
         addr_unit = mUser.getUnitNo();
         addr_street = mUser.getStreet();
         addr_suburb = mUser.getSuburb().getName();
         suburbId = mUser.getSuburb().getId();
         suburbPostCode = mUser.getSuburb().getPostCode();
+
+
         Area mArea = MelbourneUtils.getAreaFromSuburb(mUser.getSuburb(), this);
         areaName = mArea.getName();
         areaFee = mArea.getFee();
 
 
-//        String users_string = SharedPreferenceUtils
-//                .getLoginUser(ChooseAddressActivity.this);
-//        Gson gson = new Gson();
-//        User[] users = gson.fromJson(users_string, User[].class);
-//        User activeUser = users[MelbourneUtils.getActiveUser(users)];
-//
-//        addr_unit = activeUser.getUnitNo();
-//        addr_street = activeUser.getStreet();
-//        addr_suburb = activeUser.getSuburb();
-
-
+        //Init UI
         chooseAddr_list = (ListView) findViewById(R.id.chooseAddr_list);
 
         mChooseAddressListAdapter = new ChooseAddressListAdapter(this,
@@ -140,7 +134,8 @@ public class ChooseAddressActivity extends Activity {
         savedInstanceState.putString("areaname", areaName);
         savedInstanceState.putInt("areafee", areaFee);
 
-        Log.d("ADDRESS", "address status saved");
+        if (DEBUG)
+            Log.d("ADDRESS", "address status saved");
         super.onSaveInstanceState(savedInstanceState);
 
     }
@@ -159,7 +154,9 @@ public class ChooseAddressActivity extends Activity {
         mChooseAddressListAdapter.refresh(addr_unit, addr_street,
                 addr_suburb, suburbPostCode);
         mChooseAddressSuburbListAdapter.refresh(areaName, areaFee);
-        Log.d("ADDRESS", "address status restored");
+
+        if (DEBUG)
+            Log.d("ADDRESS", "address status restored");
     }
 
     @Override
@@ -190,18 +187,18 @@ public class ChooseAddressActivity extends Activity {
                 areaFee = data.getIntExtra("fee", 0);
 
 
+                //update to UI
                 mChooseAddressListAdapter.refresh(addr_unit, addr_street,
                         addr_suburb, suburbPostCode);
                 mChooseAddressSuburbListAdapter.refresh(areaName, areaFee);
-                //chooseAddr_list.setAdapter(mChooseAddressListAdapter);
-                //chooseAddrSuburb_list.setAdapter(mChooseAddressSuburbListAdapter);
+
 
             }
             if (resultCode == RESULT_CANCELED) {
-                // Write your code if there's no result
+                //Canceled, do nothing
             }
         }
-    }// onActivityResult
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -213,12 +210,10 @@ public class ChooseAddressActivity extends Activity {
                 // activity and
                 // use NavUtils in the Support Package to ensure proper handling of
                 // Up.
-                // Intent upIntent = NavUtils.getParentActivityIntent(this);
-                // upIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                // startActivity(upIntent);
                 finish();
                 return true;
             case R.id.finish:
+
 
                 if (addr_unit.equals("") || addr_street.equals("")
                         || addr_suburb.equals("")) {
@@ -234,24 +229,14 @@ public class ChooseAddressActivity extends Activity {
                                     }
                             ).show();
                 } else {
-//                    String users_string = SharedPreferenceUtils
-//                            .getLoginUser(ChooseAddressActivity.this);
-//                    Gson gson = new Gson();
-//                    User[] users = gson.fromJson(users_string, User[].class);
-//                    User active_user = users[MelbourneUtils.getActiveUser(users)];
-//                    active_user.setUnitNo(addr_unit);
-//                    active_user.setStreet(addr_street);
-//                    active_user.setSuburb(addr_suburb);
-//
-//                    SharedPreferenceUtils.saveLoginUser(ChooseAddressActivity.this,
-//                            gson.toJson(users));
 
+                    //Post New Address to server
                     AddressManagerThread addressThread = new AddressManagerThread(mHandler, this, mUser.getPhoneNumber(), addr_unit, addr_street, suburbId);
                     addressThread.start();
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("unit",addr_unit);
-                    returnIntent.putExtra("street",addr_street);
-                    returnIntent.putExtra("suburb",addr_suburb);
+                    returnIntent.putExtra("unit", addr_unit);
+                    returnIntent.putExtra("street", addr_street);
+                    returnIntent.putExtra("suburb", addr_suburb);
                     returnIntent.putExtra("area", areaName);
                     returnIntent.putExtra("fee", areaFee);
                     setResult(RESULT_OK, returnIntent);

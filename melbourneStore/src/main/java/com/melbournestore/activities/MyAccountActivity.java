@@ -37,8 +37,6 @@ import com.melbournestore.application.SysApplication;
 import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.Suburb;
 import com.melbournestore.models.user_iphone;
-import com.melbournestore.network.CouponManagerThread;
-import com.melbournestore.network.OrderManagerThread;
 import com.melbournestore.network.UploadImageManagerThread;
 import com.melbournestore.network.UserLoginManagerThread;
 import com.melbournestore.utils.BitmapUtils;
@@ -53,15 +51,16 @@ import java.io.IOException;
 
 public class MyAccountActivity extends Activity {
 
-    public static final int choose_address_code = 4;
+    public static final int CHOOSE_ADDRESS_CODE = 4;
 
     public static final int REQUEST_CODE_CAMERA = 5;
 
     public static final int REQUEST_CODE_IMAGE = 6;
 
-    // public static final int IMAGE_REQUEST_CODE = 6;
-    DisplayImageOptions options;
-    ProgressDialog progress;
+    private static final boolean DEBUG = false;
+
+    private DisplayImageOptions options;
+    private ProgressDialog progress;
     private Button mLogout;
     private ListView mMyAccountList;
     private ListView mMyAccountListAddress;
@@ -80,12 +79,13 @@ public class MyAccountActivity extends Activity {
             switch (msg.what) {
 
                 case 0:
-                    // Popup Menu
+                    // Popup Menu to choose profile picture
 
                     showPopMenu();
                     break;
 
                 case 1:
+                    //Update order and coupon numbers
                     String mUserString = (String) msg.obj;
                     SharedPreferenceUtils.saveLoginUser(MyAccountActivity.this, mUserString);
 
@@ -115,28 +115,6 @@ public class MyAccountActivity extends Activity {
                     break;
 
 
-//                case 1:
-//                    //get Coupon
-//                    mCouponNum = (Integer)msg.obj;
-//                    Log.d("ACCOUNT", "mCouponNum: "+String.valueOf(mCouponNum));
-//                    mMyAccountListAdapter = new MyAccountListAdapter(MyAccountActivity.this, mHandler, options, mUser, mOrderNum, mCouponNum);
-//                    mMyAccountList.setAdapter(mMyAccountListAdapter);
-//                    break;
-//                case 2:
-//
-//                    break;
-//
-//                case 3:
-//                    //get Order
-//                    mOrderNum = (Integer)msg.obj;
-//                    Log.d("ACCOUNT", "mOrderNum: "+String.valueOf(mCouponNum));
-//                    mMyAccountListAdapter = new MyAccountListAdapter(MyAccountActivity.this, mHandler, options, mUser, mOrderNum, mCouponNum);
-//                    mMyAccountList.setAdapter(mMyAccountListAdapter);
-//                    break;
-//                case 4:
-//
-//                    break;
-
             }
         }
     };
@@ -144,10 +122,6 @@ public class MyAccountActivity extends Activity {
     private String mPassword = "";
     private Gson gson = new Gson();
     private PopupWindow mpopupWindow;
-    private OrderManagerThread mOrderThread;
-    private CouponManagerThread mCouponThread;
-    private int callOrderCode = 0;
-    private int callCouponCode = 0;
     private UserLoginManagerThread mLoginThread;
     private long mExitTime;
 
@@ -177,7 +151,8 @@ public class MyAccountActivity extends Activity {
         mNumber = SharedPreferenceUtils.getUserNumber(this);
         mPassword = SharedPreferenceUtils.getUserPassword(this);
 
-        Log.d("LOGIN", "mNumber: " + mNumber + " mPassword; " + mPassword);
+        if (DEBUG)
+            Log.d("LOGIN", "mNumber: " + mNumber + " mPassword; " + mPassword);
 
         mLoginThread = new UserLoginManagerThread(mHandler, this, mNumber, mPassword);
         mLoginThread.start();
@@ -203,13 +178,9 @@ public class MyAccountActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-//				Intent intent = new Intent(MyAccountActivity.this, MainActivity.class);
-//				startActivity(intent);
-//				finish();
 
-                //SysApplication.setLoginStatus(false);
 
+                //Log out, reinit the registered values to empty
                 user_iphone user = new user_iphone("", "", "", 0, "", new Suburb(0, "", "", ""));
                 SharedPreferenceUtils.saveLoginUser(MyAccountActivity.this, gson.toJson(user));
                 SharedPreferenceUtils.saveUserNumber(MyAccountActivity.this, "");
@@ -263,10 +234,6 @@ public class MyAccountActivity extends Activity {
                 // use NavUtils in the Support Package to ensure proper handling of
                 // Up.
 
-//			Intent returnIntent = new Intent();
-//			returnIntent.putExtra("profile", mProfile);
-//			setResult(RESULT_OK, returnIntent);
-//			finish();
 
                 Intent upIntent = NavUtils.getParentActivityIntent(this);
                 upIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -282,21 +249,11 @@ public class MyAccountActivity extends Activity {
         // Check which request we're responding to
 
         switch (requestCode) {
-            case choose_address_code:
+            case CHOOSE_ADDRESS_CODE:
                 // Get the Address chosen
 
                 // Make sure the request was successful
                 if (resultCode == RESULT_OK) {
-//                    String unit = data.getStringExtra("unit");
-//                    String street = data.getStringExtra("street");
-//                    String suburb = data.getStringExtra("suburb");
-//                    String areaName = data.getStringExtra("area");
-//                    int fee = data.getIntExtra("fee", 0);
-//
-//                    mUser.setUnitNo(unit);
-//                    mUser.setStreet(street);
-//                    mUser.setSuburb(MelbourneUtils.getSuburbFromAreaNameAndSuburb(areaName, suburb, this));
-
 
                     mMyAccountListAdapterAddress.refresh(mUser);
                     mMyAccountListAddress.setAdapter(mMyAccountListAdapterAddress);
@@ -311,12 +268,6 @@ public class MyAccountActivity extends Activity {
                                 this.getContentResolver(), originalUri);
 
 
-//                        String users_string = SharedPreferenceUtils.getLoginUser(MyAccountActivity.this);
-//                        Gson gson = new Gson();
-//                        User[] users = gson.fromJson(users_string, User[].class);
-//                        User activeUser1 = users[MelbourneUtils.getActiveUser(users)];
-                        //TODO
-
                         Bitmap scaledBitmap = BitmapUtils.scaleDownBitmap(bitmap, 100, getBaseContext());
 
                         BitmapUtils.saveMyBitmap(mUser.getPhoneNumber(), scaledBitmap);
@@ -324,7 +275,10 @@ public class MyAccountActivity extends Activity {
 
                         MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
                         File file = BitmapUtils.getMyBitMapFile(mUser.getPhoneNumber());
-                        Log.d("HEADICON", file.getAbsolutePath());
+
+                        if (DEBUG)
+                            Log.d("HEADICON", file.getAbsolutePath());
+
                         String number = mUser.getPhoneNumber();
                         multipartEntity.addTextBody("number", number);
                         multipartEntity.addBinaryBody("file", file, ContentType.create("image/png"), "head_icon.png");
@@ -338,7 +292,6 @@ public class MyAccountActivity extends Activity {
                         mMyAccountListAdapter.refresh(mUser, mOrderNum, mCouponNum);
                         mMyAccountList.setAdapter(mMyAccountListAdapter);
 
-//                        SharedPreferenceUtils.saveLoginUser(MyAccountActivity.this, gson.toJson(users));
 
                     } catch (FileNotFoundException e) {
                         // TODO Auto-generated catch block
@@ -355,12 +308,6 @@ public class MyAccountActivity extends Activity {
                     Bundle bundle = data.getExtras();
                     Bitmap bitmap = (Bitmap) bundle.get("data");
 
-//                    String users_string = SharedPreferenceUtils.getLoginUser(MyAccountActivity.this);
-//                    Gson gson = new Gson();
-//                    User[] users = gson.fromJson(users_string, User[].class);
-//                    User activeUser2 = users[MelbourneUtils.getActiveUser(users)];
-
-                    //TODO
 
                     Bitmap scaledBitmap = BitmapUtils.scaleDownBitmap(bitmap, 100, getBaseContext());
 
@@ -373,11 +320,11 @@ public class MyAccountActivity extends Activity {
 
                     MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();
                     File file = BitmapUtils.getMyBitMapFile(mUser.getPhoneNumber());
-                    Log.d("HEADICON", file.getAbsolutePath());
+                    if (DEBUG)
+                        Log.d("HEADICON", file.getAbsolutePath());
                     String number = mUser.getPhoneNumber();
                     multipartEntity.addTextBody("number", number);
                     multipartEntity.addBinaryBody("file", file, ContentType.create("image/png"), "head_icon.png");
-                    //multipartEntity.addBinaryBody("file", file, ContentType.create("image/png"), "head_icon.png");
                     UploadImageManagerThread mUploadThread = new UploadImageManagerThread(mHandler, this, mUser.getPhoneNumber(), multipartEntity);
                     mUploadThread.start();
 
@@ -388,7 +335,6 @@ public class MyAccountActivity extends Activity {
                     mMyAccountListAdapter.refresh(mUser, mOrderNum, mCouponNum);
                     mMyAccountList.setAdapter(mMyAccountListAdapter);
 
-//                    SharedPreferenceUtils.saveLoginUser(MyAccountActivity.this, gson.toJson(users));
                 }
                 break;
         }
@@ -408,20 +354,6 @@ public class MyAccountActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-                // Intent intentFromCapture = new Intent(
-                // MediaStore.ACTION_IMAGE_CAPTURE);
-                //
-                //
-                // File path = Environment
-                // .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-                // File file = new File(path,
-                // IMAGE_FILE_NAME);
-                // intentFromCapture.putExtra(
-                // MediaStore.EXTRA_OUTPUT,
-                // Uri.fromFile(file));
-                // startActivityForResult(intentFromCapture,
-                // CAMERA_REQUEST_CODE);
 
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, REQUEST_CODE_CAMERA);
@@ -432,13 +364,7 @@ public class MyAccountActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-                // Intent intentFromGallery = new Intent();
-                // intentFromGallery.setType("image/*");
-                // intentFromGallery
-                // .setAction(Intent.ACTION_GET_CONTENT);
-                // startActivityForResult(intentFromGallery,
-                // IMAGE_REQUEST_CODE);
+
                 Intent intent = new Intent(Intent.ACTION_PICK,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, REQUEST_CODE_IMAGE);
@@ -450,7 +376,7 @@ public class MyAccountActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
+
                 mpopupWindow.dismiss();
             }
 

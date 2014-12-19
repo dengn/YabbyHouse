@@ -26,10 +26,12 @@ import java.util.List;
  */
 public class DeleteOrderManagerThread extends Thread {
 
-    Handler mHandler;
-    Context mContext;
-    int mId;
-    Gson gson = new Gson();
+    private static final boolean DEBUG = false;
+
+    private Handler mHandler;
+    private Context mContext;
+    private int mId;
+    private Gson gson = new Gson();
 
 
     public DeleteOrderManagerThread(Handler handler, Context context, int id) {
@@ -103,7 +105,8 @@ public class DeleteOrderManagerThread extends Thread {
 
         String result = handlePost(Constant.URL_BASE + "delete_order", pairs);
 
-        Log.d("DELETEORDERTHREAD", result);
+        if (DEBUG)
+            Log.d("DELETEORDERTHREAD", result);
 
 
     }

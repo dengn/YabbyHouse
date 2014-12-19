@@ -24,7 +24,8 @@ import java.util.HashMap;
  */
 public class RecommandationManagerThread extends Thread {
 
-    Handler mHandler;
+    private static final boolean DEBUG = false;
+    private Handler mHandler;
 
     public RecommandationManagerThread(Handler handler) {
         mHandler = handler;
@@ -70,12 +71,13 @@ public class RecommandationManagerThread extends Thread {
 
     @Override
     public void run() {
-        // TODO Auto-generated method stub
-        String result = handleGet(Constant.URL_BASE+"advertisements");
 
+        String result = handleGet(Constant.URL_BASE + "advertisements");
 
-        Log.d("THREAD", result);
-        Log.d("THREAD", "result string len: " + String.valueOf(result.length()));
+        if (DEBUG)
+            Log.d("THREAD", result);
+        if (DEBUG)
+            Log.d("THREAD", "result string len: " + String.valueOf(result.length()));
         ArrayList<advertisements> mAd = getAdvertisement(result);
 
         Message message = mHandler.obtainMessage();

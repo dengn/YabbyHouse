@@ -34,11 +34,13 @@ import java.util.List;
  */
 public class UserLoginManagerThread extends Thread {
 
-    Handler mHandler;
-    Context mContext;
-    String mNumber;
-    String mPassword;
-    Gson gson = new Gson();
+    private static final boolean DEBUG = false;
+
+    private Handler mHandler;
+    private Context mContext;
+    private String mNumber;
+    private String mPassword;
+    private Gson gson = new Gson();
 
 
     public UserLoginManagerThread(Handler handler, Context context, String number, String password) {
@@ -155,28 +157,29 @@ public class UserLoginManagerThread extends Thread {
         pairs.add(new BasicNameValuePair("number", mNumber));
         pairs.add(new BasicNameValuePair("password", mPassword));
         pairs.add(new BasicNameValuePair("device_token", ""));
-        //String result = handlePut(Constant.URL_BASE+"user/verification", pairs);
+
         String result = handlePost(Constant.URL_BASE + "user", pairs);
-        Log.d("USERTHREAD", result);
+        if (DEBUG)
+            Log.d("USERTHREAD", result);
         if (!result.contains("user")) {
             Message message = mHandler.obtainMessage();
             message.what = 2;
             mHandler.sendMessage(message);
-        }
-        else if (result.equals("HTTP/1.1 404 NOT FOUND")) {
+        } else if (result.equals("HTTP/1.1 404 NOT FOUND")) {
             Message message = mHandler.obtainMessage();
             message.what = 0;
             mHandler.sendMessage(message);
-        }
-        else {
+        } else {
             user_iphone user = getUser(result);
 
             String order_result = handleGet(Constant.URL_BASE + "user/" + mNumber + "/orders");
-            Log.d("ORDERTHREAD", order_result);
+            if (DEBUG)
+                Log.d("ORDERTHREAD", order_result);
             Order[] orders = getOrders(order_result);
 
             String coupon_result = handleGet(Constant.URL_BASE + "user/" + mNumber + "/coupons");
-            Log.d("COUPONTHREAD", coupon_result);
+            if (DEBUG)
+                Log.d("COUPONTHREAD", coupon_result);
             user_coupon[] coupons = getCoupons(coupon_result);
 
             SharedPreferenceUtils.saveUserNumber(mContext, mNumber);
@@ -190,31 +193,7 @@ public class UserLoginManagerThread extends Thread {
 
 
         }
-//        item_iphone mItem = getItem(result);
-//
-//        String localItemsString = SharedPreferenceUtils.getLocalItems(mContext, mItem.getShopId());
-//        Type type = new TypeToken<ArrayList<item_iphone>>() {}.getType();
-//        ArrayList<item_iphone> localItems = gson.fromJson(localItemsString, type);
-//        ArrayList<Integer> localItemIds = MelbourneUtils.getLocalItemsId(localItems);
-//
-//        if(!localItemIds.contains(mItem.getId())){
-//            ArrayList<item_iphone> newItems = new ArrayList<item_iphone>();
-//            newItems.clear();
-//            newItems.addAll(localItems);
-//            newItems.add(mItem);
-//            SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(newItems), mItem.getShopId());
-//        }
-//
-//        Message message = mHandler.obtainMessage();
-//        message.obj = mItem;
-//        try {
-//            sleep(5);
-//        } catch (InterruptedException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        message.what = 0;
-//        mHandler.sendMessage(message);
+
     }
 
 }

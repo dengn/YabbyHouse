@@ -24,14 +24,16 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by OLEDCOMM on 01/12/2014.
+ * Created by dengn on 01/12/2014.
  */
 public class OrderManagerThread extends Thread {
 
-    Handler mHandler;
-    Context mContext;
-    Gson gson = new Gson();
-    String mUserNumber;
+    private static final boolean DEBUG = false;
+
+    private Handler mHandler;
+    private Context mContext;
+    private Gson gson = new Gson();
+    private String mUserNumber;
 
 
     public OrderManagerThread(Handler handler, Context context, String userNumber) {
@@ -99,7 +101,8 @@ public class OrderManagerThread extends Thread {
 
         String result = handleGet(Constant.URL_BASE + "user/" + mUserNumber + "/orders");
 
-        Log.d("ORDERTHREAD", result);
+        if(DEBUG)
+            Log.d("ORDERTHREAD", result);
         Order[] mOrders = getOrders(result);
 
 
@@ -107,24 +110,6 @@ public class OrderManagerThread extends Thread {
         message.obj = mOrders;
         message.what = 0;
         mHandler.sendMessage(message);
-
-//        switch(mCallCode){
-//            case 0:
-//                //called from MyAccountActivity page
-//                Message message = mHandler.obtainMessage();
-//                message.obj = mOrders.length;
-//                Log.d("ACCOUNT", "mOrders.length: "+String.valueOf(mOrders.length));
-//                message.what = 3;
-//                mHandler.sendMessage(message);
-//                break;
-//            case 1:
-//                //called by the other
-//                message = mHandler.obtainMessage();
-//                message.obj = mOrders;
-//                message.what = 4;
-//                mHandler.sendMessage(message);
-//                break;
-//        }
 
 
     }

@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.melbournestore.application.SysApplication;
 
+
+//Finally this function is not implemented
 public class ChatActivity extends Activity {
 
     private long mExitTime;
@@ -47,7 +49,7 @@ public class ChatActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.call:
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "0488888888"));
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "0412888588"));
                 startActivity(intent);
                 return true;
             case android.R.id.home:

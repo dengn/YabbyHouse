@@ -22,10 +22,7 @@ import android.widget.SearchView;
 import com.melbournestore.activities.R;
 import com.melbournestore.adaptors.CategoryListAdapter;
 import com.melbournestore.adaptors.ItemsSearchListAdapter;
-import com.melbournestore.adaptors.PlateSearchListAdapter;
 import com.melbournestore.application.SysApplication;
-import com.melbournestore.models.Plate;
-import com.melbournestore.models.Shop;
 import com.melbournestore.models.Shop_iPhone;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.network.ItemManagerThread;
@@ -37,26 +34,25 @@ import java.util.ArrayList;
 
 public class PlateFragment extends Fragment {
 
-    Context mContext;
+    private Context mContext;
 
-    ListView category;
+    private ProgressDialog progress;
 
-    ProgressDialog progress;
+    private ListView category;
+    private CategoryListAdapter category_adapter;
 
-    ExpandableListView plates;
-    DisplayImageOptions options;
-    ShopManagerThread mShopThread;
-    CategoryListAdapter category_adapter;
-    PlateSearchListAdapter platesFilter_adapter;
-    ItemsSearchListAdapter itemsSearchAdapter;
-    SearchItemManagerThread mSearchItemThread;
+    private ExpandableListView plates;
+    private ItemsSearchListAdapter itemsSearchAdapter;
 
-    ListView searchList;
+    private ListView searchList;
+    //private PlateSearchListAdapter platesFilter_adapter;
 
+    private DisplayImageOptions options;
+    private ShopManagerThread mShopThread;
+    private SearchItemManagerThread mSearchItemThread;
 
-    boolean header_created = false;
-    ActionBar actionBar;
-    SearchView search_plate;
+    private ActionBar actionBar;
+    private SearchView search_plate;
     private ArrayList<Shop_iPhone> mShops = new ArrayList<Shop_iPhone>();
     private ArrayList<item_iphone> mSearchItems = new ArrayList<item_iphone>();
     private Handler mHandler_item = new Handler();
@@ -87,7 +83,7 @@ public class PlateFragment extends Fragment {
 
         }
     };
-    private ArrayList<Shop> shopList = new ArrayList<Shop>();
+    //private ArrayList<Shop> shopList = new ArrayList<Shop>();
 
     public PlateFragment() {
 
@@ -143,35 +139,33 @@ public class PlateFragment extends Fragment {
         search_plate.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //plates.setVisibility(View.VISIBLE);
 
-                expandAll();
+
+                //expandAll();
             }
         });
 
         search_plate.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String query) {
-                //plates.setVisibility(View.VISIBLE);
 
-                platesFilter_adapter.filterData(query);
+
+                //platesFilter_adapter.filterData(query);
 
                 mSearchItemThread = new SearchItemManagerThread(mHandler, mContext, query);
                 mSearchItemThread.start();
 
 
-
-
-                expandAll();
+                //expandAll();
                 return false;
             }
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //plates.setVisibility(View.VISIBLE);
+
                 searchList.setVisibility(View.VISIBLE);
-                platesFilter_adapter.filterData(query);
-                expandAll();
+                //platesFilter_adapter.filterData(query);
+                //expandAll();
 
 
                 return false;
@@ -180,10 +174,10 @@ public class PlateFragment extends Fragment {
         search_plate.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                plates.setVisibility(View.INVISIBLE);
+                //plates.setVisibility(View.INVISIBLE);
                 searchList.setVisibility(View.INVISIBLE);
-                platesFilter_adapter.filterData("");
-                expandAll();
+                //platesFilter_adapter.filterData("");
+                //expandAll();
                 return false;
             }
         });
@@ -194,7 +188,6 @@ public class PlateFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        // handle myorder_list_item selection
         switch (item.getItemId()) {
             case R.id.search_plate:
 
@@ -230,13 +223,11 @@ public class PlateFragment extends Fragment {
 
         plates = (ExpandableListView) rootView.findViewById(R.id.plate_search_list);
 
-        loadSomeData();
 
-        //platesFilter_adapter = new PlatesFilterListAdapter(getActivity(), MelbourneUtils.getAllPlateNames());
 
-        platesFilter_adapter = new PlateSearchListAdapter(getActivity(), shopList);
+        //platesFilter_adapter = new PlateSearchListAdapter(getActivity(), shopList);
 
-        plates.setAdapter(platesFilter_adapter);
+        //plates.setAdapter(platesFilter_adapter);
 
         plates.setVisibility(View.INVISIBLE);
 
@@ -263,81 +254,15 @@ public class PlateFragment extends Fragment {
 
     }
 
-    //method to expand all groups
-    private void expandAll() {
-        int count = platesFilter_adapter.getGroupCount();
-        for (int i = 0; i < count; i++) {
-            plates.expandGroup(i);
-        }
-    }
-
-    private void loadSomeData() {
+//    //method to expand all groups
+//    private void expandAll() {
+//        int count = platesFilter_adapter.getGroupCount();
+//        for (int i = 0; i < count; i++) {
+//            plates.expandGroup(i);
+//        }
+//    }
 
 
-        ArrayList<Plate> plateList = new ArrayList<Plate>();
-        Plate plate = new Plate(15, "麻辣小龙虾", 0, 55, 121, 0, 0, 1);
-        plateList.add(plate);
-
-        plate = new Plate(45, "蒜泥小龙虾", 0, 55, 121, 0, 0, 1);
-        plateList.add(plate);
-
-        plate = new Plate(45, "泡椒小龙虾", 0, 55, 121, 0, 0, 1);
-        plateList.add(plate);
-
-        plate = new Plate(45, "咖喱小龙虾", 0, 55, 121, 0, 0, 1);
-        plateList.add(plate);
-
-        plate = new Plate(45, "小龙虾炒年糕", 0, 55, 121, 0, 0, 1);
-        plateList.add(plate);
-
-
-        Shop shop = new Shop(1, "龙虾叔叔", "123", "123", "06458789", 1, "123", "456", plateList.toArray(new Plate[plateList.size()]));
-
-        shopList.add(shop);
-
-        plateList = new ArrayList<Plate>();
-
-        plate = new Plate(15, "A套餐", 0, 55, 121, 0, 0, 1);
-        plateList.add(plate);
-
-        plate = new Plate(45, "B套餐", 0, 55, 121, 0, 0, 1);
-        plateList.add(plate);
-
-        plate = new Plate(45, "C套餐", 0, 55, 121, 0, 0, 1);
-        plateList.add(plate);
-
-        plate = new Plate(45, "D套餐", 0, 55, 121, 0, 0, 1);
-        plateList.add(plate);
-
-        plate = new Plate(45, "E套餐", 0, 55, 121, 0, 0, 1);
-        plateList.add(plate);
-
-        shop = new Shop(2, "黑丸嫩仙草", "123", "123", "06458789", 1, "123", "456", plateList.toArray(new Plate[plateList.size()]));
-
-        shopList.add(shop);
-
-
-        plateList = new ArrayList<Plate>();
-
-        plate = new Plate(15, "水饺", 0, 55, 121, 0, 0, 1);
-        plateList.add(plate);
-
-        plate = new Plate(45, "煎饺", 0, 55, 121, 0, 0, 1);
-        plateList.add(plate);
-
-        plate = new Plate(45, "猪肉水饺", 0, 55, 121, 0, 0, 1);
-        plateList.add(plate);
-
-        plate = new Plate(45, "芹菜水饺", 0, 55, 121, 0, 0, 1);
-        plateList.add(plate);
-
-        plate = new Plate(45, "白菜水饺", 0, 55, 121, 0, 0, 1);
-        plateList.add(plate);
-
-        shop = new Shop(3, "水饺妞妞", "123", "123", "06458789", 1, "123", "456", plateList.toArray(new Plate[plateList.size()]));
-
-        shopList.add(shop);
-    }
 
 
 }

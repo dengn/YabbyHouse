@@ -1,10 +1,6 @@
 package com.melbournestore.adaptors;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +15,15 @@ import com.melbournestore.utils.Constant;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class RecommandationListAdapter extends BaseAdapter {
 
 
     private static LayoutInflater inflater = null;
-    Context mContext;
-    DisplayImageOptions mOptions;
-    ArrayList<advertisements> mAd = new ArrayList<advertisements>();
+    private Context mContext;
+    private DisplayImageOptions mOptions;
+    private ArrayList<advertisements> mAd = new ArrayList<advertisements>();
 
     public RecommandationListAdapter(Context context, DisplayImageOptions options, ArrayList<advertisements> Ad) {
 
@@ -113,29 +108,6 @@ public class RecommandationListAdapter extends BaseAdapter {
         Button ad_desc;
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
 
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
 
 }

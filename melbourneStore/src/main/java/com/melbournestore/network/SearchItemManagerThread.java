@@ -21,13 +21,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by OLEDCOMM on 28/11/2014.
+ * Created by dengn on 28/11/2014.
  */
-public class SearchItemManagerThread extends Thread{
+public class SearchItemManagerThread extends Thread {
 
-    Handler mHandler;
-    Context mContext;
-    String mSearchText;
+    private static final boolean DEBUG = false;
+
+    private Handler mHandler;
+    private Context mContext;
+    private String mSearchText;
 
     public SearchItemManagerThread(Handler handler, Context context, String searchText) {
         mHandler = handler;
@@ -66,7 +68,7 @@ public class SearchItemManagerThread extends Thread{
 
         ArrayList<item_iphone> Items_array = new ArrayList<item_iphone>();
 
-        if(items.length>0) {
+        if (items.length > 0) {
 
             for (int i = 0; i < items.length; i++) {
                 Items_array.add(items[i]);
@@ -81,29 +83,17 @@ public class SearchItemManagerThread extends Thread{
     @Override
     public void run() {
 
-        String result = handleGet(Constant.URL_BASE + "items?search="+mSearchText);
+        String result = handleGet(Constant.URL_BASE + "items?search=" + mSearchText);
 
 
-
+        if(DEBUG)
         Log.d("ITEMSEARCHTHREAD", result);
         ArrayList<item_iphone> mItems = getItems(result);
 
 
-//        if(SharedPreferenceUtils.getFirstTimeLaunch(mContext)){
-//            SharedPreferenceUtils.saveFirstTimeLaunch(mContext);
-//
-//            MelbourneUtils.createLocalItems(mContext, mItems);
-//
-//        }
 
         Message message = mHandler.obtainMessage();
         message.obj = mItems;
-//        try {
-//            sleep(5);
-//        } catch (InterruptedException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
         message.what = 1;
         mHandler.sendMessage(message);
     }

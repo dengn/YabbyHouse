@@ -25,16 +25,15 @@ public class SubmitListCouponAdapter extends BaseAdapter {
 
 
     private static LayoutInflater inflater = null;
-    final int TYPE_URL = 0;
-    final int TYPE_EMPTY = 1;
-    Handler mHandler;
-    Context mContext;
-    String mArea;
-    int mFee;
-    user_iphone mUser;
+    private final int TYPE_URL = 0;
+    private final int TYPE_EMPTY = 1;
+    private Handler mHandler;
+    private Context mContext;
+    private String mArea;
+    private int mFee;
+    private user_iphone mUser;
 
     public SubmitListCouponAdapter(Context context, Handler handler, String area, int fee, user_iphone user) {
-        // TODO Auto-generated constructor stub
 
 
         mContext = context;
@@ -55,7 +54,7 @@ public class SubmitListCouponAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        // TODO Auto-generated method stub
+
         int p = position;
         if (p == 0)
             return TYPE_URL;
@@ -66,25 +65,25 @@ public class SubmitListCouponAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
+
         return 2;
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
+
 
         viewHolder_url holder_url = null;
         viewHolder_coupon holder_coupon = null;
@@ -121,7 +120,7 @@ public class SubmitListCouponAdapter extends BaseAdapter {
 
                     @Override
                     public void onClick(View v) {
-                        // TODO Auto-generated method stub
+
                         Intent intent = new Intent(mContext, DeliveryNoticeActivity.class);
                         mContext.startActivity(intent);
                     }
@@ -145,7 +144,7 @@ public class SubmitListCouponAdapter extends BaseAdapter {
 
                     @Override
                     public void onClick(View v) {
-                        // TODO Auto-generated method stub
+
                         Intent intent = new Intent(mContext,
                                 MyCouponActivity.class);
                         intent.putExtra("callSource", 1);

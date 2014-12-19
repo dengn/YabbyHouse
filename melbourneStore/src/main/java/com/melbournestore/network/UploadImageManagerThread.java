@@ -28,14 +28,16 @@ import java.util.List;
 
 
 /**
- * Created by OLEDCOMM on 03/12/2014.
+ * Created by dengn on 03/12/2014.
  */
-public class UploadImageManagerThread extends Thread{
-    Handler mHandler;
-    Context mContext;
-    String mNumber;
-    MultipartEntityBuilder mMultipartEntity;
-    Gson gson = new Gson();
+public class UploadImageManagerThread extends Thread {
+
+    private static final boolean DEBUG = false;
+    private Handler mHandler;
+    private Context mContext;
+    private String mNumber;
+    private MultipartEntityBuilder mMultipartEntity;
+    private Gson gson = new Gson();
 
 
     public UploadImageManagerThread(Handler handler, Context context, String number, MultipartEntityBuilder multipartEntity) {
@@ -50,26 +52,6 @@ public class UploadImageManagerThread extends Thread{
         HttpGet request = new HttpGet(strUrl);//实例化get请求
         DefaultHttpClient client = new DefaultHttpClient();//实例化客户端
         try {
-            HttpResponse response = client.execute(request);//执行该请求,得到服务器端的响应内容
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                result = EntityUtils.toString(response.getEntity());//把响应结果转成String
-            } else {
-                result = response.getStatusLine().toString();
-            }
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-        return result;
-    }
-
-
-    public String handlePost(String strUrl, List<NameValuePair> params) {
-        String result = null;
-        HttpPost request = new HttpPost(strUrl);//实例化get请求
-        DefaultHttpClient client = new DefaultHttpClient();//实例化客户端
-
-        try {
-            request.setEntity(mMultipartEntity.build());
             HttpResponse response = client.execute(request);//执行该请求,得到服务器端的响应内容
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 result = EntityUtils.toString(response.getEntity());//把响应结果转成String
@@ -101,9 +83,24 @@ public class UploadImageManagerThread extends Thread{
         return result;
     }
 
+    public String handlePost(String strUrl, List<NameValuePair> params) {
+        String result = null;
+        HttpPost request = new HttpPost(strUrl);//实例化get请求
+        DefaultHttpClient client = new DefaultHttpClient();//实例化客户端
 
-
-
+        try {
+            request.setEntity(mMultipartEntity.build());
+            HttpResponse response = client.execute(request);//执行该请求,得到服务器端的响应内容
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                result = EntityUtils.toString(response.getEntity());//把响应结果转成String
+            } else {
+                result = response.getStatusLine().toString();
+            }
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+        return result;
+    }
 
     @Override
     public void run() {
@@ -111,13 +108,13 @@ public class UploadImageManagerThread extends Thread{
         List<NameValuePair> pairs = new ArrayList<NameValuePair>();
         pairs.add(new BasicNameValuePair("number", mNumber));
 
-        //String result = handlePut(Constant.URL_BASE+"user/verification", pairs);
+
         String result = handlePost(Constant.URL_BASE + "user/upload/headicon", pairs);
 
-
+        if(DEBUG)
         Log.d("UPLOADTHREAD", result);
 
-        if(result.contains("head_icon")){
+        if (result.contains("head_icon")) {
             HashMap<String, String> headIcon = new HashMap<String, String>();
             Gson gson = new Gson();
             Type listType = new TypeToken<HashMap<String, String>>() {
@@ -127,12 +124,11 @@ public class UploadImageManagerThread extends Thread{
             msg.obj = headIcon.get("head_icon");
             msg.what = 2;
             mHandler.sendMessage(msg);
-        }else{
+        } else {
             Message msg = mHandler.obtainMessage();
             msg.what = 3;
             mHandler.sendMessage(msg);
         }
-
 
 
     }

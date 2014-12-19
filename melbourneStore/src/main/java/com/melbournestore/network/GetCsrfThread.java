@@ -20,12 +20,13 @@ import java.util.HashMap;
 /**
  * Created by dengn on 2014/12/3.
  */
-public class GetCsrfThread extends Thread{
+public class GetCsrfThread extends Thread {
 
-    Handler mHandler;
-    Context mContext;
-    Gson gson = new Gson();
+    private static final boolean DEBUG = false;
 
+    private Handler mHandler;
+    private Context mContext;
+    private Gson gson = new Gson();
 
 
     public GetCsrfThread(Handler handler, Context context) {
@@ -52,9 +53,6 @@ public class GetCsrfThread extends Thread{
     }
 
 
-
-
-
     @Override
     public void run() {
 
@@ -66,8 +64,9 @@ public class GetCsrfThread extends Thread{
         HashMap<String, String> csrf_hash = gson.fromJson(csrf, type);
 
         String mCsrf = csrf_hash.get("csrf");
-        //SharedPreferenceUtils.saveCsrf(mContext, mCsrf);
-        Log.d("CREATEORDERTHREAD", "mCsrf: " + mCsrf);
+
+        if (DEBUG)
+            Log.d("CREATEORDERTHREAD", "mCsrf: " + mCsrf);
 
 
     }

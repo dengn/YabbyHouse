@@ -28,26 +28,28 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 public class DishActivity extends Activity {
 
-    DisplayImageOptions options;
-    ProgressDialog progress;
+    private DisplayImageOptions options;
+
+
+    private ProgressDialog progress;
     private ListView mDishList;
     private DishListAdapter mDishListAdapter;
     private Button mDishConfirmChoice;
     private TextView mDishTotalPrice;
     private TextView mDishTotalNum;
-    private String mName;
-    private int mPrice;
-    private int mStockMax;
-    private int mNum;
-    private int mLikeNum;
+
+
     private int mItemId;
     private String mItemName;
     private number_price sumNumberPrice;
 
-    private item_iphone mItem = new item_iphone();
-    private SingleItemManagerThread mSingleItemThread;
     private float mTotalPrice;
     private int mTotalNum;
+
+    private item_iphone mItem = new item_iphone();
+    private SingleItemManagerThread mSingleItemThread;
+
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -67,15 +69,8 @@ public class DishActivity extends Activity {
                 case 1:
                     // plus = 1
 
-//                    String shops_string1 = SharedPreferenceUtils
-//                            .getCurrentChoice(DishActivity.this);
-//                    Gson gson1 = new Gson();
-//                    Shop[] shops1 = gson1.fromJson(shops_string1, Shop[].class);
-//                    Plate plate1 = shops1[mShopId].getPlates()[mPlateId];
-
                     mItem = MelbourneUtils.updateItemUnits(DishActivity.this, mItem);
                     mDishListAdapter.refresh(mItem);
-                    //mDishList.setAdapter(mDishListAdapter);
 
                     sumNumberPrice = MelbourneUtils.sum_item_number_price(DishActivity.this);
 
@@ -89,15 +84,9 @@ public class DishActivity extends Activity {
                 case 2:
                     // minus = 2
 
-//                    String shops_string2 = SharedPreferenceUtils
-//                            .getCurrentChoice(DishActivity.this);
-//                    Gson gson2 = new Gson();
-//                    Shop[] shops2 = gson2.fromJson(shops_string2, Shop[].class);
-//                    Plate plate2 = shops2[mShopId].getPlates()[mPlateId];
 
                     mItem = MelbourneUtils.updateItemUnits(DishActivity.this, mItem);
                     mDishListAdapter.refresh(mItem);
-                    //mDishList.setAdapter(mDishListAdapter);
 
 
                     sumNumberPrice = MelbourneUtils.sum_item_number_price(DishActivity.this);
@@ -112,10 +101,9 @@ public class DishActivity extends Activity {
                 case 3:
                     progress.dismiss();
                     showNotice("亲，您今天已经点过赞了。");
-                    //mDishListAdapter.refresh(mItem);
                     break;
                 case 4:
-
+                    // like = 4
                     mItem = (item_iphone) msg.obj;
                     mItem = MelbourneUtils.updateItemUnits(DishActivity.this, mItem);
                     mDishListAdapter.refresh(mItem);
@@ -150,9 +138,8 @@ public class DishActivity extends Activity {
 
         mSingleItemThread = new SingleItemManagerThread(mHandler, this, mItemId);
         mSingleItemThread.start();
-        progress = new ProgressDialog(this ,R.style.dialog_loading);
+        progress = new ProgressDialog(this, R.style.dialog_loading);
         progress.show();
-
 
 
         getActionBar().setTitle(mItemName);
@@ -213,6 +200,7 @@ public class DishActivity extends Activity {
                         }
                 ).show();
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -223,10 +211,6 @@ public class DishActivity extends Activity {
                 // activity and
                 // use NavUtils in the Support Package to ensure proper handling of
                 // Up.
-//                Intent upIntent = NavUtils.getParentActivityIntent(this);
-//                upIntent.putExtra("shopId", mItem.getShopId());
-//                upIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//                startActivity(upIntent);
                 finish();
                 return true;
         }

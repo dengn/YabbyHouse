@@ -1,7 +1,7 @@
 package com.melbournestore.models;
 
 /**
- * Created by OLEDCOMM on 27/11/2014.
+ * Created by dengn on 27/11/2014.
  */
 public class number_price {
 

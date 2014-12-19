@@ -20,15 +20,13 @@ public class UseCouponAdapter extends BaseAdapter {
 
 
     private static LayoutInflater inflater = null;
-    final int TYPE_URL = 0;
-    final int TYPE_EMPTY = 1;
-    Handler mHandler;
-    Context mContext;
-    user_coupon mChosenCoupon;
+
+    private Handler mHandler;
+    private Context mContext;
+    private user_coupon mChosenCoupon;
     private Gson gson = new Gson();
 
     public UseCouponAdapter(Context context, Handler handler, user_coupon chosenCoupon) {
-        // TODO Auto-generated constructor stub
 
 
         mContext = context;
@@ -75,27 +73,12 @@ public class UseCouponAdapter extends BaseAdapter {
         holder.title = (TextView) convertView.findViewById(R.id.usecoupon_name);
         holder.notUse = (Button) convertView.findViewById(R.id.not_use_coupon);
 
-//        if(mChosenCoupon.getId()==-1){
-//            convertView.setVisibility(View.INVISIBLE);
-//        }
-//        else{
-//            convertView.setVisibility(View.VISIBLE);
-//        }
+
         holder.title.setText(mChosenCoupon.getCoupon().getName());
         holder.notUse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String couponString = SharedPreferenceUtils.getUserCoupons(mContext);
-//                Log.d("COUPON", "before: " + couponString);
-//
-//                Type listType = new TypeToken<ArrayList<user_coupon>>() {
-//                }.getType();
-//                ArrayList<user_coupon> coupons = new ArrayList<user_coupon>();
-//                coupons = gson.fromJson(couponString, listType);
-//                coupons.remove(position);
-//                SharedPreferenceUtils.saveUserCoupons(mContext, gson.toJson(coupons));
-//
-//                //SharedPreferenceUtils.saveUserCoupons(mContext, "[]");
+
                 SharedPreferenceUtils.saveUserCoupons(mContext, gson.toJson(new user_coupon(-1, -1, -1, "", new Coupon(-1, "", "", "", -1, "", "", -1, -1))));
 
                 Message msg = mHandler.obtainMessage();

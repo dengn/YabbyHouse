@@ -20,16 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by OLEDCOMM on 01/12/2014.
+ * Created by dengn on 01/12/2014.
  */
 public class AddressManagerThread extends Thread {
-    Handler mHandler;
-    Context mContext;
-    Gson gson = new Gson();
-    String mUserNumber;
-    String mUnitNo;
-    String mStreet;
-    int mSuburbId;
+
+    private static final boolean DEBUG = false;
+
+    private Handler mHandler;
+    private Context mContext;
+    private Gson gson = new Gson();
+    private String mUserNumber;
+    private String mUnitNo;
+    private String mStreet;
+    private int mSuburbId;
 
 
     public AddressManagerThread(Handler handler, Context context, String userNumber, String unitNo, String street, int suburbId) {
@@ -69,30 +72,9 @@ public class AddressManagerThread extends Thread {
         pairs.add(new BasicNameValuePair("suburb_id", String.valueOf(mSuburbId)));
         String result = handlePut(Constant.URL_BASE + "user/address", pairs);
 
-        Log.d("ADDRESSTHREAD", result);
-//        user_coupon[] mCoupons = getCoupons(result);
-//
-//        Message message = mHandler.obtainMessage();
-//        message.obj = mCoupons;
-//        message.what = 0;
-//        mHandler.sendMessage(message);
-//        switch(mCallCode){
-//            case 0:
-//                //called from MyAccountActivity page
-//                Message message = mHandler.obtainMessage();
-//                message.obj = mCoupons.length;
-//                Log.d("ACCOUNT", "mCoupons.length: "+String.valueOf(mCoupons.length));
-//                message.what = 1;
-//                mHandler.sendMessage(message);
-//                break;
-//            case 1:
-//                //called by the other
-//                message = mHandler.obtainMessage();
-//                message.obj = mCoupons;
-//                message.what = 2;
-//                mHandler.sendMessage(message);
-//                break;
-//        }
+        if (DEBUG)
+            Log.d("ADDRESSTHREAD", result);
+
 
     }
 

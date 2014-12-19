@@ -26,7 +26,9 @@ import com.melbournestore.network.CouponManagerThread;
 
 public class MyCouponActivity extends Activity {
 
-    ProgressDialog progress;
+    private static final boolean DEBUG = false;
+
+    private ProgressDialog progress;
     private long mExitTime;
     private ListView mCouponList;
     private MyCouponListAdapter mCouponListAdapter;
@@ -41,7 +43,8 @@ public class MyCouponActivity extends Activity {
             switch (msg.what) {
                 case 0:
                     mCoupons = (user_coupon[]) msg.obj;
-                    Log.d("COUPON", "mCoupons len: " + String.valueOf(mCoupons.length));
+                    if (DEBUG)
+                        Log.d("COUPON", "mCoupons len: " + String.valueOf(mCoupons.length));
                     if (mCoupons.length != 0) {
                         mCouponList.setVisibility(View.VISIBLE);
                     }

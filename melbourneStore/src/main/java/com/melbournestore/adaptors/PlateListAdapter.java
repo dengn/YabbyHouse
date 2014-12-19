@@ -34,7 +34,7 @@ public class PlateListAdapter extends BaseAdapter {
     ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
     DisplayImageOptions mOptions;
     private Gson gson = new Gson();
-    private boolean likeClicked = false;
+
 
     public PlateListAdapter(Context context, Handler handler, DisplayImageOptions options, ArrayList<item_iphone> items) {
 
@@ -106,8 +106,6 @@ public class PlateListAdapter extends BaseAdapter {
             holder.plus = (Button) rowView.findViewById(R.id.plate_plus);
             holder.minus = (Button) rowView.findViewById(R.id.plate_minus);
 
-//        setComponentsStatus(holder.plus, holder.minus, holder.num_view,
-//                position);
 
             holder.names_view.setText(mItems.get(position).getName());
             holder.prices_view
@@ -125,27 +123,6 @@ public class PlateListAdapter extends BaseAdapter {
             }
 
 
-//        final Handler itemHandler = new Handler(){
-//            @Override
-//            public void handleMessage(Message msg) {
-//                switch (msg.what) {
-//
-//                    case 0:
-//
-//                        Toast.makeText(mContext, "亲，今天已经点过赞了。", Toast.LENGTH_SHORT)
-//                                .show();
-//                        break;
-//
-//                    case 1:
-//
-//                        holder.like_view
-//                                .setImageResource(R.drawable.other_icon_liked);
-//                        break;
-//
-//
-//                }
-//            }
-//        };
 
             rowView.setOnClickListener(new View.OnClickListener() {
 

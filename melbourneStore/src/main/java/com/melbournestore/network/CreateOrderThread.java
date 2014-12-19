@@ -32,21 +32,23 @@ import java.util.List;
  */
 public class CreateOrderThread extends Thread {
 
-    Handler mHandler;
-    Context mContext;
-    Gson gson = new Gson();
-    String mUserNumber;
-    String mUnitNo;
-    String mStreet;
-    String mPostCode;
-    int mSuburbId;
-    String mDeliveryTime;
-    int mDeliveryFee;
-    String mRemark;
-    String mContactNumber;
-    ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
-    String mCsrf;
-    int mCouponId;
+    private static final boolean DEBUG = false;
+
+    private Handler mHandler;
+    private Context mContext;
+    private Gson gson = new Gson();
+    private String mUserNumber;
+    private String mUnitNo;
+    private String mStreet;
+    private String mPostCode;
+    private int mSuburbId;
+    private String mDeliveryTime;
+    private int mDeliveryFee;
+    private String mRemark;
+    private String mContactNumber;
+    private ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
+    private String mCsrf;
+    private int mCouponId;
 
 
     public CreateOrderThread(Handler handler, Context context, String userNumber, String unitNo, String street, String postCode, int suburbId, String deliveryTime, int deliveryFee, String remark, String contactNumber, ArrayList<item_iphone> items, int couponId) {
@@ -123,7 +125,8 @@ public class CreateOrderThread extends Thread {
 
         DefaultHttpClient client = new DefaultHttpClient();//实例化客户端
         String csrf = handleGet(Constant.URL_BASE + "create_order", client);
-        Log.d("CREATEORDERTHREAD", "csrf: " + csrf);
+        if (DEBUG)
+            Log.d("CREATEORDERTHREAD", "csrf: " + csrf);
         if (csrf.contains("csrf")) {
             Type type = new TypeToken<HashMap<String, String>>() {
             }.getType();
@@ -131,7 +134,8 @@ public class CreateOrderThread extends Thread {
 
 
             mCsrf = csrf_hash.get("csrf");
-            Log.d("CREATEORDERTHREAD", "mCsrf: " + mCsrf);
+            if (DEBUG)
+                Log.d("CREATEORDERTHREAD", "mCsrf: " + mCsrf);
 
 
             List<NameValuePair> pairs = new ArrayList<NameValuePair>();
@@ -159,7 +163,8 @@ public class CreateOrderThread extends Thread {
 
             String result = handlePost(Constant.URL_BASE + "create_order", pairs, client);
 
-            Log.d("CREATEORDERTHREAD", result);
+            if (DEBUG)
+                Log.d("CREATEORDERTHREAD", result);
 
             if (result.equals("{\"result\": 0}")) {
                 //submit failed

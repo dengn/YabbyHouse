@@ -24,9 +24,9 @@ import java.util.ArrayList;
 public class ItemsSearchListAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
-    Context mContext;
-    Handler mHandler;
-    ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
+    private Context mContext;
+    private Handler mHandler;
+    private ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
 
     private Gson gson = new Gson();
 

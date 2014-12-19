@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -89,9 +88,8 @@ public class MyOrderListAdapter extends BaseAdapter {
         holder.names_view.setText(MelbourneUtils.getAllItemsNames(mOrders[position].getItems()));
         holder.price_view.setText("$" + String.valueOf(MelbourneUtils.sum_price_items(mOrders[position].getItems()) + (float) mOrders[position].getDeliveryFee()));
 
-//        Log.d("ORDER", MelbourneUtils.getStatusString(mOrders[position].getStatus()));
         holder.status_view.setText(MelbourneUtils.getStatusString(mOrders[position].getStatus()));
-//        holder.status_view.setText("待配送");
+
 
         holder.delete.setText("删除");
 
@@ -105,9 +103,6 @@ public class MyOrderListAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
-
-                Log.d("DEBUG", "myorder_list_item clicked");
 
 
                 Intent intent = new Intent(mContext, CurrentOrderActivity.class);

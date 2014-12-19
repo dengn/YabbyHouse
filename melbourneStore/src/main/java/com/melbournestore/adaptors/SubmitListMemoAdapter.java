@@ -25,7 +25,7 @@ public class SubmitListMemoAdapter extends BaseAdapter {
     private String mMemo;
 
     public SubmitListMemoAdapter(Context context, Handler handler, String memo) {
-        // TODO Auto-generated constructor stub
+
 
 
         mContext = context;
@@ -44,25 +44,25 @@ public class SubmitListMemoAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
+
         return 1;
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
+
 
         viewHolder_edittext holder_edittext = null;
 

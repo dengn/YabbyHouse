@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.melbournestore.activities.ChooseAddressActivity;
 import com.melbournestore.activities.R;
 import com.melbournestore.activities.SubmitOrderActivity;
-import com.melbournestore.models.Order_user;
 import com.melbournestore.models.user_iphone;
 import com.melbournestore.utils.MelbourneUtils;
 
@@ -28,13 +27,13 @@ public class SubmitListAdapter extends BaseAdapter {
 
 
     private static LayoutInflater inflater = null;
-    final int TYPE_TEXT = 0;
-    final int TYPE_ACTIVITY = 1;
-    final int TYPE_CHECKBOX = 2;
-    Handler mHandler;
-    Context mContext;
-    user_iphone mUser;
-    Order_user mCurrentOrder;
+    private final int TYPE_TEXT = 0;
+    private final int TYPE_ACTIVITY = 1;
+    private final int TYPE_CHECKBOX = 2;
+    private Handler mHandler;
+    private Context mContext;
+    private user_iphone mUser;
+
 
     String mContactNumber;
     String mUnit;
@@ -43,7 +42,7 @@ public class SubmitListAdapter extends BaseAdapter {
     String mDeliveryTime;
 
     public SubmitListAdapter(Context context, Handler handler, user_iphone user, String contact_number, String unit, String street, String suburb, String deliveryTime) {
-        // TODO Auto-generated constructor stub
+
 
         mUser = user;
         mContext = context;
@@ -70,7 +69,7 @@ public class SubmitListAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        // TODO Auto-generated method stub
+
         int p = position;
         if (p == 0)
             return TYPE_TEXT;
@@ -83,25 +82,25 @@ public class SubmitListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
+
         return 3;
     }
 
     @Override
     public Object getItem(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public long getItemId(int position) {
-        // TODO Auto-generated method stub
+
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
+
         viewHolder_text holder_text = null;
         viewHolder_activity holder_activity = null;
         viewHolder_checkbox holder_checkbox = null;
@@ -190,7 +189,7 @@ public class SubmitListAdapter extends BaseAdapter {
 
                     @Override
                     public void onClick(View v) {
-                        // TODO Auto-generated method stub
+
                         Intent intent = new Intent(mContext, ChooseAddressActivity.class);
                         ((Activity) mContext).startActivityForResult(intent, SubmitOrderActivity.result_code_address);
                     }
@@ -219,7 +218,7 @@ public class SubmitListAdapter extends BaseAdapter {
 
                     @Override
                     public void onClick(View v) {
-                        // TODO Auto-generated method stub
+
                         //popup the delivery time picker
                         Message message = new Message();
                         Bundle b = new Bundle();

@@ -25,10 +25,9 @@ import com.melbournestore.network.UserVerificationManagerThread;
 
 public class VerificationActivity extends Activity {
 
+    ProgressDialog progress;
     private TextView verificationNotice;
     private EditText verificationCode;
-
-    ProgressDialog progress;
     private EditText setPassword;
 
     private Button reSendButton;
@@ -43,7 +42,7 @@ public class VerificationActivity extends Activity {
 
     private long mExitTime;
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -129,7 +128,7 @@ public class VerificationActivity extends Activity {
                 } else {
                     UserSignUpManagerThread mSignUpThread = new UserSignUpManagerThread(mHandler, VerificationActivity.this, mNumber, mVerificationCode, mPassword);
                     mSignUpThread.start();
-                    progress = new ProgressDialog(VerificationActivity.this ,R.style.dialog_loading);
+                    progress = new ProgressDialog(VerificationActivity.this, R.style.dialog_loading);
                     progress.show();
                 }
             }

@@ -28,12 +28,12 @@ import com.melbournestore.network.UserLoginManagerThread;
 
 public class SignUpActivity extends Activity {
 
+    private static final boolean DEBUG = false;
+
+    private ProgressDialog progress;
     private TextView signInNotice;
     private EditText signInNumber;
     private EditText signInPassword;
-
-    ProgressDialog progress;
-
     private Button signInButton;
 
     private String mNumber;
@@ -49,7 +49,7 @@ public class SignUpActivity extends Activity {
             switch (msg.what) {
                 //login failed, password or phone number is wrong
                 case 0:
-                    if(progress != null) {
+                    if (progress != null) {
                         progress.dismiss();
                     }
 
@@ -73,7 +73,7 @@ public class SignUpActivity extends Activity {
                     finish();
                     break;
                 case 2:
-                    if(progress != null) {
+                    if (progress != null) {
                         progress.dismiss();
                     }
 
@@ -135,72 +135,14 @@ public class SignUpActivity extends Activity {
                     //get the input number and password
                     mNumber = signInNumber.getText().toString();
                     mPassword = signInPassword.getText().toString();
-                    Log.d("SIGNUP", "mNumber: " + mNumber + " mPassword: " + mPassword);
+                    if(DEBUG)
+                        Log.d("SIGNUP", "mNumber: " + mNumber + " mPassword: " + mPassword);
                     UserLoginManagerThread mUserLoginThread = new UserLoginManagerThread(mHandler, SignUpActivity.this, mNumber, mPassword);
                     mUserLoginThread.start();
-                    progress = new ProgressDialog(SignUpActivity.this ,R.style.dialog_loading);
+                    progress = new ProgressDialog(SignUpActivity.this, R.style.dialog_loading);
                     progress.show();
                 }
 
-//                else {
-//
-//                    mPhoneNumber = loginNumber.getText().toString();
-//
-//                    String users_string = SharedPreferenceUtils
-//                            .getLoginUser(SignUpActivity.this);
-//                    Gson gson = new Gson();
-//                    User[] users = gson.fromJson(users_string, User[].class);
-//
-//                    if (users.length > 0) {
-//                        boolean user_found = false;
-//                        for (int i = 0; i < users.length; i++) {
-//                            if (users[i].getPhoneNumber().equals(mPhoneNumber)) {
-//                                users[i].setActive(true);
-//                                user_found = true;
-//                                break;
-//                            }
-//                        }
-//                        if (!user_found) {
-//                            ArrayList<User> user_array = new ArrayList<User>(
-//                                    Arrays.asList(users));
-//                            User user = new User();
-//                            user.setActive(true);
-//                            user.setPhoneNumber(mPhoneNumber);
-//                            user.setUnitNo("");
-//                            user.setStreet("");
-//                            user.setSuburb("");
-//                            user_array.add(user);
-//                            users = user_array.toArray(new User[0]);
-//                        }
-//
-//                        SharedPreferenceUtils.saveLoginUser(SignUpActivity.this,
-//                                gson.toJson(users));
-//
-//                    } else {
-//                        users = new User[1];
-//                        User user = new User();
-//                        user.setActive(true);
-//                        user.setPhoneNumber(mPhoneNumber);
-//                        user.setUnitNo("");
-//                        user.setStreet("");
-//                        user.setSuburb("");
-//
-//                        users[0] = user;
-//                        SharedPreferenceUtils.saveLoginUser(SignUpActivity.this,
-//                                gson.toJson(users));
-//                    }
-//
-//                    UserLoginManagerThread mUserLoginThread = new UserLoginManagerThread(mHandler, SignUpActivity.this, loginNumber.getText()
-//                            .toString());
-//                    mUserLoginThread.start();
-//
-//                    Intent returnIntent = new Intent();
-//                    returnIntent.putExtra("number", loginNumber.getText()
-//                            .toString());
-//                    setResult(RESULT_OK, returnIntent);
-//                    finish();
-//
-//                }
             }
 
         });
@@ -208,9 +150,9 @@ public class SignUpActivity extends Activity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
-        if(progress != null) {
+        if (progress != null) {
             progress.dismiss();
         }
     }
@@ -254,9 +196,6 @@ public class SignUpActivity extends Activity {
                 // activity and
                 // use NavUtils in the Support Package to ensure proper handling of
                 // Up.
-                // Intent upIntent = NavUtils.getParentActivityIntent(this);
-                // upIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                // startActivity(upIntent);
                 finish();
                 return true;
             case R.id.signup:

@@ -32,6 +32,8 @@ public class ShoppingCartActivity extends Activity {
 
     public static final int LOGIN_CODE = 8;
 
+    private static final boolean DEBUG = false;
+
     private Button mConfirmOrders;
 
     private TextView mTotalPrice;
@@ -89,14 +91,12 @@ public class ShoppingCartActivity extends Activity {
 
         getActionBar().setTitle("购物车");
 
-//        String shops_string = SharedPreferenceUtils.getCurrentChoice(this);
-//        Gson gson = new Gson();
-//        Shop[] shops = gson.fromJson(shops_string, Shop[].class);
+
         mItems = MelbourneUtils.getAllChosenItems(this);
 
         totalPrice = MelbourneUtils.sum_item_number_price(this).getPrice();
 
-//        Plate[] plates_chosen = MelbourneUtils.getPlatesChosen(shops);
+
 
         mConfirmOrders = (Button) findViewById(R.id.confirm_order);
         mConfirmOrders.getBackground().setAlpha(80);
@@ -118,8 +118,8 @@ public class ShoppingCartActivity extends Activity {
 
                 String userNumber = SharedPreferenceUtils
                         .getUserNumber(ShoppingCartActivity.this);
-
-                Log.d("USERNUMBER", "userNumber: " + userNumber);
+                if(DEBUG)
+                    Log.d("USERNUMBER", "userNumber: " + userNumber);
                 if (!userNumber.equals("")) {
 
                     if (totalPrice == 0) {
@@ -145,7 +145,6 @@ public class ShoppingCartActivity extends Activity {
                 } else {
                     Intent intent = new Intent(ShoppingCartActivity.this,
                             SignUpActivity.class);
-                    // intent.putExtra("total_price", priceTotal);
 
                     startActivityForResult(intent, LOGIN_CODE);
                 }
@@ -161,9 +160,7 @@ public class ShoppingCartActivity extends Activity {
 
         switch (requestCode) {
             case LOGIN_CODE:
-                // Get the Address chosen
 
-                // Make sure the request was successful
 
                 break;
 

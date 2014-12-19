@@ -75,7 +75,6 @@ public class MyOrdersFragment extends Fragment {
 
     }
 
-    //private Context mContext;
 
     @Override
     public void onAttach(Activity activity) {

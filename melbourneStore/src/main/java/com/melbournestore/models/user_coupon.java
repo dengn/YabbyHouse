@@ -1,7 +1,7 @@
 package com.melbournestore.models;
 
 /**
- * Created by OLEDCOMM on 01/12/2014.
+ * Created by dengn on 01/12/2014.
  */
 public class user_coupon {
 

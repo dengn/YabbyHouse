@@ -27,12 +27,14 @@ import java.util.List;
  */
 public class UserSignUpManagerThread extends Thread {
 
-    Handler mHandler;
-    Context mContext;
-    String mNumber;
-    String mCode;
-    String mPassword;
-    Gson gson = new Gson();
+    private static final boolean DEBUG = false;
+
+    private Handler mHandler;
+    private Context mContext;
+    private String mNumber;
+    private String mCode;
+    private String mPassword;
+    private Gson gson = new Gson();
 
 
     public UserSignUpManagerThread(Handler handler, Context context, String number, String code, String password) {
@@ -108,17 +110,19 @@ public class UserSignUpManagerThread extends Thread {
         pairs.add(new BasicNameValuePair("code", mCode));
         //valid verification code
         String result = handlePost(Constant.URL_BASE + "user/verification", pairs);
+        if(DEBUG)
         Log.d("USERTHREAD", "verification: " + result);
 
         String verificationError = "{\"message\": \"\\u9a8c\\u8bc1\\u7801\\u4e0d\\u6b63\\u786e\", \"result\": 400}";
 
-        //TODO
+
         if (!result.equals(verificationError)) {
             //valid success
             pairs = new ArrayList<NameValuePair>();
             pairs.add(new BasicNameValuePair("number", mNumber));
             pairs.add(new BasicNameValuePair("password", mPassword));
             String signUpResult = handlePost(Constant.URL_BASE + "user", pairs);
+            if(DEBUG)
             Log.d("USERTHREAD", "sign up: " + signUpResult);
             if (!result.equals("HTTP/1.1 404 NOT FOUND")) {
                 //everything is successful

@@ -27,9 +27,11 @@ import java.util.HashMap;
  */
 public class ShopManagerThread extends Thread {
 
-    Handler mHandler;
+    private static final boolean DEBUG = false;
 
-    Context mContext;
+    private Handler mHandler;
+
+    private Context mContext;
 
     public ShopManagerThread(Handler handler, Context context) {
         mHandler = handler;
@@ -77,9 +79,10 @@ public class ShopManagerThread extends Thread {
 
     @Override
     public void run() {
-        String result = handleGet(Constant.URL_BASE+"shops");
+        String result = handleGet(Constant.URL_BASE + "shops");
 
 
+        if(DEBUG)
         Log.d("THREAD", result);
         ArrayList<Shop_iPhone> mShops = getShops(result);
 
@@ -87,9 +90,9 @@ public class ShopManagerThread extends Thread {
         SharedPreferenceUtils.saveLocalShops(mContext, gson.toJson(mShops));
 
         //if it's the first time to launch
-        if(SharedPreferenceUtils.getFirstTimeLaunch(mContext)){
+        if (SharedPreferenceUtils.getFirstTimeLaunch(mContext)) {
             SharedPreferenceUtils.saveFirstTimeLaunch(mContext);
-            for(int i=0;i<mShops.size();i++){
+            for (int i = 0; i < mShops.size(); i++) {
                 ArrayList<item_iphone> items = new ArrayList<item_iphone>();
                 SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(items), mShops.get(i).getId());
             }

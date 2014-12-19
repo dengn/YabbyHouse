@@ -27,10 +27,12 @@ import java.util.List;
  */
 public class UserVerificationManagerThread extends Thread {
 
-    Handler mHandler;
-    Context mContext;
-    String mNumber;
-    Gson gson = new Gson();
+    private static final boolean DEBUG = false;
+
+    private Handler mHandler;
+    private Context mContext;
+    private String mNumber;
+    private Gson gson = new Gson();
 
 
     public UserVerificationManagerThread(Handler handler, Context context, String number) {
@@ -101,9 +103,10 @@ public class UserVerificationManagerThread extends Thread {
 
         List<NameValuePair> pairs = new ArrayList<NameValuePair>();
         pairs.add(new BasicNameValuePair("number", mNumber));
-        //String result = handlePut(Constant.URL_BASE+"user/verification", pairs);
+
         String result = handlePut(Constant.URL_BASE + "user/verification", pairs);
 
+        if(DEBUG)
         Log.d("USERTHREAD", result);
         //verification code sent
         if (!result.equals("HTTP/1.1 404 NOT FOUND")) {
@@ -115,31 +118,7 @@ public class UserVerificationManagerThread extends Thread {
             message.what = 0;
             mHandler.sendMessage(message);
         }
-//        item_iphone mItem = getItem(result);
-//
-//        String localItemsString = SharedPreferenceUtils.getLocalItems(mContext, mItem.getShopId());
-//        Type type = new TypeToken<ArrayList<item_iphone>>() {}.getType();
-//        ArrayList<item_iphone> localItems = gson.fromJson(localItemsString, type);
-//        ArrayList<Integer> localItemIds = MelbourneUtils.getLocalItemsId(localItems);
-//
-//        if(!localItemIds.contains(mItem.getId())){
-//            ArrayList<item_iphone> newItems = new ArrayList<item_iphone>();
-//            newItems.clear();
-//            newItems.addAll(localItems);
-//            newItems.add(mItem);
-//            SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(newItems), mItem.getShopId());
-//        }
-//
-//        Message message = mHandler.obtainMessage();
-//        message.obj = mItem;
-//        try {
-//            sleep(5);
-//        } catch (InterruptedException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        message.what = 0;
-//        mHandler.sendMessage(message);
+
     }
 
 }

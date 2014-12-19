@@ -36,7 +36,6 @@ import com.melbournestore.application.SysApplication;
 import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.Coupon;
 import com.melbournestore.models.Order;
-import com.melbournestore.models.OrderItem;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.models.user_coupon;
 import com.melbournestore.models.user_iphone;
@@ -56,10 +55,14 @@ import kankan.wheel.widget.adapters.ArrayWheelAdapter;
 
 public class SubmitOrderActivity extends Activity {
 
+    private static final boolean DEBUG = false;
+
     public static final int result_code_address = 3;
     public static final int result_coupon = 4;
-    float priceTotal;
-    ProgressDialog progress;
+
+
+
+    private ProgressDialog progress;
     private Button mSubmitOrders;
     private TextView mSubmitPrice;
     private ListView mSubmitList;
@@ -71,7 +74,11 @@ public class SubmitOrderActivity extends Activity {
     private SubmitListCouponAdapter mSubmitListCouponAdapter;
     private UseCouponAdapter mUseCouponListAdapter;
     private PopupWindow mTimePickerPopup;
+
+
     private user_iphone mUser;
+
+    private float priceTotal;
 
     private String mUnitNo = "";
     private String mStreet = "";
@@ -84,15 +91,11 @@ public class SubmitOrderActivity extends Activity {
 
     private String mContactNumber = "";
 
-    private OrderItem[] mOrderItems;
-    private user_coupon mUser_coupon;
 
     private Gson gson = new Gson();
 
     private int mDiscount = 0;
 
-
-    private ArrayList<user_coupon> mCoupons = new ArrayList<user_coupon>();
     private user_coupon mChosenCoupon;
 
 
@@ -107,7 +110,7 @@ public class SubmitOrderActivity extends Activity {
                     int action = b1.getInt("action");
                     // popup the time picker
                     if (action == 2) {
-                        //showTimePicker();
+
                         showDeliveryTimePicker();
                     }
 
@@ -132,7 +135,6 @@ public class SubmitOrderActivity extends Activity {
                     mChosenCoupon = mGson.fromJson(chosenCouponString, user_coupon.class);
 
                     mDiscount = 0;
-                    //priceTotal -= (int)Float.parseFloat(mChosenCoupon.getCoupon().getDiscount());
                     mSubmitPrice.setText("共计费用：$" + String.valueOf(priceTotal + mFee));
 
                     mUseCouponListAdapter.refresh(mChosenCoupon);
@@ -234,56 +236,9 @@ public class SubmitOrderActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
 
-//                String users_string = SharedPreferenceUtils
-//                        .getLoginUser(SubmitOrderActivity.this);
-//                Gson gson = new Gson();
-//                User[] users = gson.fromJson(users_string, User[].class);
-//                User activeUser = users[MelbourneUtils.getActiveUser(users)];
-//
-//                String current_order = SharedPreferenceUtils
-//                        .getCurrentOrder(SubmitOrderActivity.this);
-//                Order_user currentOrder = gson.fromJson(current_order,
-//                        Order_user.class);
-//
-//                String current_choice = SharedPreferenceUtils
-//                        .getCurrentChoice(SubmitOrderActivity.this);
-//                Shop[] shops = gson.fromJson(current_choice, Shop[].class);
-//                Plate[] plates = MelbourneUtils.getPlatesChosen(shops);
-//                currentOrder.setPlates(plates);
-//                currentOrder.setDeliveryFee(MelbourneUtils.getSuburbDeliveryPrice(activeUser.getSuburb()));
-//
-//                if (activeUser.getOrders() == null) {
-//                    Order_user[] userOrder = new Order_user[1];
-//                    userOrder[0] = currentOrder;
-//                    activeUser.setOrders(userOrder);
-//                } else if (activeUser.getOrders().length == 0) {
-//                    Order_user[] userOrder = new Order_user[1];
-//                    userOrder[0] = currentOrder;
-//                    activeUser.setOrders(userOrder);
-//                } else {
-//                    ArrayList<Order_user> userOrder_array = new ArrayList<Order_user>(
-//                            Arrays.asList(activeUser.getOrders()));
-//                    userOrder_array.add(currentOrder);
-//                    activeUser.setOrders(userOrder_array
-//                            .toArray(new Order_user[0]));
-//                }
-//                currentOrder.setStatus(0);
-//                currentOrder.setCreateTime(MelbourneUtils.getSystemTime());
-//
-//                SharedPreferenceUtils.saveCurrentOrder(SubmitOrderActivity.this,
-//                        gson.toJson(currentOrder));
-//
-//                SharedPreferenceUtils.saveLoginUser(SubmitOrderActivity.this,
-//                        gson.toJson(users));
 
                 ArrayList<item_iphone> items = MelbourneUtils.getAllChosenItems(SubmitOrderActivity.this);
-//                mOrderItems = new OrderItem[items.size()];
-//                for(int i=0;i<items.size();i++){
-//                    item_iphone eachItem = items.get(i);
-//                    mOrderItems[i]=new OrderItem(0, eachItem.getId(), eachItem.getName(), eachItem.getDesc(), (int)Float.parseFloat(eachItem.getPrice()), String.valueOf(eachItem.getUnit()));
-//                }
 
 
                 if (mContactNumber.equals("")) {
@@ -307,9 +262,6 @@ public class SubmitOrderActivity extends Activity {
 
                     progress.show();
                 }
-//                Intent intent = new Intent(SubmitOrderActivity.this,
-//                        OrderSubmittedActivity.class);
-//                startActivity(intent);
             }
 
         });
@@ -369,7 +321,6 @@ public class SubmitOrderActivity extends Activity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
 
-                // String address = data.getStringExtra("address");
                 mUnitNo = data.getStringExtra("unit");
                 mStreet = data.getStringExtra("street");
                 mSuburb = data.getStringExtra("suburb");
@@ -385,19 +336,6 @@ public class SubmitOrderActivity extends Activity {
 
                 mSubmitListCouponAdapter.refresh(mArea, mFee, mUser);
                 mSubmitCouponList.setAdapter(mSubmitListCouponAdapter);
-//                String users_string = SharedPreferenceUtils
-//                        .getLoginUser(SubmitOrderActivity.this);
-//                Gson gson = new Gson();
-//                User[] users = gson.fromJson(users_string, User[].class);
-//                User activeUser = users[MelbourneUtils.getActiveUser(users)];
-//
-//                String current_order = SharedPreferenceUtils
-//                        .getCurrentOrder(SubmitOrderActivity.this);
-//                Order_user currentOrder = gson.fromJson(current_order,
-//                        Order_user.class);
-//
-//                mSubmitListAdapter.refresh(activeUser, currentOrder);
-//                mSubmitList.setAdapter(mSubmitListAdapter);
             }
         } else if (requestCode == result_coupon) {
             if (resultCode == RESULT_OK) {
@@ -445,20 +383,6 @@ public class SubmitOrderActivity extends Activity {
         LinearLayout deliveryTimePicker = (LinearLayout) view.findViewById(R.id.delivery_time_picker);
 
 
-//        WheelView hours = (WheelView) view.findViewById(R.id.delivery_hour);
-//        NumericWheelAdapter hourAdapter = new NumericWheelAdapter(this, 0, 23, "%02d");
-//        hourAdapter.setItemResource(R.layout.wheel_text_item);
-//        hourAdapter.setItemTextResource(R.id.wheel_text);
-//        hours.setViewAdapter(hourAdapter);
-
-//        WheelView mins = (WheelView) view.findViewById(R.id.delivery_mins);
-//        NumericWheelAdapter minAdapter = new NumericWheelAdapter(this, 0, 59, "%02d");
-//        minAdapter.setItemResource(R.layout.wheel_text_item);
-//        minAdapter.setItemTextResource(R.id.wheel_text);
-//        mins.setViewAdapter(minAdapter);
-//        mins.setCyclic(true);
-
-
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
 
         final WheelView day = (WheelView) view.findViewById(R.id.delivery_day);
@@ -472,13 +396,6 @@ public class SubmitOrderActivity extends Activity {
         hourAdapter.setItemTextResource(R.id.wheel_text);
         hours.setViewAdapter(hourAdapter);
 
-
-//        day.addChangingListener(new OnWheelChangedListener() {
-//            @Override
-//            public void onChanged(WheelView wheel, int oldValue, int newValue) {
-//
-//            }
-//        });
 
         // set current time
 
@@ -516,14 +433,14 @@ public class SubmitOrderActivity extends Activity {
 
                 if (day.getCurrentItem() == 0) {
                     Date date = new Date();
-                    date = c.getTime(); //这个时间就是日期往后推一天的结果
+                    date = c.getTime();
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
                     delivery_time += formatter.format(date);
                 } else {
                     Date date = new Date();
                     c.setTime(date);
                     c.add(Calendar.DATE, 1);
-                    date = c.getTime(); //这个时间就是日期往后推一天的结果
+                    date = c.getTime();
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
                     delivery_time += formatter.format(date);
                 }
@@ -556,13 +473,10 @@ public class SubmitOrderActivity extends Activity {
         } else {
             start_time = hour + 1;
         }
-        //start_time = 24;
+
 
         ArrayList<String> time = new ArrayList<String>();
-//        time.add("19点-20点");
-//        time.add("20点-21点");
-//        time.add("21点-22点");
-//        time.add("23点-24点");
+
         if (start_time <= 23) {
             for (int i = start_time; i < 24; i++) {
 
@@ -574,15 +488,7 @@ public class SubmitOrderActivity extends Activity {
             time.add("时间太晚了亲");
             button.setEnabled(false);
         }
-//        for (int i = start_time; i < 24; i++) {
-//            for (int j = 0; j < 4; j++) {
-//                if (j == 0) {
-//                    time.add(String.valueOf(i) + ":00");
-//                } else {
-//                    time.add(String.valueOf(i) + ":" + String.valueOf(j * 15));
-//                }
-//            }
-//        }
+
         String[] returned_time = new String[time.size()];
         returned_time = time.toArray(returned_time);
         return returned_time;

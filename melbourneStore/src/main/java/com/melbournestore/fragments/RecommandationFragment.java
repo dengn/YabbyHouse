@@ -32,12 +32,12 @@ import java.util.ArrayList;
  */
 public class RecommandationFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     DisplayImageOptions options;
-    // TODO: Rename and change types of parameters
+
     private String mParam1;
     private String mParam2;
     /**
@@ -45,7 +45,7 @@ public class RecommandationFragment extends Fragment {
      */
     private ListView mRecommandationList;
 
-    ProgressDialog progress;
+    private ProgressDialog progress;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -61,15 +61,7 @@ public class RecommandationFragment extends Fragment {
             mAd = (ArrayList<advertisements>) msg.obj;
             mRecommadationListAdapter.refresh(mAd);
             progress.dismiss();
-            //mRecommandationList.setAdapter(mRecommadationListAdapter);
 
-//            switch (msg.what) {
-//                case 1:
-//                    break;
-//                case 2:
-//                    break;
-//
-//            }
         }
     };
     private Context mContext;
@@ -83,7 +75,7 @@ public class RecommandationFragment extends Fragment {
     public RecommandationFragment() {
     }
 
-    // TODO: Rename and change types of parameters
+
     public static RecommandationFragment newInstance(String param1, String param2) {
         RecommandationFragment fragment = new RecommandationFragment();
         Bundle args = new Bundle();

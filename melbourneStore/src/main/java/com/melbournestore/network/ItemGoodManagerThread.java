@@ -29,11 +29,13 @@ import java.util.List;
  */
 public class ItemGoodManagerThread extends Thread {
 
-    Handler mHandler;
-    Context mContext;
-    Gson gson = new Gson();
-    int mItemId;
-    String mNumber;
+    private static final boolean DEBUG = false;
+
+    private Handler mHandler;
+    private Context mContext;
+    private Gson gson = new Gson();
+    private int mItemId;
+    private String mNumber;
 
     public ItemGoodManagerThread(Handler handler, Context context, int itemId, String number) {
         mHandler = handler;
@@ -94,16 +96,16 @@ public class ItemGoodManagerThread extends Thread {
     public void run() {
 
         List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-        String result = handlePost(Constant.URL_BASE + "item/" + String.valueOf(mItemId)+"/user/"+mNumber, pairs);
+        String result = handlePost(Constant.URL_BASE + "item/" + String.valueOf(mItemId) + "/user/" + mNumber, pairs);
 
-        Log.d("GOODTHREAD", result);
+        if(DEBUG)
+            Log.d("GOODTHREAD", result);
 
-        if(result.equals("{\"result\": 1}")){
+        if (result.equals("{\"result\": 1}")) {
             Message msg = mHandler.obtainMessage();
             msg.what = 3;
             mHandler.sendMessage(msg);
-        }
-        else if(result.contains("item")){
+        } else if (result.contains("item")) {
 
             Message msg = mHandler.obtainMessage();
             msg.obj = getItem(result);
@@ -111,31 +113,7 @@ public class ItemGoodManagerThread extends Thread {
             mHandler.sendMessage(msg);
 
         }
-//        item_iphone mItem = getItem(result);
-//
-//        String localItemsString = SharedPreferenceUtils.getLocalItems(mContext, mItem.getShopId());
-//        Type type = new TypeToken<ArrayList<item_iphone>>() {}.getType();
-//        ArrayList<item_iphone> localItems = gson.fromJson(localItemsString, type);
-//        ArrayList<Integer> localItemIds = MelbourneUtils.getLocalItemsId(localItems);
-//
-//        if(!localItemIds.contains(mItem.getId())){
-//            ArrayList<item_iphone> newItems = new ArrayList<item_iphone>();
-//            newItems.clear();
-//            newItems.addAll(localItems);
-//            newItems.add(mItem);
-//            SharedPreferenceUtils.saveLocalItems(mContext, gson.toJson(newItems), mItem.getShopId());
-//        }
-//
-//        Message message = mHandler.obtainMessage();
-//        message.obj = mItem;
-//        try {
-//            sleep(5);
-//        } catch (InterruptedException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        message.what = 0;
-//        mHandler.sendMessage(message);
+
     }
 
 }
