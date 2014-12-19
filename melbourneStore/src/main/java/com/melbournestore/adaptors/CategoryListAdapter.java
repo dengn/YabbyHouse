@@ -18,6 +18,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class CategoryListAdapter extends BaseAdapter {
 
@@ -34,6 +36,13 @@ public class CategoryListAdapter extends BaseAdapter {
         mShops.clear();
         mShops.addAll(Shops);
 
+
+        Collections.sort(mShops, new Comparator<Shop_iPhone>() {
+            public int compare(Shop_iPhone shop1, Shop_iPhone shop2) {
+                return shop1.getSeq() - shop2.getSeq();
+            }
+        });
+
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -41,6 +50,12 @@ public class CategoryListAdapter extends BaseAdapter {
     public void refresh(ArrayList<Shop_iPhone> Shops) {
         mShops.clear();
         mShops.addAll(Shops);
+
+        Collections.sort(mShops, new Comparator<Shop_iPhone>() {
+            public int compare(Shop_iPhone shop1, Shop_iPhone shop2) {
+                return shop1.getSeq() - shop2.getSeq();
+            }
+        });
         notifyDataSetChanged();
     }
 
