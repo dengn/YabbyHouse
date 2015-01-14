@@ -49,7 +49,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class PlateActivity extends Activity {
+public class SelectCategoryActivity extends Activity {
 
     private static final String TAG = "Melbourne";
     DisplayImageOptions options;
@@ -86,7 +86,7 @@ public class PlateActivity extends Activity {
                 // plus = 1
                 case 1:
 
-                    String itemsString1 = SharedPreferenceUtils.getLocalItems(PlateActivity.this, mShopId);
+                    String itemsString1 = SharedPreferenceUtils.getLocalItems(SelectCategoryActivity.this, mShopId);
                     Type type1 = new TypeToken<ArrayList<item_iphone>>() {
                     }.getType();
                     ArrayList<item_iphone> items1 = gson.fromJson(itemsString1, type1);
@@ -97,7 +97,7 @@ public class PlateActivity extends Activity {
                     //mPlatesList.setAdapter(mPlateListAdapter);
 
 
-                    sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
+                    sumNumberPrice = MelbourneUtils.sum_item_number_price(SelectCategoryActivity.this);
 
                     totalPrice = sumNumberPrice.getPrice();
                     totalNum = sumNumberPrice.getNumber();
@@ -113,7 +113,7 @@ public class PlateActivity extends Activity {
                     } else {
 
 
-                        String itemsString2 = SharedPreferenceUtils.getLocalItems(PlateActivity.this, mShopId);
+                        String itemsString2 = SharedPreferenceUtils.getLocalItems(SelectCategoryActivity.this, mShopId);
                         Type type2 = new TypeToken<ArrayList<item_iphone>>() {
                         }.getType();
                         ArrayList<item_iphone> items2 = gson.fromJson(itemsString2, type2);
@@ -124,7 +124,7 @@ public class PlateActivity extends Activity {
                         mPlateListAdapter.refresh(mItems);
                         //mPlatesList.setAdapter(mPlateListAdapter);
 
-                        sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
+                        sumNumberPrice = MelbourneUtils.sum_item_number_price(SelectCategoryActivity.this);
 
                         totalPrice = sumNumberPrice.getPrice();
                         totalNum = sumNumberPrice.getNumber();
@@ -170,7 +170,7 @@ public class PlateActivity extends Activity {
         getActionBar().setTitle(mShopName);
 
 
-        sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
+        sumNumberPrice = MelbourneUtils.sum_item_number_price(SelectCategoryActivity.this);
 
         totalPrice = sumNumberPrice.getPrice();
         totalNum = sumNumberPrice.getNumber();
@@ -199,7 +199,7 @@ public class PlateActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(PlateActivity.this,
+                Intent intent = new Intent(SelectCategoryActivity.this,
                         ShoppingCartActivity.class);
                 startActivity(intent);
 
@@ -219,7 +219,7 @@ public class PlateActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        sumNumberPrice = MelbourneUtils.sum_item_number_price(PlateActivity.this);
+        sumNumberPrice = MelbourneUtils.sum_item_number_price(SelectCategoryActivity.this);
 
         totalPrice = sumNumberPrice.getPrice();
         totalNum = sumNumberPrice.getNumber();
@@ -227,7 +227,7 @@ public class PlateActivity extends Activity {
 //        Intent intent = getIntent();
 //        mShopId = intent.getIntExtra("shopId", 0);
 
-        String itemsString = SharedPreferenceUtils.getLocalItems(PlateActivity.this, mShopId);
+        String itemsString = SharedPreferenceUtils.getLocalItems(SelectCategoryActivity.this, mShopId);
         Type type = new TypeToken<ArrayList<item_iphone>>() {
         }.getType();
         ArrayList<item_iphone> items = gson.fromJson(itemsString, type);

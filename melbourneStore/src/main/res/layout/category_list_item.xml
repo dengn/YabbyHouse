@@ -22,10 +22,48 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
 
+        <!--<Button-->
+        <!--android:id="@+id/ad_desc"-->
+        <!--style="@style/textShadow"-->
+        <!--android:layout_width="124dp"-->
+        <!--android:layout_height="37dp"-->
+        <!--android:layout_alignRight="@id/plates_image"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:layout_marginTop="15dp"-->
+        <!--android:gravity="center_vertical|right"-->
+        <!--android:paddingRight="15dp"-->
+        <!--android:text="龙虾叔叔配送"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="16sp" />-->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/plates_image"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/action_search" />
+
+            <TextView
+                style="@style/textShadow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:text="龙虾叔叔配送"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/plates_image"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="20dp"
             android:orientation="vertical">
 
