@@ -10,11 +10,25 @@
         android:layout_gravity="center"
         android:orientation="vertical">
 
-        <com.melbournestore.utils.CircleImageView
-            android:id="@+id/select_category_image"
-            android:layout_width="83dp"
-            android:layout_height="83dp"
-            android:layout_gravity="center" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.melbournestore.utils.CircleImageView
+                android:id="@+id/select_category_image"
+                android:layout_width="83dp"
+                android:layout_height="83dp"
+                android:layout_gravity="center" />
+
+            <ImageView
+                android:id="@+id/select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/icon_choice"
+                android:visibility="gone" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/select_category_title"
@@ -22,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="全部"
+            android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>
 

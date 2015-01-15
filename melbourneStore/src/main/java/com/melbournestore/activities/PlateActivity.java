@@ -18,6 +18,7 @@ package com.melbournestore.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,8 +40,10 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.melbournestore.adaptors.PlateListAdapter;
+import com.melbournestore.adaptors.SelectCategoryListAdapter;
 import com.melbournestore.application.SysApplication;
 import com.melbournestore.db.SharedPreferenceUtils;
+import com.melbournestore.models.categories;
 import com.melbournestore.models.item_iphone;
 import com.melbournestore.models.number_price;
 import com.melbournestore.network.ItemManagerThread;
@@ -138,6 +142,7 @@ public class PlateActivity extends Activity {
         }
 
     };
+    private ArrayList<categories> mCategories = new ArrayList<categories>();
     private long mExitTime;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -160,6 +165,12 @@ public class PlateActivity extends Activity {
         Intent intent = getIntent();
         mShopId = intent.getIntExtra("shopid", 0);
         mShopName = intent.getStringExtra("shopName");
+
+        String categoriesString = intent.getStringExtra("shopCategories");
+        categories[] categoriesArray = gson.fromJson(categoriesString, categories[].class);
+        for (int i = 0; i < categoriesArray.length; i++) {
+            mCategories.add(categoriesArray[i]);
+        }
 
         mItemThread = new ItemManagerThread(mHandler, this, mShopId);
         mItemThread.start();
@@ -286,9 +297,31 @@ public class PlateActivity extends Activity {
                 return true;
             case R.id.items_category:
 
+//                Dialog dialog = new Dialog(this, R.style.Dialog_Fullscreen);
+//                dialog.setContentView(R.layout.select_category_layout);
+
+                Dialog dialog = buildDialogView();
+
+                dialog.show();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private Dialog buildDialogView() {
+
+        Dialog dialog = new Dialog(this, R.style.Dialog_Fullscreen);
+
+        dialog.setCancelable(true);
+        View dialogView = getLayoutInflater().inflate(R.layout.select_category_layout, null);
+        GridView selectCategoryGrid = (GridView) dialogView.findViewById(R.id.select_category_grid);
+        selectCategoryGrid.setChoiceMode(GridView.CHOICE_MODE_SINGLE);
+
+        SelectCategoryListAdapter selectCategoryGridAdapter = new SelectCategoryListAdapter(this, options, mCategories);
+        selectCategoryGrid.setAdapter(selectCategoryGridAdapter);
+        dialog.setContentView(dialogView);
+        return dialog;
+
     }
 
 

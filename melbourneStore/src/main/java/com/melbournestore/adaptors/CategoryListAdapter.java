@@ -2,6 +2,7 @@ package com.melbournestore.adaptors;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.melbournestore.activities.PlateActivity;
 import com.melbournestore.activities.R;
 import com.melbournestore.models.Shop_iPhone;
@@ -26,7 +28,7 @@ public class CategoryListAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
     Context mContext;
     ArrayList<Shop_iPhone> mShops = new ArrayList<Shop_iPhone>();
-
+    Gson gson = new Gson();
     DisplayImageOptions mOptions;
 
     public CategoryListAdapter(Context context, DisplayImageOptions options, ArrayList<Shop_iPhone> Shops) {
@@ -100,6 +102,8 @@ public class CategoryListAdapter extends BaseAdapter {
                 Intent intent = new Intent(mContext, PlateActivity.class);
                 intent.putExtra("shopid", mShops.get(position).getId());
                 intent.putExtra("shopName", mShops.get(position).getName());
+                intent.putExtra("shopCategories", gson.toJson(mShops.get(position).getCategories()));
+                Log.d("CATEGORY", gson.toJson(mShops.get(position).getCategories()));
                 mContext.startActivity(intent);
             }
         });

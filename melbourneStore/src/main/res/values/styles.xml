@@ -122,4 +122,9 @@
         <item name="android:topBright">@color/transparent</item>
         <item name="android:topDark">@color/transparent</item>
     </style>
+
+    <style name="Dialog_Fullscreen">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>

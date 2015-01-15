@@ -12,7 +12,7 @@ public class Shop_iPhone {
     private int delivery_type;
     private String image;
     private String update_time;
-    private categories[] categorieses;
+    private categories[] categories;
     private String desc;
 
     public Shop_iPhone() {
@@ -21,7 +21,7 @@ public class Shop_iPhone {
 
     public Shop_iPhone(int id, String name, String addr,
                        String contact_number, int seq, String image, String update_time,
-                       categories[] categorieses, String desc) {
+                       categories[] categories, String desc) {
         this.id = id;
         this.name = name;
         this.addr = addr;
@@ -29,7 +29,7 @@ public class Shop_iPhone {
         this.seq = seq;
         this.image = image;
         this.update_time = update_time;
-        this.categorieses = categorieses;
+        this.categories = categories;
         this.desc = desc;
     }
 
@@ -90,11 +90,11 @@ public class Shop_iPhone {
     }
 
     public categories[] getCategories() {
-        return categorieses;
+        return categories;
     }
 
-    public void setCategories(categories[] categorieses) {
-        this.categorieses = categorieses;
+    public void setCategories(categories[] categories) {
+        this.categories = categories;
     }
 
     public String getDesc() {
