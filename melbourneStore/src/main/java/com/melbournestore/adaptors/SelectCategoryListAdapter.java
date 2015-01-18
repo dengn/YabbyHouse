@@ -1,12 +1,13 @@
 package com.melbournestore.adaptors;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Checkable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,13 +27,16 @@ public class SelectCategoryListAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
     Context mContext;
     ArrayList<categories> mCategories = new ArrayList<categories>();
-
+    int mSelectedCategory = 0;
     DisplayImageOptions mOptions;
+    Handler mHandler;
 
-    public SelectCategoryListAdapter(Context context, DisplayImageOptions options, ArrayList<categories> Categories) {
+    public SelectCategoryListAdapter(Context context, Handler handler, DisplayImageOptions options, ArrayList<categories> Categories, int SelectedCategory) {
 
         mContext = context;
+        mHandler = handler;
         mOptions = options;
+        mSelectedCategory = SelectedCategory;
         mCategories.clear();
         mCategories.addAll(Categories);
 
@@ -88,43 +92,30 @@ public class SelectCategoryListAdapter extends BaseAdapter {
         holder.categoryName.setText(mCategories.get(position).getName());
 
 
+        holder.categoryChecked = (ImageView) rowView.findViewById(R.id.select_icon);
+        holder.categoryChecked.setVisibility((position == mSelectedCategory) ? View.VISIBLE : View.INVISIBLE);
+
+
         rowView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Message msg = mHandler.obtainMessage();
+                msg.what = 3;
+                msg.arg1 = position;
+                msg.arg2 = mCategories.get(position).getId();
+                msg.obj = mCategories.get(position).getName();
+                mHandler.sendMessage(msg);
 
             }
         });
         return rowView;
     }
 
-    public class Holder implements Checkable {
+    public class Holder {
 
         CircleImageView categoryImg;
         ImageView categoryChecked;
         TextView categoryName;
-        private boolean mChecked;
-
-        @Override
-        public boolean isChecked() {
-            // TODO Auto-generated method stub
-            return mChecked;
-        }
-
-        @Override
-        public void setChecked(boolean checked) {
-            // TODO Auto-generated method stub
-            mChecked = checked;
-            setBackgroundDrawable(checked ? getResources().getDrawable(
-                    R.drawable.background) : null);
-            mSelcetView.setVisibility(checked ? View.VISIBLE : View.GONE);
-        }
-
-        @Override
-        public void toggle() {
-            // TODO Auto-generated method stub
-            setChecked(!mChecked);
-        }
 
 
     }

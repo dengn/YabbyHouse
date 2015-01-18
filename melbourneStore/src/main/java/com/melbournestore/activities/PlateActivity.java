@@ -72,6 +72,11 @@ public class PlateActivity extends Activity {
     private float totalPrice = 0;
     private int totalNum = 0;
     private ArrayList<item_iphone> mItems = new ArrayList<item_iphone>();
+
+
+    private int mSelectedCategoryIndex = 0;
+    private int mSelectedCategoryId = 1;
+    private String mCategoryName = "";
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -137,11 +142,43 @@ public class PlateActivity extends Activity {
                         mTotalNum.setText(String.valueOf(totalNum));
                     }
                     break;
+                case 3:
+                    //update list by choosing categories
+                    mSelectedCategoryIndex = msg.arg1;
+                    mSelectedCategoryId = msg.arg2;
+                    mCategoryName = (String) msg.obj;
+
+                    dialog.dismiss();
+
+                    if (mSelectedCategoryId == 1) {
+                        String itemsString = SharedPreferenceUtils.getLocalItems(PlateActivity.this, mShopId);
+                        Type type = new TypeToken<ArrayList<item_iphone>>() {
+                        }.getType();
+                        ArrayList<item_iphone> items = gson.fromJson(itemsString, type);
+                        mItems.clear();
+                        mItems.addAll(items);
+                        getActionBar().setTitle(mShopName);
+
+                        mPlateListAdapter.refresh(mItems);
+                    } else {
+
+                        ArrayList<item_iphone> items_category = MelbourneUtils.getItemsFromCategoryId(PlateActivity.this, mShopId, mSelectedCategoryId);
+                        getActionBar().setTitle(mShopName + "-" + mCategoryName);
+
+                        mItems.clear();
+                        mItems.addAll(items_category);
+
+
+                        mPlateListAdapter.refresh(mItems);
+
+                    }
+
 
             }
         }
 
     };
+    private Dialog dialog;
     private ArrayList<categories> mCategories = new ArrayList<categories>();
     private long mExitTime;
 
@@ -300,7 +337,7 @@ public class PlateActivity extends Activity {
 //                Dialog dialog = new Dialog(this, R.style.Dialog_Fullscreen);
 //                dialog.setContentView(R.layout.select_category_layout);
 
-                Dialog dialog = buildDialogView();
+                dialog = buildDialogView();
 
                 dialog.show();
                 return true;
@@ -310,15 +347,33 @@ public class PlateActivity extends Activity {
 
     private Dialog buildDialogView() {
 
-        Dialog dialog = new Dialog(this, R.style.Dialog_Fullscreen);
+        final Dialog dialog = new Dialog(this, R.style.Theme_D1NoTitleDim);
 
-        dialog.setCancelable(true);
+        dialog.setCancelable(false);
         View dialogView = getLayoutInflater().inflate(R.layout.select_category_layout, null);
         GridView selectCategoryGrid = (GridView) dialogView.findViewById(R.id.select_category_grid);
+        TextView cancelDialog = (TextView) dialogView.findViewById(R.id.select_category_back);
+        cancelDialog.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
         selectCategoryGrid.setChoiceMode(GridView.CHOICE_MODE_SINGLE);
 
-        SelectCategoryListAdapter selectCategoryGridAdapter = new SelectCategoryListAdapter(this, options, mCategories);
+        SelectCategoryListAdapter selectCategoryGridAdapter = new SelectCategoryListAdapter(this, mHandler, options, mCategories, mSelectedCategoryIndex);
         selectCategoryGrid.setAdapter(selectCategoryGridAdapter);
+
+        dialog.getWindow().setDimAmount(0.55f);
+
+//        WindowManager.LayoutParams lp=dialog.getWindow().getAttributes();
+//        lp.dimAmount=0.55f;
+//        dialog.getWindow().setAttributes(lp);
+//        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+//        dialog.getWindow()
+//                .addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+
         dialog.setContentView(dialogView);
         return dialog;
 

@@ -471,22 +471,22 @@ public class MelbourneUtils {
         return shops.get(index).getName();
     }
 
-    public static final Suburb getSuburbFromAreaNameAndSuburb(String area, String suburb, Context context){
+    public static final Suburb getSuburbFromAreaNameAndSuburb(String area, String suburb, Context context) {
         String areaString = SharedPreferenceUtils.getAreas(context);
         Type typeArea = new TypeToken<ArrayList<Area>>() {
         }.getType();
         Gson gson = new Gson();
         ArrayList<Area> areas = gson.fromJson(areaString, typeArea);
-        int area_index =0;
-        for(int i=0;i<areas.size();i++){
-            if(area.equals(areas.get(i))){
+        int area_index = 0;
+        for (int i = 0; i < areas.size(); i++) {
+            if (area.equals(areas.get(i))) {
                 area_index = i;
                 break;
             }
         }
-        int suburb_index =0;
-        for(int i=0;i<areas.get(area_index).getSuburbs().size();i++){
-            if(suburb.equals(areas.get(area_index).getSuburbs().get(i))){
+        int suburb_index = 0;
+        for (int i = 0; i < areas.get(area_index).getSuburbs().size(); i++) {
+            if (suburb.equals(areas.get(area_index).getSuburbs().get(i))) {
                 suburb_index = i;
                 break;
             }
@@ -496,7 +496,7 @@ public class MelbourneUtils {
     }
 
     public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivity = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity == null) {
             Log.i("NetWorkState", "Unavailabel");
             return false;
@@ -515,12 +515,29 @@ public class MelbourneUtils {
     }
 
     public static boolean isOpenNetwork(Context context) {
-        ConnectivityManager connManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(connManager.getActiveNetworkInfo() != null) {
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connManager.getActiveNetworkInfo() != null) {
             return connManager.getActiveNetworkInfo().isAvailable();
         }
 
         return false;
+    }
+
+    public static ArrayList<item_iphone> getItemsFromCategoryId(Context context, int ShopId, int CategoryId) {
+        ArrayList<item_iphone> returnItems = new ArrayList<item_iphone>();
+
+        Gson gson = new Gson();
+        String itemsString = SharedPreferenceUtils.getLocalItems(context, ShopId);
+        Type type = new TypeToken<ArrayList<item_iphone>>() {
+        }.getType();
+        ArrayList<item_iphone> items = gson.fromJson(itemsString, type);
+
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).getCategory_id() == CategoryId) {
+                returnItems.add(items.get(i));
+            }
+        }
+        return returnItems;
     }
 
 }
