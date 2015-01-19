@@ -43,14 +43,14 @@ public class AddressManagerThread extends Thread {
 
     public static String handlePut(String strUrl, List<NameValuePair> params) {
         String result = null;
-        HttpPut request = new HttpPut(strUrl);//ÊµÀı»¯getÇëÇó
-        DefaultHttpClient client = new DefaultHttpClient();//ÊµÀı»¯¿Í»§¶Ë
+        HttpPut request = new HttpPut(strUrl);//å®ä¾‹åŒ–getè¯·æ±‚
+        DefaultHttpClient client = new DefaultHttpClient();//å®ä¾‹åŒ–å®¢æˆ·ç«¯
 
         try {
             request.setEntity(new UrlEncodedFormEntity(params));
-            HttpResponse response = client.execute(request);//Ö´ĞĞ¸ÃÇëÇó,µÃµ½·şÎñÆ÷¶ËµÄÏìÓ¦ÄÚÈİ
+            HttpResponse response = client.execute(request);//æ‰§è¡Œè¯¥è¯·æ±‚,å¾—åˆ°æœåŠ¡å™¨ç«¯çš„å“åº”å†…å®¹
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                result = EntityUtils.toString(response.getEntity());//°ÑÏìÓ¦½á¹û×ª³ÉString
+                result = EntityUtils.toString(response.getEntity());//æŠŠå“åº”ç»“æœè½¬æˆString
             } else {
                 result = response.getStatusLine().toString();
             }

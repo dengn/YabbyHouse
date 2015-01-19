@@ -113,11 +113,11 @@ public class RecommandationFragment extends Fragment {
 
 
         options = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.loading_ads)    //ÔÚImageView¼ÓÔØ¹ı³ÌÖĞÏÔÊ¾Í¼Æ¬
-                .showImageForEmptyUri(R.drawable.loading_ads)  //imageÁ¬½ÓµØÖ·Îª¿ÕÊ±
-                .showImageOnFail(R.drawable.loading_ads)  //image¼ÓÔØÊ§°Ü
-                .cacheInMemory(true)  //¼ÓÔØÍ¼Æ¬Ê±»áÔÚÄÚ´æÖĞ¼ÓÔØ»º´æ
-                .cacheOnDisc(true)   //¼ÓÔØÍ¼Æ¬Ê±»áÔÚ´ÅÅÌÖĞ¼ÓÔØ»º´æ
+                .showStubImage(R.drawable.loading_ads)    //åœ¨ImageViewåŠ è½½è¿‡ç¨‹ä¸­æ˜¾ç¤ºå›¾ç‰‡
+                .showImageForEmptyUri(R.drawable.loading_ads)  //imageè¿æ¥åœ°å€ä¸ºç©ºæ—¶
+                .showImageOnFail(R.drawable.loading_ads)  //imageåŠ è½½å¤±è´¥
+                .cacheInMemory(true)  //åŠ è½½å›¾ç‰‡æ—¶ä¼šåœ¨å†…å­˜ä¸­åŠ è½½ç¼“å­˜
+                .cacheOnDisc(true)   //åŠ è½½å›¾ç‰‡æ—¶ä¼šåœ¨ç£ç›˜ä¸­åŠ è½½ç¼“å­˜
                 .build();
 
         mRecommadationListAdapter = new RecommandationListAdapter(mContext, options, mAd);

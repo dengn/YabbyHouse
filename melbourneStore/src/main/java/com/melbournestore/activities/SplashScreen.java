@@ -8,6 +8,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
+import com.melbournestore.db.SharedPreferenceUtils;
+
 public class SplashScreen extends Activity {
 
     // Splash screen timer
@@ -34,8 +36,15 @@ public class SplashScreen extends Activity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                Intent i = new Intent(SplashScreen.this, MainActivity.class);
-                startActivity(i);
+                if(SharedPreferenceUtils.getFirstTimeLaunch(SplashScreen.this)){
+                    Intent i = new Intent(SplashScreen.this, StarterActivity.class);
+                    startActivity(i);
+                }
+                else{
+                    Intent i = new Intent(SplashScreen.this, MainActivity.class);
+                    startActivity(i);
+                }
+
 
                 // close this activity
                 finish();
