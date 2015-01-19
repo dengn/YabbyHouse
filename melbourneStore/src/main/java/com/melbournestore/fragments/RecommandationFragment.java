@@ -37,6 +37,7 @@ public class RecommandationFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     DisplayImageOptions options;
+    ProgressDialog progress;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -44,9 +45,6 @@ public class RecommandationFragment extends Fragment {
      * The fragment's ListView/GridView.
      */
     private ListView mRecommandationList;
-
-    ProgressDialog progress;
-
     /**
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
@@ -61,17 +59,17 @@ public class RecommandationFragment extends Fragment {
             mAd = (ArrayList<advertisements>) msg.obj;
             mRecommadationListAdapter.refresh(mAd);
             progress.dismiss();
-            //mRecommandationList.setAdapter(mRecommadationListAdapter);
 
-//            switch (msg.what) {
+        }
+    };            //mRecommandationList.setAdapter(mRecommadationListAdapter);
+
+    //            switch (msg.what) {
 //                case 1:
 //                    break;
 //                case 2:
 //                    break;
 //
 //            }
-        }
-    };
     private Context mContext;
     ;
     private RecommandationManagerThread mRecommandationThread;
@@ -113,8 +111,8 @@ public class RecommandationFragment extends Fragment {
 
 
         options = new DisplayImageOptions.Builder()
-                .showStubImage(R.drawable.loading_ads)    //在ImageView加载过程中显示图片
-                .showImageForEmptyUri(R.drawable.loading_ads)  //image连接地址为空时
+                .showStubImage(R.drawable.loading_ads)    //在ImageView加载过程中显示图�?
+                .showImageForEmptyUri(R.drawable.loading_ads)  //image连接地址为空�?
                 .showImageOnFail(R.drawable.loading_ads)  //image加载失败
                 .cacheInMemory(true)  //加载图片时会在内存中加载缓存
                 .cacheOnDisc(true)   //加载图片时会在磁盘中加载缓存

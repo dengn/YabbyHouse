@@ -4,77 +4,59 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import com.google.gson.Gson;
-import com.melbournestore.activities.ChatActivity;
 import com.melbournestore.activities.R;
-import com.melbournestore.adaptors.MyOrderListAdapter;
-import com.melbournestore.db.SharedPreferenceUtils;
-import com.melbournestore.models.Order;
-import com.melbournestore.models.user_iphone;
-import com.melbournestore.network.DeleteOrderManagerThread;
-import com.melbournestore.network.OrderManagerThread;
-import com.melbournestore.utils.SwipeListView;
+import com.melbournestore.adaptors.ShowListAdapter;
+import com.melbournestore.models.Show;
+import com.melbournestore.network.ShowManagerThread;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
 import java.util.ArrayList;
 
 public class ShowFragment extends Fragment {
 
 
-    MyOrderListAdapter myOrderListAdapter;
+    ShowListAdapter mShowListAdapter;
+    GridView mGridView;
     ProgressDialog progress;
-    private Order[] mOrders;
-    private OrderManagerThread mOrderThread;
-    private DeleteOrderManagerThread mDeleteOrderThread;
-    private String mContactNumber;
+    DisplayImageOptions mOptions;
+
+
+    private ShowManagerThread mShowThread;
+
     private Gson gson = new Gson();
     private Context mContext;
-    private SwipeListView myOrdersList;
 
-    public ShowFragment() {
+    private int mPageNum = 1;
 
-    }
-
+    private ArrayList<Show> mShows = new ArrayList<Show>();
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    mOrders = (Order[]) msg.obj;
-                    myOrderListAdapter.refresh(mOrders);
-                    progress.dismiss();
+                    mShows = (ArrayList<Show>) msg.obj;
+                    mShowListAdapter.refresh(mShows);
+//                    progress.dismiss();
                     break;
 
-                case 1:
-                    //delete order
-                    int deleteId = (Integer) msg.obj;
-                    ArrayList<Order> updatedOrders = new ArrayList<Order>();
-                    for (int i = 0; i < mOrders.length; i++) {
-                        if (mOrders[i].getId() != deleteId) {
-                            updatedOrders.add(mOrders[i]);
-                        }
-                    }
-                    mOrders = updatedOrders.toArray(new Order[updatedOrders.size()]);
-                    myOrderListAdapter.refresh(mOrders);
-
-                    mDeleteOrderThread = new DeleteOrderManagerThread(mHandler, mContext, deleteId);
-                    mDeleteOrderThread.start();
-                    break;
 
             }
 
         }
     };
+
+    public ShowFragment() {
+
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -89,45 +71,32 @@ public class ShowFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        String userString = SharedPreferenceUtils.getLoginUser(mContext);
-        user_iphone user = gson.fromJson(userString, user_iphone.class);
-        mContactNumber = user.getPhoneNumber();
 
-        mOrderThread = new OrderManagerThread(mHandler, mContext, mContactNumber);
-        mOrderThread.start();
-        progress = new ProgressDialog(mContext, R.style.dialog_loading);
-        progress.show();
+        mShowThread = new ShowManagerThread(mHandler, mContext, mPageNum);
+        mShowThread.start();
+//        progress = new ProgressDialog(mContext, R.style.dialog_loading);
+//        progress.show();
+
+        mOptions = new DisplayImageOptions.Builder()
+                .showStubImage(R.drawable.loading_ads)    //在ImageView加载过程中显示图片
+                .showImageForEmptyUri(R.drawable.loading_ads)  //image连接地址为空时
+                .showImageOnFail(R.drawable.loading_ads)  //image加载失败
+                .cacheInMemory(true)  //加载图片时会在内存中加载缓存
+                .cacheOnDisc(true)   //加载图片时会在磁盘中加载缓存
+                .build();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.myorders_menu, menu);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle myorder_list_item selection
-        switch (item.getItemId()) {
-            case R.id.chat:
-
-                Intent intent = new Intent(getActivity(), ChatActivity.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_myorders, container, false);
-        myOrdersList = (SwipeListView) rootView.findViewById(R.id.my_orders);
+        View rootView = inflater.inflate(R.layout.fragment_show, container, false);
+        mGridView = (GridView) rootView.findViewById(R.id.show_gridview);
 
-        myOrderListAdapter = new MyOrderListAdapter(mContext, myOrdersList.getRightViewWidth(), mHandler, mOrders);
+        mShowListAdapter = new ShowListAdapter(mContext, mHandler, mOptions, mShows);
 
-        myOrdersList.setAdapter(myOrderListAdapter);
+        mGridView.setAdapter(mShowListAdapter);
 
         return rootView;
     }

@@ -47,6 +47,7 @@ import com.melbournestore.fragments.GoogleMapFragment;
 import com.melbournestore.fragments.MyOrdersFragment;
 import com.melbournestore.fragments.PlateFragment;
 import com.melbournestore.fragments.RecommandationFragment;
+import com.melbournestore.fragments.ShowFragment;
 import com.melbournestore.models.Coupon;
 import com.melbournestore.models.Order_user;
 import com.melbournestore.models.Plate;
@@ -103,6 +104,7 @@ public class MainActivity extends Activity {
     private static final int MY_ACCOUNT_CODE = 7;
     Fragment plate_fragment;
     Fragment myorders_fragment;
+    Fragment show_fragment;
     Fragment googlemap_fragment;
     Fragment recommandation_fragment;
     DisplayImageOptions options;
@@ -115,7 +117,8 @@ public class MainActivity extends Activity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private String[] mMenuTitles;
-    private Handler mHandler = new Handler(){};
+    private Handler mHandler = new Handler() {
+    };
     private long mExitTime;
     private int mOrderNum;
     private int mCouponNum;
@@ -124,7 +127,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
 
         setContentView(R.layout.activity_main);
@@ -155,7 +157,6 @@ public class MainActivity extends Activity {
         }
 
 
-
         AreaManagerThread mAreaThread = new AreaManagerThread(mHandler, this);
         mAreaThread.start();
 
@@ -166,6 +167,8 @@ public class MainActivity extends Activity {
         plate_fragment.onAttach(this);
         myorders_fragment = new MyOrdersFragment();
         myorders_fragment.onAttach(this);
+        show_fragment = new ShowFragment();
+        show_fragment.onAttach(this);
         googlemap_fragment = new GoogleMapFragment();
         googlemap_fragment.onAttach(this);
 
@@ -409,19 +412,22 @@ public class MainActivity extends Activity {
                 mDrawerLayout.closeDrawer(mDrawerList);
                 break;
             case 4:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Coming soon!")
-                        .setCancelable(false)
-                        .setPositiveButton("知道了", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                //do things
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
-//                mDrawerList.setItemChecked(position, true);
-//                setTitle(mMenuTitles[position - 1]);
-//                mDrawerLayout.closeDrawer(mDrawerList);
+//                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                builder.setMessage("Coming soon!")
+//                        .setCancelable(false)
+//                        .setPositiveButton("知道了", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                //do things
+//                            }
+//                        });
+//                AlertDialog alert = builder.create();
+//                alert.show();
+
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content_frame, show_fragment).commit();
+                mDrawerList.setItemChecked(position, true);
+                setTitle(mMenuTitles[position - 1]);
+                mDrawerLayout.closeDrawer(mDrawerList);
                 break;
             case 5:
                 fragmentManager.beginTransaction()
