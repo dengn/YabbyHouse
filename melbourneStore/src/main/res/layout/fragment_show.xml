@@ -9,7 +9,12 @@
     <GridView
         android:id="@+id/show_gridview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:horizontalSpacing="3pt"
+        android:numColumns="3"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="3pt"/>
 
     <LinearLayout
         android:layout_width="match_parent"

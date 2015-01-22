@@ -116,6 +116,9 @@
             android:name=".ChatActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ShowImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".SplashScreen"
             android:screenOrientation="portrait">
             <intent-filter>

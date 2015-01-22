@@ -1,6 +1,7 @@
 package com.melbournestore.adaptors;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.melbournestore.activities.R;
+import com.melbournestore.activities.ShowImageActivity;
 import com.melbournestore.models.Show;
 import com.melbournestore.utils.Constant;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -76,6 +78,15 @@ public class ShowListAdapter extends BaseAdapter {
         holder.showImage = (ImageView) rowView.findViewById(R.id.show_img);
         ImageLoader.getInstance().displayImage(Constant.URL_BASE_PHOTO + mShows.get(position).getShow_image(), holder.showImage, mOptions);
 
+        holder.showImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ShowImageActivity.class);
+                intent.putExtra("shows", gson.toJson(mShows));
+                intent.putExtra("position", position);
+                mContext.startActivity(intent);
+            }
+        });
 
         return rowView;
     }

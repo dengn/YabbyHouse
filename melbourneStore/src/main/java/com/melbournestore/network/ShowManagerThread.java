@@ -66,7 +66,8 @@ public class ShowManagerThread extends Thread {
 //        }.getType();
 //        HashMap<String, Show[]> mShows = gson.fromJson(jsonString, listType);
 //        Show[] shows = mShows.get("user_show_list");
-        Show[] shows = showPage.getShows().get("user_show_list");
+        Log.d("SHOW", String.valueOf(showPage.getHasNext()));
+        Show[] shows = showPage.getShows();
 
         ArrayList<Show> Shows_array = new ArrayList<Show>();
 
