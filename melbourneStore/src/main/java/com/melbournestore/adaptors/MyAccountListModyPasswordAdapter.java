@@ -1,0 +1,127 @@
+package com.melbournestore.adaptors;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Handler;
+import android.text.method.PasswordTransformationMethod;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.melbournestore.activities.R;
+import com.melbournestore.db.SharedPreferenceUtils;
+import com.melbournestore.network.UserLoginManagerThread;
+
+public class MyAccountListModyPasswordAdapter extends BaseAdapter {
+
+    private static LayoutInflater inflater = null;
+    private Context mContext;
+    private Handler mHandler;
+
+    public MyAccountListModyPasswordAdapter(Context context, Handler handler) {
+        // TODO Auto-generated constructor stub
+
+        mContext = context;
+        mHandler = handler;
+
+        inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public void refresh() {
+
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getCount() {
+        // TODO Auto-generated method stub
+        return 1;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        // TODO Auto-generated method stub
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        // TODO Auto-generated method stub
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        // TODO Auto-generated method stub
+
+        viewHolder_coupon holder_coupon = null;
+
+        holder_coupon = new viewHolder_coupon();
+        convertView = inflater.inflate(R.layout.myaccount_list_coupon, parent,
+                false);
+
+        holder_coupon.title = (TextView) convertView
+                .findViewById(R.id.myaccount_coupon_title);
+        holder_coupon.rightArrow = (ImageView) convertView
+                .findViewById(R.id.myaccount_coupon_rightarrow);
+
+        holder_coupon.title.setText("修改密码");
+        holder_coupon.rightArrow
+                .setImageResource(R.drawable.other_icon_rightarrow);
+
+
+        convertView.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                final EditText editText = new EditText(mContext);
+                editText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                new AlertDialog.Builder(mContext)
+                        .setTitle("请输入当前密码")
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .setView(editText)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+//                        Message message = mHandler.obtainMessage();
+//                        message.what = 4;
+//                        message.obj = editText.getText().toString();
+//                        mHandler.sendMessage(message);
+                        String mNumber = SharedPreferenceUtils.getContactNumber(mContext);
+                        UserLoginManagerThread mLoginThread = new UserLoginManagerThread(mHandler, mContext, mNumber, editText.getText().toString());
+                        mLoginThread.start();
+
+                    }
+                })
+                        .setNegativeButton("取消", null)
+                        .show();
+
+            }
+
+        });
+
+
+        convertView.setTag(holder_coupon);
+
+
+        return convertView;
+
+    }
+
+
+    class viewHolder_coupon {
+
+        private TextView title;
+
+        private ImageView rightArrow;
+
+    }
+
+}

@@ -32,6 +32,16 @@
         android:divider="@color/lightgray"
         android:dividerHeight="1dip" />
 
+    <ListView
+        android:id="@+id/myaccount_modify_password"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/myaccount_list_coupon"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="378dp"
+        android:divider="@color/lightgray"
+        android:dividerHeight="1dip" />
+
     <Button
         android:id="@+id/logout"
         android:layout_width="267dp"

@@ -33,6 +33,7 @@ import com.google.gson.Gson;
 import com.melbournestore.adaptors.MyAccountListAdapter;
 import com.melbournestore.adaptors.MyAccountListAddressAdapter;
 import com.melbournestore.adaptors.MyAccountListCouponAdapter;
+import com.melbournestore.adaptors.MyAccountListModyPasswordAdapter;
 import com.melbournestore.application.SysApplication;
 import com.melbournestore.db.SharedPreferenceUtils;
 import com.melbournestore.models.Suburb;
@@ -66,9 +67,14 @@ public class MyAccountActivity extends Activity {
     private ListView mMyAccountList;
     private ListView mMyAccountListAddress;
     private ListView mMyAccountListCoupon;
+    private ListView mMyAccountListModifyPassword;
+
     private MyAccountListAdapter mMyAccountListAdapter;
     private MyAccountListAddressAdapter mMyAccountListAdapterAddress;
     private MyAccountListCouponAdapter mMyAccountListAdapterCoupon;
+    private MyAccountListModyPasswordAdapter mMyAccountListModyPasswordAdapter;
+
+
     private user_iphone mUser;
 
     private int mOrderNum = 0;
@@ -111,6 +117,26 @@ public class MyAccountActivity extends Activity {
                 case 3:
 
                     showNotice("上传失败");
+                    progress.dismiss();
+                    break;
+
+                case 4:
+
+                    //Modify password
+                    String inputPassword = (String) msg.obj;
+                    mLoginThread = new UserLoginManagerThread(mHandler, MyAccountActivity.this, mNumber, inputPassword);
+                    mLoginThread.start();
+                    progress.show();
+
+
+                    break;
+
+                case 5:
+                    Toast.makeText(MyAccountActivity.this, "密码不正确", Toast.LENGTH_SHORT);
+                    progress.dismiss();
+                    break;
+                case 6:
+                    Toast.makeText(MyAccountActivity.this, "密码不正确", Toast.LENGTH_SHORT);
                     progress.dismiss();
                     break;
 
@@ -226,6 +252,7 @@ public class MyAccountActivity extends Activity {
         mMyAccountList = (ListView) findViewById(R.id.myaccount_list);
         mMyAccountListAddress = (ListView) findViewById(R.id.myaccount_list_address);
         mMyAccountListCoupon = (ListView) findViewById(R.id.myaccount_list_coupon);
+        mMyAccountListModifyPassword = (ListView) findViewById(R.id.myaccount_modify_password);
 
         mMyAccountListAdapter = new MyAccountListAdapter(this, mHandler, options, mUser, mOrderNum, mCouponNum);
         mMyAccountList.setAdapter(mMyAccountListAdapter);
@@ -235,6 +262,11 @@ public class MyAccountActivity extends Activity {
 
         mMyAccountListAdapterCoupon = new MyAccountListCouponAdapter(this, mHandler);
         mMyAccountListCoupon.setAdapter(mMyAccountListAdapterCoupon);
+
+        mMyAccountListModyPasswordAdapter = new MyAccountListModyPasswordAdapter(this, mHandler);
+        mMyAccountListModifyPassword.setAdapter(mMyAccountListModyPasswordAdapter);
+
+
 
     }
 

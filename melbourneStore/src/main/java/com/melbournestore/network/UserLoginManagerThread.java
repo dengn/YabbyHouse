@@ -160,12 +160,12 @@ public class UserLoginManagerThread extends Thread {
         Log.d("USERTHREAD", result);
         if (!result.contains("user")) {
             Message message = mHandler.obtainMessage();
-            message.what = 2;
+            message.what = 5;
             mHandler.sendMessage(message);
         }
         else if (result.equals("HTTP/1.1 404 NOT FOUND")) {
             Message message = mHandler.obtainMessage();
-            message.what = 0;
+            message.what = 6;
             mHandler.sendMessage(message);
         }
         else {
