@@ -1,3 +1,4 @@
 include ':amazinglistview', ':wheel'
 include ':swipelistview'
 include ':melbourneStore'
+include ':library'

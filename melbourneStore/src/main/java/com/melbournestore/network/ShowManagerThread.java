@@ -28,6 +28,8 @@ public class ShowManagerThread extends Thread {
     Context mContext;
 
     int mPageNum = 1;
+    int mHasNext = 0;
+    int mNextNum = 0;
 
     Gson gson = new Gson();
 
@@ -58,7 +60,7 @@ public class ShowManagerThread extends Thread {
     /**
      * Transform JSON String to Show
      */
-    public static ArrayList<Show> getShows(String jsonString) {
+    public ArrayList<Show> getShows(String jsonString) {
         Gson gson = new Gson();
         ShowPage showPage = gson.fromJson(jsonString, ShowPage.class);
 
@@ -67,7 +69,18 @@ public class ShowManagerThread extends Thread {
 //        HashMap<String, Show[]> mShows = gson.fromJson(jsonString, listType);
 //        Show[] shows = mShows.get("user_show_list");
         Log.d("SHOW", String.valueOf(showPage.getHasNext()));
+
+        if(showPage.getHasNext()){
+            mHasNext = 1;
+        }
+        else{
+            mHasNext = 0;
+        }
+        mNextNum = showPage.getNextNum();
+
         Show[] shows = showPage.getShows();
+
+
 
         ArrayList<Show> Shows_array = new ArrayList<Show>();
 
@@ -89,7 +102,9 @@ public class ShowManagerThread extends Thread {
 
         Message message = mHandler.obtainMessage();
         message.obj = mShows;
-        message.what = 0;
+        message.arg1 = mHasNext;
+        message.arg2 = mNextNum;
+
         mHandler.sendMessage(message);
     }
 
