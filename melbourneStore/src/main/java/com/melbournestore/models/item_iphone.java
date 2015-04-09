@@ -7,7 +7,7 @@ public class item_iphone {
     private String desc;
     private String price;
     private int category_id;
-    private int stock;
+    private long stock;
     private int unit;
     private int group_buy;
     private Float group_price;
@@ -21,7 +21,7 @@ public class item_iphone {
 
     }
 
-    public item_iphone(int id, String name, String desc, String price, int category_id, int stock, int unit, int group_buy, Float group_price, String image, int good, int seq, int shop_id, String update_time) {
+    public item_iphone(int id, String name, String desc, String price, int category_id, long stock, int unit, int group_buy, Float group_price, String image, int good, int seq, int shop_id, String update_time) {
         this.id = id;
         this.name = name;
         this.desc = desc;
@@ -79,11 +79,11 @@ public class item_iphone {
         this.category_id = category_id;
     }
 
-    public int getStock() {
+    public long getStock() {
         return stock;
     }
 
-    public void setStock(int stock) {
+    public void setStock(long stock) {
         this.stock = stock;
     }
 

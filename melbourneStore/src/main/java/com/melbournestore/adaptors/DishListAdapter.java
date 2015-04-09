@@ -261,7 +261,7 @@ public class DishListAdapter extends BaseAdapter {
     }
 
     private void setComponentsStatus(Button plusButton, Button minusButton) {
-        int stock_num = mItem.getStock();
+        long stock_num = mItem.getStock();
         int plate_num = mItem.getUnit();
 
         if (plate_num >= stock_num) {

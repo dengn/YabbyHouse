@@ -61,6 +61,15 @@ public class MelbourneUtils {
 
     }
 
+    public static final boolean checkStringNotNull(String string){
+        if(string==null){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
     public static final int sum_number_all(Shop[] shops) {
         int num_all = 0;
         for (int i = 0; i < shops.length; i++) {

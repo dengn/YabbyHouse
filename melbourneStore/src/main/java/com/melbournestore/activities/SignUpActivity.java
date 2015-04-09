@@ -79,6 +79,12 @@ public class SignUpActivity extends Activity {
 
                     showNotice("登录失败\n手机号码或密码错误");
                     break;
+                case 6:
+                    if(progress != null) {
+                        progress.dismiss();
+                    }
+                    showNotice("登录失败\n手机号码或密码错误");
+                    break;
             }
         }
     };

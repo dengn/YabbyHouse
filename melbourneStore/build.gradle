@@ -31,14 +31,15 @@ dependencies {
     compile project(':swipelistview')
     compile project(':amazinglistview')
     compile project(':wheel')
-    compile project(':library')
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     compile 'com.android.support:support-v4:19.+'
     compile 'com.google.code.gson:gson:2.3'
     compile 'com.google.android.gms:play-services:+'
-    compile files('libs/httpcore-4.4.jar')
-    compile files('libs/httpmime-4.3.3.jar')
-    compile files('libs/universal-image-loader-1.9.3.jar')
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'org.apache.httpcomponents:httpmime:4.4.1'
+    compile 'org.apache.httpcomponents:httpcore:4.4.1'
+    compile project(':library')
 }
 
 

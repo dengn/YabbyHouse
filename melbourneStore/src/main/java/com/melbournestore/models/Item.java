@@ -6,7 +6,7 @@ public class Item {
     private String name;
     private String desc;
     private int price;
-    private int stock;
+    private long stock;
     private int unit;
     private int group_buy;
     private int group_price;
@@ -20,7 +20,7 @@ public class Item {
 
     }
 
-    public Item(int id, String name, String desc, int price, int stock, int unit, int group_buy, int group_price, String image, int good, int seq, int shop_id, String update_time) {
+    public Item(int id, String name, String desc, int price, long stock, int unit, int group_buy, int group_price, String image, int good, int seq, int shop_id, String update_time) {
         this.id = id;
         this.name = name;
         this.desc = desc;
@@ -69,11 +69,11 @@ public class Item {
         this.price = price;
     }
 
-    public int getStock() {
+    public long getStock() {
         return stock;
     }
 
-    public void setStock(int stock) {
+    public void setStock(long stock) {
         this.stock = stock;
     }
 

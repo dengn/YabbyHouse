@@ -192,39 +192,128 @@ public class CurrentOrderActivity extends Activity implements View.OnTouchListen
         currentOrder_number.setText("订单号: " + String.valueOf(mOrder.getId()));
         if (mOrder.getStatus() == 0) {
             currentOrder_status1_circle.setBackgroundResource(R.drawable.circle_white);
-            currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
+            if(MelbourneUtils.checkStringNotNull(mOrder.getCreateTime())) {
+                currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
+            }
+            else{
+                currentOrder_status1_time.setText("");
+            }
         } else if (mOrder.getStatus() == 1) {
             currentOrder_status1_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status2_circle.setBackgroundResource(R.drawable.circle_white);
-            currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
-            currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
+            if(MelbourneUtils.checkStringNotNull(mOrder.getCreateTime())) {
+                currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
+            }
+            else{
+                currentOrder_status1_time.setText("");
+            }
+            if(MelbourneUtils.checkStringNotNull(mOrder.getConfirmTime())) {
+                currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
+            }
+            else{
+                currentOrder_status2_time.setText("");
+            }
+            //currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
+            //currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
         } else if (mOrder.getStatus() == 2) {
             currentOrder_status1_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status2_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status3_circle.setBackgroundResource(R.drawable.circle_white);
-            currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
-            currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
-            currentOrder_status3_time.setText(mOrder.getDistributingTime().split(" ")[1]);
+            if(MelbourneUtils.checkStringNotNull(mOrder.getCreateTime())) {
+                currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
+            }
+            else{
+                currentOrder_status1_time.setText("");
+            }
+            if(MelbourneUtils.checkStringNotNull(mOrder.getConfirmTime())) {
+                currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
+            }
+            else{
+                currentOrder_status2_time.setText("");
+            }
+            if(MelbourneUtils.checkStringNotNull(mOrder.getDistributingTime())) {
+                currentOrder_status3_time.setText(mOrder.getDistributingTime().split(" ")[1]);
+            }
+            else{
+                currentOrder_status3_time.setText("");
+            }
+            //currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
+            //currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
+            //currentOrder_status3_time.setText(mOrder.getDistributingTime().split(" ")[1]);
         } else if (mOrder.getStatus() == 3) {
             currentOrder_status1_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status2_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status3_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status4_circle.setBackgroundResource(R.drawable.circle_white);
-            currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
-            currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
-            currentOrder_status3_time.setText(mOrder.getDistributingTime().split(" ")[1]);
-            currentOrder_status4_time.setText(mOrder.getDeliveryingTime().split(" ")[1]);
+            if(MelbourneUtils.checkStringNotNull(mOrder.getCreateTime())) {
+                currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
+            }
+            else{
+                currentOrder_status1_time.setText("");
+            }
+            if(MelbourneUtils.checkStringNotNull(mOrder.getConfirmTime())) {
+                currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
+            }
+            else{
+                currentOrder_status2_time.setText("");
+            }
+            if(MelbourneUtils.checkStringNotNull(mOrder.getDistributingTime())) {
+                currentOrder_status3_time.setText(mOrder.getDistributingTime().split(" ")[1]);
+            }
+            else{
+                currentOrder_status3_time.setText("");
+            }
+            if(MelbourneUtils.checkStringNotNull(mOrder.getDeliveryingTime())) {
+                currentOrder_status4_time.setText(mOrder.getDeliveryingTime().split(" ")[1]);
+            }
+            else{
+                currentOrder_status4_time.setText("");
+            }
+//            currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
+//            currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
+//            currentOrder_status3_time.setText(mOrder.getDistributingTime().split(" ")[1]);
+//            currentOrder_status4_time.setText(mOrder.getDeliveryingTime().split(" ")[1]);
         } else if (mOrder.getStatus() == 4) {
             currentOrder_status1_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status2_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status3_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status4_circle.setBackgroundResource(R.drawable.circle_white);
             currentOrder_status5_circle.setBackgroundResource(R.drawable.circle_white);
-            currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
-            currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
-            currentOrder_status3_time.setText(mOrder.getDistributingTime().split(" ")[1]);
-            currentOrder_status4_time.setText(mOrder.getDeliveryingTime().split(" ")[1]);
-            currentOrder_status5_time.setText(mOrder.getCompleteTime().split(" ")[1]);
+            if(MelbourneUtils.checkStringNotNull(mOrder.getCreateTime())) {
+                currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
+            }
+            else{
+                currentOrder_status1_time.setText("");
+            }
+            if(MelbourneUtils.checkStringNotNull(mOrder.getConfirmTime())) {
+                currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
+            }
+            else{
+                currentOrder_status2_time.setText("");
+            }
+            if(MelbourneUtils.checkStringNotNull(mOrder.getDistributingTime())) {
+                currentOrder_status3_time.setText(mOrder.getDistributingTime().split(" ")[1]);
+            }
+            else{
+                currentOrder_status3_time.setText("");
+            }
+            if(MelbourneUtils.checkStringNotNull(mOrder.getDeliveryingTime())) {
+                currentOrder_status4_time.setText(mOrder.getDeliveryingTime().split(" ")[1]);
+            }
+            else{
+                currentOrder_status4_time.setText("");
+            }
+            if(MelbourneUtils.checkStringNotNull(mOrder.getCompleteTime())) {
+                currentOrder_status5_time.setText(mOrder.getCompleteTime().split(" ")[1]);
+            }
+            else{
+                currentOrder_status5_time.setText("");
+            }
+//            currentOrder_status1_time.setText(mOrder.getCreateTime().split(" ")[1]);
+//            currentOrder_status2_time.setText(mOrder.getConfirmTime().split(" ")[1]);
+//            currentOrder_status3_time.setText(mOrder.getDistributingTime().split(" ")[1]);
+//            currentOrder_status4_time.setText(mOrder.getDeliveryingTime().split(" ")[1]);
+//            currentOrder_status5_time.setText(mOrder.getCompleteTime().split(" ")[1]);
         }
 
 

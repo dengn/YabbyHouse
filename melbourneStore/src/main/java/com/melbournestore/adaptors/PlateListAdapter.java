@@ -242,7 +242,7 @@ public class PlateListAdapter extends BaseAdapter {
 
     private void setComponentsStatus(Button plusButton, Button minusButton,
                                      TextView numView, int position) {
-        int stock_num = mItems.get(position).getStock();
+        long stock_num = mItems.get(position).getStock();
         int plate_num = mItems.get(position).getUnit();
 
         if (plate_num >= stock_num) {
