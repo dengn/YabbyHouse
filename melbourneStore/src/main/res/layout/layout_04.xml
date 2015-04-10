@@ -3,16 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/relative_04"
+    android:background="@drawable/head4"
 >
-    
-    <Button 
-        android:id="@+id/btn_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="点击进入应用"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="80dip"
-        android:background="@drawable/starter_btn"/>
 
 </RelativeLayout>

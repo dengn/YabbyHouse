@@ -26,7 +26,7 @@ public class StarterActivity extends Activity {
     private LayoutInflater mLayoutInflater;
     private LinearLayout mLinearLayout;
     private int current=0;
-    private ImageView[] points=new ImageView[4];
+    private ImageView[] points=new ImageView[5];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,12 +38,14 @@ public class StarterActivity extends Activity {
         View view2=mLayoutInflater.inflate(R.layout.layout_02, null);
         View view3=mLayoutInflater.inflate(R.layout.layout_03, null);
         View view4=mLayoutInflater.inflate(R.layout.layout_04, null);
-        mButton=(Button)view4.findViewById(R.id.btn_start);
+        View view5=mLayoutInflater.inflate(R.layout.layout_05, null);
+        mButton=(Button)view5.findViewById(R.id.btn_start);
         mButton.setOnClickListener(new MySetOnClickListener());
         mLists.add(view1);
         mLists.add(view2);
         mLists.add(view3);
         mLists.add(view4);
+        mLists.add(view5);
         adapter=new StartPagerAdapter(mLists);
         mViewPager.setAdapter(adapter);
         mViewPager.setOnPageChangeListener(new MyOnPagerChangerListener());
@@ -52,7 +54,7 @@ public class StarterActivity extends Activity {
     //初始化下面的小圆点
     private void initPoints()
     {
-        for(int i=0;i<4;i++)
+        for(int i=0;i<5;i++)
         {
             points[i]=(ImageView)mLinearLayout.getChildAt(i);
             points[i].setImageResource(R.drawable.sysclear_ic_storage_left);
